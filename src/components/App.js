@@ -13,10 +13,39 @@ class App extends Component {
         super(props);
         this.state = {
             isShowingModal: false,
+            arraySelectedStations: [],
         };
         this.handleSystemClick = this.handleSystemClick.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
-        this.handleTableButtonClick = this.handleTableButtonClick.bind(this);
+        this.onRowSelect = this.onRowSelect.bind(this);
+    }
+
+    onRowSelect(row, isSelected, e) {
+        let tempArray = this.state.arraySelectedStations.slice();
+
+        if (isSelected) {
+            // add new object which was selected
+            tempArray.push(row);
+        } else if (!isSelected) {
+            // remove object which has same kml as exist
+            tempArray = tempArray.filter(obj => obj.kml !== row.kml);
+        }
+        this.setState({ arraySelectedStations: tempArray }, function () {
+            console.log(this.state.arraySelectedStations);
+        });
+        console.log(e);
+    }
+
+    onSelectAll(isSelected, rows) {
+        alert(`is select all: ${isSelected}`);
+        if (isSelected) {
+            alert('Current display and selected data: ');
+        } else {
+            alert('unselect rows: ');
+        }
+        for (let i = 0; i < rows.length; i += 1) {
+            alert(rows[i].id);
+        }
     }
 
     handleSystemClick(value) {
@@ -31,10 +60,6 @@ class App extends Component {
     openDialog = () => this.setState({ isShowingModal: true })
 
     handleClose = () => this.setState({ isShowingModal: false })
-
-    handleTableButtonClick(obj) {
-        console.log(obj.row);
-    }
 
     render() {
         const modalStyle = {
@@ -56,16 +81,15 @@ class App extends Component {
                 </div>
                 {
                     this.state.isShowingModal &&
-                    <ModalContainer onClose={this.handleClose}>
+                    <ModalContainer>
                         <ModalDialog style={modalStyle} onClose={this.handleClose}>
                             <h1>Check stations</h1>
-                            <Table
-                                onClick={this.handleTableButtonClick} />
+                            <Table onSelectAll={this.onSelectAll} onRowSelect={this.onRowSelect} />
                         </ModalDialog>
                     </ModalContainer>
                 }
                 <SystemButton id="info" class="info" title="info" value="i" onSystemClick={this.handleRefreshClick} />
-                <Map />
+                <Map selectedStations={this.state.arraySelectedStations} />
             </div>
         );
     }

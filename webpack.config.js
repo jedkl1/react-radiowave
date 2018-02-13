@@ -37,6 +37,7 @@ module.exports = function (env) {
              *  就需要一个预处理器来告诉 webpack 该如何处理这个文件，比如 css、图片等
              *  https://webpack.js.org/concepts/loaders/
              */
+
             loaders: [
                 /**
                  * eslint-loader
@@ -186,6 +187,9 @@ module.exports = function (env) {
                     changeOrigin: true
                 }
             }
+        },
+        node: {
+            fs: "empty"
         },
         // 为压缩以后的代码提供 source map 方便调试
         // https://webpack.js.org/configuration/devtool/

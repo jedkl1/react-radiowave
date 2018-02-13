@@ -1,81 +1,47 @@
-import React, { Component } from 'react';
-import RTSelectTable from 'react-table';
-import 'react-table/react-table.css';
 
-const jsonFile = require('../../listStations.json');
+import React from 'react';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
-class Table extends Component {
+const data = require('../../listStations.json');
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            selected: [],
-        };
-        this.handleClick = this.handleClick.bind(this);
-    }
+function transmitterFormat(cell, row) {
+    return (<a href={row.linkToRP}>{cell}</a>);
+}
 
-    handleClick = () => {
-        this.props.onSystemClick(this.props.value);
-    }
+function stationFormat(cell, row) {
+    return (<a href={row.linkToStation}>{cell}</a>);
+}
 
-    render() {
-        const data = jsonFile.station;
-        const columns = [
-            {
-                Header: 'Icon',
-                accessor: 'icon',
-                Cell: row => (
-                    <div
-                        style={{
-                            width: '100%',
-                            height: '100%',
-                            backgroundImage: `url(${row.value})`,
-                            borderRadius: '2px',
-                            backgroundSize: 'contain',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }} />
-            ),
-            }, {
-                Header: 'Name',
-                accessor: 'name',
-                Cell: cellInfo => (
-                    <a href={cellInfo.original.linkToStation}>{cellInfo.original.name}</a>
-            ),
-            }, {
-                Header: 'Frequency',
-                accessor: 'frequency',
-            }, {
-                Header: 'Transmitter', // Custom header components!
-                accessor: 'transmitter',
-                Cell: cellInfo => (
-                    <a href={cellInfo.original.linkToRP}>{cellInfo.original.transmitter}</a>
-            ),
-            }];
+function iconFormat(cell) {
+    return (<div style={{
+        width: '5em',
+        height: '1.45em',
+        backgroundImage: `url(${cell})`,
+        borderRadius: '2px',
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+    }} />);
+}
 
-        return (
-            <RTSelectTable
-                data={data}
-                selectable={'true'}
-                columns={columns}
-                pageSizeOptions={[5, 10]}
-                defaultPageSize={5}
-                className="-striped -highlight"
-                loadingText="Looking for data"
-                noDataText="Couldn't find data"
-                getTrProps={(state, rowInfo) => ({
+function Table(props) {
+    const selectRowProp = {
+        mode: 'checkbox',
+        clickToSelect: true,
+        bgColor: 'rgb(233, 149, 233)',
+        onSelect: props.onRowSelect,
+        onSelectAll: props.onSelectAll,
+    };
 
-                    onClick: () => {
-                        this.setState({
-                            selected: rowInfo.index,
-                        });
-                    },
-                    style: {
-                        background: rowInfo.index === this.state.selected ? '#00afec' : 'white',
-                        color: rowInfo.index === this.state.selected ? 'white' : 'black',
-                    },
-                })} />);
-    }
+    return (
+        <BootstrapTable data={data.station} selectRow={selectRowProp} striped hover condensed pagination search>
+            <TableHeaderColumn dataField="icon" dataFormat={iconFormat} width="10%">Icon</TableHeaderColumn>
+            <TableHeaderColumn dataField="name" isKey dataFormat={stationFormat}>Name</TableHeaderColumn>
+            <TableHeaderColumn dataField="frequency" width="15%">Frequency</TableHeaderColumn>
+            <TableHeaderColumn dataField="transmitter" dataFormat={transmitterFormat}>Transmitter</TableHeaderColumn>
+        </BootstrapTable>
+    );
 }
 
 export default Table;
