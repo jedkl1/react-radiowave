@@ -32,12 +32,14 @@ function Table(props) {
         bgColor: 'rgb(233, 149, 233)',
         onSelect: props.onRowSelect,
         onSelectAll: props.onSelectAll,
+        selected: props.selected,
     };
 
     return (
         <BootstrapTable data={data.station} selectRow={selectRowProp} striped hover condensed pagination search>
+            <TableHeaderColumn isKey dataField="uniqId" hidden>ID</TableHeaderColumn>
             <TableHeaderColumn dataField="icon" dataFormat={iconFormat} width="10%">Icon</TableHeaderColumn>
-            <TableHeaderColumn dataField="name" isKey dataFormat={stationFormat}>Name</TableHeaderColumn>
+            <TableHeaderColumn dataField="name" dataFormat={stationFormat}>Name</TableHeaderColumn>
             <TableHeaderColumn dataField="frequency" width="15%">Frequency</TableHeaderColumn>
             <TableHeaderColumn dataField="transmitter" dataFormat={transmitterFormat}>Transmitter</TableHeaderColumn>
         </BootstrapTable>

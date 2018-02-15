@@ -1,6 +1,7 @@
 {
     "station": [
         {
+            "uniqId": "1",
            "name": "RMF FM",
            "linkToStation": "http://old.radiopolska.pl/wykaz/pokaz_stacja.php?pid=12",
            "icon": "http://old.radiopolska.pl/wykaz/logo/rmffm.png",
@@ -10,6 +11,7 @@
            "linkToRP": "http://old.radiopolska.pl/wykaz/pokaz_lokalizacja.php?pid=611"
         },
         {
+            "uniqId": "2",
            "name": "Radio Zet",
            "linkToStation": "http://old.radiopolska.pl/wykaz/pokaz_stacja.php?pid=11",
            "icon": "http://old.radiopolska.pl/wykaz/logo/zet.png",
@@ -19,6 +21,7 @@
            "linkToRP": "http://old.radiopolska.pl/wykaz/pokaz_lokalizacja.php?pid=612"
         },
         {
+            "uniqId": "3",
            "name": "RMF MAXXX",
            "linkToStation": "http://old.radiopolska.pl/wykaz/pokaz_stacja.php?pid=15",
            "icon": "http://old.radiopolska.pl/wykaz/logo/rmfmaxxx.png",
@@ -28,6 +31,7 @@
            "linkToRP": "http://old.radiopolska.pl/wykaz/pokaz_lokalizacja.php?pid=614"
         },
         {
+            "uniqId": "4",
            "name": "Radio Maryja",
            "linkToStation": "http://old.radiopolska.pl/wykaz/pokaz_stacja.php?pid=16",
            "icon": "http://old.radiopolska.pl/wykaz/logo/maryja.png",
@@ -37,6 +41,7 @@
            "linkToRP": "http://old.radiopolska.pl/wykaz/pokaz_lokalizacja.php?pid=615"
         },
         {
+            "uniqId": "5",
            "name": "Jedynka",
            "linkToStation": "http://old.radiopolska.pl/wykaz/pokaz_stacja.php?pid=6",
            "icon": "http://old.radiopolska.pl/wykaz/logo/pr1.png",
@@ -46,6 +51,7 @@
            "linkToRP": "http://old.radiopolska.pl/wykaz/pokaz_lokalizacja.php?pid=616"
         },
         {
+            "uniqId": "6",
            "name": "Trójka",
            "linkToStation": "http://old.radiopolska.pl/wykaz/pokaz_stacja.php?pid=8",
            "icon": "http://old.radiopolska.pl/wykaz/logo/pr3.png",

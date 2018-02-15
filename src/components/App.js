@@ -14,15 +14,16 @@ class App extends Component {
         this.state = {
             isShowingModal: false,
             arraySelectedStations: [],
+            selectedRows: [],
         };
         this.handleSystemClick = this.handleSystemClick.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
         this.onRowSelect = this.onRowSelect.bind(this);
+        this.onSelectAll = this.onSelectAll.bind(this);
     }
 
     onRowSelect(row, isSelected, e) {
         let tempArray = this.state.arraySelectedStations.slice();
-
         if (isSelected) {
             // add new object which was selected
             tempArray.push(row);
@@ -30,22 +31,36 @@ class App extends Component {
             // remove object which has same kml as exist
             tempArray = tempArray.filter(obj => obj.kml !== row.kml);
         }
-        this.setState({ arraySelectedStations: tempArray }, function () {
+        const tempSelected = [];
+        tempArray.forEach((element) => {
+            tempSelected.push(element.uniqId);
+        });
+        this.setState({ arraySelectedStations: tempArray,
+            selectedRows: tempSelected }, function () {
             console.log(this.state.arraySelectedStations);
         });
         console.log(e);
     }
 
     onSelectAll(isSelected, rows) {
-        alert(`is select all: ${isSelected}`);
+        let tempArray = this.state.arraySelectedStations.slice();
         if (isSelected) {
-            alert('Current display and selected data: ');
+            rows.forEach((element) => {
+                tempArray.push(element);
+            });
         } else {
-            alert('unselect rows: ');
+            rows.forEach((element) => {
+                tempArray = tempArray.filter(obj => obj.kml !== element.kml);
+            });
         }
-        for (let i = 0; i < rows.length; i += 1) {
-            alert(rows[i].id);
-        }
+        const tempSelected = [];
+        tempArray.forEach((element) => {
+            tempSelected.push(element.uniqId);
+        });
+        this.setState({ arraySelectedStations: tempArray,
+            selectedRows: tempSelected }, function () {
+            console.log(this.state.arraySelectedStations);
+        });
     }
 
     handleSystemClick(value) {
@@ -80,13 +95,17 @@ class App extends Component {
 
                 </div>
                 {
-                    this.state.isShowingModal &&
-                    <ModalContainer>
-                        <ModalDialog style={modalStyle} onClose={this.handleClose}>
-                            <h1>Check stations</h1>
-                            <Table onSelectAll={this.onSelectAll} onRowSelect={this.onRowSelect} />
-                        </ModalDialog>
-                    </ModalContainer>
+                    this.state.isShowingModal ?
+                        <ModalContainer>
+                            <ModalDialog style={modalStyle} onClose={this.handleClose}>
+                                <h1>Check stations</h1>
+                                <Table
+                                    onSelectAll={this.onSelectAll}
+                                    onRowSelect={this.onRowSelect}
+                                    selected={this.state.selectedRows} />
+                            </ModalDialog>
+                        </ModalContainer>
+                    : null
                 }
                 <SystemButton id="info" class="info" title="info" value="i" onSystemClick={this.handleRefreshClick} />
                 <Map selectedStations={this.state.arraySelectedStations} />

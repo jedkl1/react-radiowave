@@ -6,11 +6,6 @@ import 'leaflet/dist/leaflet.css';
 import '../styles/Map.css';
 
 const parseString = require('react-native-xml2js').parseString;
-// const tj = require('togeojson');
-// const fs = require('fs-react');
-// const DOMParser = require('xmldom').DOMParser;
-
-// const XMLParser = require('xml2json');
 
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.
