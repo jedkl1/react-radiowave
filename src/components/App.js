@@ -15,6 +15,7 @@ class App extends Component {
             isShowingModal: false,
             arraySelectedStations: [],
             selectedRows: [],
+            system: 'FM',
         };
         this.handleSystemClick = this.handleSystemClick.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
@@ -65,6 +66,7 @@ class App extends Component {
 
     handleSystemClick(value) {
         console.log(`System was set as ${value}`);
+        this.setState({ system: value, selectedRows: [], arraySelectedStations: [] });
     }
 
     handleRefreshClick(value) {
@@ -100,6 +102,7 @@ class App extends Component {
                             <ModalDialog style={modalStyle} onClose={this.handleClose}>
                                 <h1>Check stations</h1>
                                 <Table
+                                    system={this.state.system}
                                     onSelectAll={this.onSelectAll}
                                     onRowSelect={this.onRowSelect}
                                     selected={this.state.selectedRows} />

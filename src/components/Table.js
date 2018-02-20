@@ -4,6 +4,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 const data = require('../../listStations.json');
+const dataDAB = require('../../listDAB.json');
 
 function transmitterFormat(cell, row) {
     return (<a href={row.linkToRP}>{cell}</a>);
@@ -35,14 +36,61 @@ function Table(props) {
         selected: props.selected,
     };
 
-    return (
-        <BootstrapTable data={data.station} selectRow={selectRowProp} striped hover condensed pagination search>
+    const options = {
+        sizePerPageList: [{
+            text: '5', value: 5,
+        }, {
+            text: '10', value: 10,
+        },
+        {
+            text: '20', value: 20,
+        }],
+        sizePerPage: 5,
+    };
+
+    let table = null;
+    if (props.system === 'FM') {
+        table = (<BootstrapTable
+            data={data.station}
+            selectRow={selectRowProp}
+            striped
+            hover
+            condensed
+            pagination
+            search
+            options={options}>
             <TableHeaderColumn isKey dataField="uniqId" hidden>ID</TableHeaderColumn>
             <TableHeaderColumn dataField="icon" dataFormat={iconFormat} width="10%">Icon</TableHeaderColumn>
-            <TableHeaderColumn dataField="name" dataFormat={stationFormat}>Name</TableHeaderColumn>
+            <TableHeaderColumn dataField="name" dataFormat={stationFormat} width="25%">Name</TableHeaderColumn>
             <TableHeaderColumn dataField="frequency" width="15%">Frequency</TableHeaderColumn>
             <TableHeaderColumn dataField="transmitter" dataFormat={transmitterFormat}>Transmitter</TableHeaderColumn>
-        </BootstrapTable>
+        </BootstrapTable>);
+    } else if (props.system === 'DAB+') {
+        table = (<BootstrapTable
+            data={dataDAB.station}
+            selectRow={selectRowProp}
+            striped
+            hover
+            condensed
+            pagination
+            search
+            options={options}>
+            <TableHeaderColumn isKey dataField="uniqId" hidden>ID</TableHeaderColumn>
+            <TableHeaderColumn dataField="icon" dataFormat={iconFormat} width="10%">Icon</TableHeaderColumn>
+            <TableHeaderColumn dataField="name" dataFormat={stationFormat} width="25%">Name</TableHeaderColumn>
+            <TableHeaderColumn dataField="frequency" width="15%">Frequency</TableHeaderColumn>
+            <TableHeaderColumn dataField="transmitter" dataFormat={transmitterFormat}>Transmitter</TableHeaderColumn>
+            <TableHeaderColumn dataField="kanal" width="10%">Canal</TableHeaderColumn>
+            <TableHeaderColumn dataField="wojewodztow" width="10%">Region</TableHeaderColumn>
+        </BootstrapTable>);
+    } else if (props.system === 'MUX') {
+        table = null;
+    }
+
+    return (
+        <div>
+            { table }
+        </div>
     );
 }
 
