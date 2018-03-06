@@ -3,7 +3,6 @@ import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
-// const data = require('../../listStations.json');
 const dataDAB = require('../../listDAB.json');
 
 let data = null;
