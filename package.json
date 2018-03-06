@@ -1,6 +1,6 @@
 {
     "name": "radiowavepropagation",
-    "homepage": "https://jedkl15.github.io/react-radiowave/public/",
+    "homepage": "https://jedkl15.github.io/react-radiowave",
     "dependencies": {
         "classnames": "^2.2.5",
         "css-loader": "^0.28.9",
@@ -48,7 +48,8 @@
         "webpack-dev-server": "^2.4.5"
     },
     "scripts": {
+	"build": "webpack --config webpack.config.js",
         "predeploy": "npm run build",
-        "deploy": "gh-pages -d build"
+        "deploy": "npm run build && gh-pages -d build"
     }
 }
