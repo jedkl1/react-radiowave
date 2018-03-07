@@ -15,7 +15,7 @@ class App extends Component {
             isShowingModal: false,
             arraySelectedStations: [],
             selectedRows: [],
-            system: 'FM',
+            system: 'fm',
         };
         this.handleSystemClick = this.handleSystemClick.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
@@ -64,9 +64,9 @@ class App extends Component {
         });
     }
 
-    handleSystemClick(value) {
-        console.log(`System was set as ${value}`);
-        this.setState({ system: value, selectedRows: [], arraySelectedStations: [] });
+    handleSystemClick(id) {
+        console.log(`System was set as ${id}`);
+        this.setState({ system: id, selectedRows: [], arraySelectedStations: [] });
     }
 
     handleRefreshClick(value) {
@@ -87,9 +87,9 @@ class App extends Component {
         return (
             <div id="gridId" className="grid">
                 <div id="systems_container" className="container systems">
-                    <SystemButton id="FM" class="system" title="Change system to FM" value="FM" onSystemClick={this.handleSystemClick} />
-                    <SystemButton id="DAB+" class="system" title="Change system to DAB+" value="DAB+" onSystemClick={this.handleSystemClick} />
-                    <SystemButton id="MUX" class="system" title="Change system to MUX" value="MUX" onSystemClick={this.handleSystemClick} />
+                    <SystemButton id="fm" class="system" title="Change system to FM" value="FM" onSystemClick={this.handleSystemClick} />
+                    <SystemButton id="dab" class="system" title="Change system to DAB+" value="DAB+" onSystemClick={this.handleSystemClick} />
+                    <SystemButton id="dvbt" class="system" title="Change system to DVB-T" value="DVB-T" onSystemClick={this.handleSystemClick} />
                 </div>
                 <div id="buttons_container" className="container buttons">
                     <SystemButton id="home" class="home" title="Home" value="" onSystemClick={this.handleRefreshClick} /> <br />

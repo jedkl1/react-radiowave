@@ -24,7 +24,7 @@ class SystemButton extends Component {
     }
 
     handleClick = () => {
-        this.props.onSystemClick(this.props.value);
+        this.props.onSystemClick(this.props.id);
     }
 
     render() {

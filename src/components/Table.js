@@ -3,9 +3,6 @@ import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
-// const data = require('../../listStations.json');
-const dataDAB = require('../../listDAB.json');
-
 let data = null;
 
 fetch('http://mapy.radiopolska.pl/api/transmitterByProgName/pl/fm/r')
@@ -61,48 +58,45 @@ function Table(props) {
         sizePerPage: 10,
     };
 
+
     let table = null;
-    if (props.system === 'FM') {
-        table = (<BootstrapTable
-            data={data}
-            selectRow={selectRowProp}
-            striped
-            hover
-            condensed
-            pagination
-            search
-            options={options}>
-            <TableHeaderColumn isKey dataField="id_nadajnik" hidden>ID</TableHeaderColumn>
-            <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="10%">Icon</TableHeaderColumn>
-            <TableHeaderColumn dataField="program" dataFormat={stationFormat} width="25%">Name</TableHeaderColumn>
-            <TableHeaderColumn dataField="mhz" width="15%">Frequency</TableHeaderColumn>
-            <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>Transmitter</TableHeaderColumn>
-        </BootstrapTable>);
-    } else if (props.system === 'DAB+') {
-        table = (<BootstrapTable
-            data={dataDAB}
-            selectRow={selectRowProp}
-            striped
-            hover
-            condensed
-            pagination
-            search
-            options={options}>
-            <TableHeaderColumn isKey dataField="uniqId" hidden>ID</TableHeaderColumn>
-            <TableHeaderColumn dataField="icon" dataFormat={iconFormat} width="10%">Icon</TableHeaderColumn>
-            <TableHeaderColumn dataField="name" dataFormat={stationFormat} width="25%">Name</TableHeaderColumn>
-            <TableHeaderColumn dataField="frequency" width="15%">Frequency</TableHeaderColumn>
-            <TableHeaderColumn dataField="transmitter" dataFormat={radioMastFormat}>Transmitter</TableHeaderColumn>
-            <TableHeaderColumn dataField="kanal" width="10%">Canal</TableHeaderColumn>
-            <TableHeaderColumn dataField="wojewodztow" width="10%">Region</TableHeaderColumn>
-        </BootstrapTable>);
-    } else if (props.system === 'MUX') {
+    if (props.system === 'fm') {
+        table = (
+            <div>
+                <TableHeaderColumn isKey dataField="id_nadajnik" hidden>ID</TableHeaderColumn>
+                <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="10%">Ikona</TableHeaderColumn>
+                <TableHeaderColumn dataField="program" dataFormat={stationFormat} width="25%">Program</TableHeaderColumn>
+                <TableHeaderColumn dataField="mhz" width="15%">MHz</TableHeaderColumn>
+                <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>Obiekt nadawczy</TableHeaderColumn>
+            </div>);
+    } else if (props.system === 'dab') {
+        table = (
+            <div>
+                <TableHeaderColumn isKey dataField="id_nadajnik" hidden>ID</TableHeaderColumn>
+                <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="10%">Ikona</TableHeaderColumn>
+                <TableHeaderColumn dataField="multipleks" dataFormat={stationFormat} width="25%">Multipleks</TableHeaderColumn>
+                <TableHeaderColumn dataField="mhz" width="15%">MHz</TableHeaderColumn>
+                <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>Obiekt nadawczy</TableHeaderColumn>
+                <TableHeaderColumn dataField="kanal_nazwa" width="10%">Kanał</TableHeaderColumn>
+                <TableHeaderColumn dataField="nwoj" width="10%">woj.</TableHeaderColumn>
+            </div>);
+    } else if (props.system === 'dvbt') {
         table = null;
     }
 
     return (
         <div>
-            { table }
+            <BootstrapTable
+                data={data}
+                selectRow={selectRowProp}
+                striped
+                hover
+                condensed
+                pagination
+                search
+                options={options}>
+                { table.props.children }
+            </BootstrapTable>
         </div>
     );
 }

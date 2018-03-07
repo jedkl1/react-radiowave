@@ -5,19 +5,6 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 const dataDAB = require('../../listDAB.json');
 
-let data = null;
-
-fetch('http://mapy.radiopolska.pl/api/transmitterByProgName/pl/fm/r')
-    .then(res => res.json())
-    .then(
-    (res) => {
-        data = res.data;
-    },
-    (error) => {
-        console.log(`Error: ${error}`);
-    },
-);
-
 function radioMastFormat(cell, row) {
     return (<a href={`http://test.radiopolska.pl/wykaz/obiekt/${row.id_obiekt}`}>{cell}</a>);
 }
@@ -61,7 +48,19 @@ function Table(props) {
     };
 
     let table = null;
+    let data = null;
+    let baseUrl = 'http://mapy.radiopolska.pl/api/';
     if (props.system === 'FM') {
+        fetch(baseURL + '/transmitterByProgName/pl/fm/r')
+            .then(res => res.json())
+            .then(
+            (res) => {
+                data = res.data;
+            },
+            (error) => {
+                console.log(`Error: ${error}`);
+            },
+        );
         table = (<BootstrapTable
             data={data}
             selectRow={selectRowProp}
