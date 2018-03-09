@@ -43,7 +43,7 @@ function Table(props) {
         bgColor: 'rgb(233, 149, 233)',
         onSelect: props.onRowSelect,
         onSelectAll: props.onSelectAll,
-        selected: props.selected,
+        selected: props.selected.id_nadajnik,
     };
 
     const options = {

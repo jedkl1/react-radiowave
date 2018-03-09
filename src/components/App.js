@@ -5,6 +5,7 @@ import '../styles/App.css';
 import Map from './Map';
 import SystemButton from './Button';
 import Table from './Table';
+import LittleTable from './LittleTable';
 
 class App extends Component {
     state = { loading: false };
@@ -34,7 +35,12 @@ class App extends Component {
         }
         const tempSelected = [];
         tempArray.forEach((element) => {
-            tempSelected.push(element.uniqId);
+            tempSelected.push({
+                id_nadajnik: element.id_nadajnik,
+                program: element.program,
+                mhz: element.mhz,
+                obiekt: element.obiekt,
+            });
         });
         this.setState({ arraySelectedStations: tempArray,
             selectedRows: tempSelected }, function () {
@@ -56,7 +62,12 @@ class App extends Component {
         }
         const tempSelected = [];
         tempArray.forEach((element) => {
-            tempSelected.push(element.uniqId);
+            tempSelected.push({
+                id_nadajnik: element.id_nadajnik,
+                program: element.program,
+                mhz: element.mhz,
+                obiekt: element.obiekt,
+            });
         });
         this.setState({ arraySelectedStations: tempArray,
             selectedRows: tempSelected }, function () {
@@ -111,6 +122,11 @@ class App extends Component {
                     : null
                 }
                 <SystemButton id="info" class="info" title="info" value="i" onSystemClick={this.handleRefreshClick} />
+                <LittleTable
+                    system={this.state.system}
+                    onSelectAll={this.onSelectAll}
+                    onRowSelect={this.onRowSelect}
+                    selected={this.state.selectedRows} />
                 <Map selectedStations={this.state.arraySelectedStations} />
             </div>
         );

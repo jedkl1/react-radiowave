@@ -1,0 +1,22 @@
+.littleTable {
+    position: absolute;
+    width: 26%;
+    height: 30vh;
+    right: 1%;
+    top: 60%;
+    z-index: 5;
+    padding: 1vh;
+    background-color: rgba(187, 69, 187, 0.8);
+    border-radius: 5px;
+}
+
+.littleTable .react-bs-table-container {
+    height: 100%;
+    background-color: white;
+    border-radius: 5px;
+    overflow: auto;
+}
+
+.react-bs-table.react-bs-table-bordered {
+    height: 88% !important;
+}
