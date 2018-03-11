@@ -48,10 +48,10 @@
         "webpack-dev-server": "^2.4.5"
     },
     "scripts": {
-	    "build": "webpack --config webpack.config.js",
+        "build": "webpack --config webpack.config.js",
         "predeploy": "npm run build",
         "deploy": "npm run build && gh-pages -d build",
-        "start": "node scripts/start.js",		
+        "start": "node scripts/start.js",
         "build2": "export NODE_ENV=production && rm -rf ./build && webpack --env.production --optimize-minimize"
     }
 }

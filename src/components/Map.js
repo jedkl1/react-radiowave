@@ -5,6 +5,8 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../styles/Map.css';
 
+const icon = require('../../images/antenna-3.png');
+
 const parseString = require('react-native-xml2js').parseString;
 
 // store the map configuration properties in an object,
@@ -27,7 +29,7 @@ config.tileLayer = {
     },
 };
 config.myIcon = L.icon({
-    iconUrl: '../../images/antenna-3.png',
+    iconUrl: icon,
     iconSize: [35, 40],
     // iconAnchor: [22, 94],
     popupAnchor: [-3, -76],
@@ -39,7 +41,7 @@ class Map extends Component {
         this.state = {
             map: null,
             tileLayer: null,
-            selectedStations: props.selectedStations,
+            selectedTransmitters: props.selectedTransmitters,
             markers: [],
             layersGroup: [],
         };
@@ -54,13 +56,13 @@ class Map extends Component {
 
     componentDidUpdate(prevProps) {
     // code to run when the component receives new props or state
-        if (this.props.selectedStations !== prevProps.selectedStations) {
-            this.state.selectedStations = this.props.selectedStations;
+        if (this.props.selectedTransmitters !== prevProps.selectedTransmitters) {
+            this.state.selectedTransmitters = this.props.selectedTransmitters;
             this.layersGroup.clearLayers();
-            this.state.markers.forEach((element) => { this.map.removeLayer(element); });
+            this.state.markers.forEach((element) => { this.state.map.removeLayer(element); });
             this.state.markers = [];
-            this.state.selectedStations.forEach((element) => {
-                fetch(`http://home.elka.pw.edu.pl/~jklocek/current/${element.kml}`)
+            this.state.selectedTransmitters.forEach((element) => {
+                fetch(`http://home.elka.pw.edu.pl/~jklocek/current/Maps/${element.id_nadajnik}.kml`)
                     .then(res => res.text())
                     .then(
                         (res) => {
@@ -72,9 +74,10 @@ class Map extends Component {
                         (error) => {
                             console.log(`Error${error}`);
                         },
-
                     );
             });
+            this.addMarkers();
+            this.setView();
         }
     }
 
@@ -85,7 +88,6 @@ class Map extends Component {
     }
 
     addLayer(kml) {
-        console.log(kml);
         const boundsArray = [];
         // const averageBounds = [0, 0];
 
@@ -94,8 +96,6 @@ class Map extends Component {
         boundsArray.push(Number(kml.LatLonBox[0].south[0]));
         boundsArray.push(Number(kml.LatLonBox[0].west[0]));
 
-        console.log(boundsArray);
-        // const imageBounds = [[boundsArray[1] - 0.025, boundsArray[3]], [boundsArray[0] - 0.025, boundsArray[2]]];
         const imageBounds = [[boundsArray[2], boundsArray[3]], [boundsArray[1], boundsArray[0]]];
         const imageUrl = `Maps/${kml.name[0]}`;
         this.layersGroup.addLayer(L.imageOverlay(`http://home.elka.pw.edu.pl/~jklocek/current/${imageUrl}`, imageBounds, { opacity: 0.6 }));
@@ -111,12 +111,38 @@ class Map extends Component {
 
         // console.log(this.state.kml);
         // console.log(averageBounds);
-        // this.setView(averageBounds[0] / this.state.selectedStations.length, averageBounds[1]
-        //     / this.state.selectedStations.length);
+        // this.setView(averageBounds[0] / this.state.selectedTransmitters.length, averageBounds[1]
+        //     / this.state.selectedTransmitters.length);
     }
 
-    setView(latitude, longitude) {
-        this.state.map.fitBounds(new L.LatLng(latitude, longitude), 7);
+    addMarkers() {
+        // ERROR Markers are not removing :(
+        this.state.markers.forEach((marker) => { this.state.map.removeLayer(marker); });
+        this.setState({ markers: [] }, function () {
+            console.log(this.state.markers);
+        });
+        this.state.selectedTransmitters.forEach((element) => {
+            const tempArray = this.state.markers.slice();
+            const marker = L.marker([element.szerokosc, element.dlugosc],
+                { icon: config.myIcon }).addTo(this.state.map);
+            marker.bindPopup(`<b>${element.program}</b><br><a target='_blank'
+                href = http://test.radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>${element.obiekt}</a>`);
+            tempArray.push(marker);
+            this.setState({ markers: tempArray }, function () {
+                console.log(this.state.markers);
+            });
+        });
+    }
+
+    setView() {
+        let latitude = 0;
+        let longitude = 0;
+        this.state.selectedTransmitters.forEach((element) => {
+            latitude += Number(element.szerokosc);
+            longitude += Number(element.dlugosc);
+        });
+        this.state.map.setView(new L.LatLng(latitude / this.state.selectedTransmitters.length,
+            longitude / this.state.selectedTransmitters.length), 7);
     }
 
     init(id) {
