@@ -14,15 +14,19 @@ function stationFormat(cell, row) {
 
 
 function LittleTable(props) {
+    const selectedToDrawTrasmitters = [];
+    props.selected.forEach((element) => {
+        selectedToDrawTrasmitters.push(element.id_nadajnik);
+    });
+
     const selectRowProp = {
         mode: 'checkbox',
         clickToSelect: true,
         bgColor: 'rgb(233, 149, 233)',
         onSelect: props.onRowSelect,
         onSelectAll: props.onSelectAll,
-        selected: props.selected,
+        selected: selectedToDrawTrasmitters,
     };
-
 
     let table = null;
     if (props.system === 'fm') {
@@ -48,7 +52,7 @@ function LittleTable(props) {
     return (
         <div className="littleTable">
             <BootstrapTable
-                data={props.selected}
+                data={props.data}
                 selectRow={selectRowProp}
                 striped
                 hover

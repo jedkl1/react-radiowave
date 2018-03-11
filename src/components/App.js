@@ -14,74 +14,90 @@ class App extends Component {
         super(props);
         this.state = {
             isShowingModal: false,
-            arraySelectedStations: [],
-            selectedRows: [],
+            selectedTransmitters: [],
             system: 'fm',
+            toDrawSelected: [],
         };
         this.handleSystemClick = this.handleSystemClick.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
         this.onRowSelect = this.onRowSelect.bind(this);
         this.onSelectAll = this.onSelectAll.bind(this);
+        this.onDrawSelected = this.onDrawSelected.bind(this);
+        this.onDrawAllSelected = this.onDrawAllSelected.bind(this);
     }
 
     onRowSelect(row, isSelected, e) {
-        let tempArray = this.state.arraySelectedStations.slice();
+        let tempArray = this.state.selectedTransmitters.slice();
         if (isSelected) {
             // add new object which was selected
             tempArray.push(row);
         } else if (!isSelected) {
-            // remove object which has same kml as exist
-            tempArray = tempArray.filter(obj => obj.kml !== row.kml);
+            // remove object which has same id_nadajnik as exist
+            tempArray = tempArray.filter(obj => obj.id_nadajnik !== row.id_nadajnik);
         }
-        const tempSelected = [];
-        tempArray.forEach((element) => {
-            tempSelected.push({
-                id_nadajnik: element.id_nadajnik,
-                program: element.program,
-                mhz: element.mhz,
-                obiekt: element.obiekt,
-            });
-        });
-        this.setState({ arraySelectedStations: tempArray,
-            selectedRows: tempSelected }, function () {
-            console.log(this.state.arraySelectedStations);
+        this.setState({ selectedTransmitters: tempArray }, function () {
+            console.log(this.state.selectedTransmitters);
         });
         console.log(e);
     }
 
     onSelectAll(isSelected, rows) {
-        let tempArray = this.state.arraySelectedStations.slice();
+        let tempArray = this.state.selectedTransmitters.slice();
         if (isSelected) {
             rows.forEach((element) => {
                 tempArray.push(element);
             });
         } else {
             rows.forEach((element) => {
-                tempArray = tempArray.filter(obj => obj.kml !== element.kml);
+                tempArray = tempArray.filter(obj => obj.id_nadajnik !== element.id_nadajnik);
             });
         }
-        const tempSelected = [];
-        tempArray.forEach((element) => {
-            tempSelected.push({
-                id_nadajnik: element.id_nadajnik,
-                program: element.program,
-                mhz: element.mhz,
-                obiekt: element.obiekt,
-            });
+
+        this.setState({ selectedTransmitters: tempArray }, function () {
+            console.log(this.state.selectedTransmitters);
         });
-        this.setState({ arraySelectedStations: tempArray,
-            selectedRows: tempSelected }, function () {
-            console.log(this.state.arraySelectedStations);
+    }
+
+    onDrawSelected(row, isSelected, e) {
+        let tempArray = this.state.toDrawSelected.slice();
+        if (isSelected) {
+            // add new object which was selected
+            tempArray.push(row);
+        } else if (!isSelected) {
+            // remove object which has same id_nadajnik as exist
+            tempArray = tempArray.filter(obj => obj.id_nadajnik !== row.id_nadajnik);
+        }
+
+        this.setState({ toDrawSelected: tempArray }, function () {
+            console.log(this.state.toDrawSelected);
+        });
+        console.log(e);
+    }
+
+    onDrawAllSelected(isSelected, rows) {
+        let tempArray = this.state.toDrawSelected.slice();
+        if (isSelected) {
+            rows.forEach((element) => {
+                tempArray.push(element);
+            });
+        } else {
+            rows.forEach((element) => {
+                tempArray = tempArray.filter(obj => obj.id_nadajnik !== element.id_nadajnik);
+            });
+        }
+
+        this.setState({ toDrawSelected: tempArray }, function () {
+            console.log(this.state.toDrawSelected);
         });
     }
 
     handleSystemClick(id) {
         console.log(`System was set as ${id}`);
-        this.setState({ system: id, selectedRows: [], arraySelectedStations: [] });
+        this.setState({ system: id, selectedRows: [], selectedTransmitters: [] });
     }
 
     handleRefreshClick(value) {
-        console.log(`aaa ${value}`);
+        console.log(`Refresh ${value}`);
         window.location.reload();
     }
 
@@ -116,18 +132,23 @@ class App extends Component {
                                     system={this.state.system}
                                     onSelectAll={this.onSelectAll}
                                     onRowSelect={this.onRowSelect}
-                                    selected={this.state.selectedRows} />
+                                    selected={this.state.selectedTransmitters} />
                             </ModalDialog>
                         </ModalContainer>
                     : null
                 }
                 <SystemButton id="info" class="info" title="info" value="i" onSystemClick={this.handleRefreshClick} />
-                <LittleTable
-                    system={this.state.system}
-                    onSelectAll={this.onSelectAll}
-                    onRowSelect={this.onRowSelect}
-                    selected={this.state.selectedRows} />
-                <Map selectedStations={this.state.arraySelectedStations} />
+                {
+                    this.state.selectedTransmitters.length ?
+                        <LittleTable
+                            system={this.state.system}
+                            onSelectAll={this.onDrawAllSelected}
+                            onRowSelect={this.onDrawSelected}
+                            selected={this.state.toDrawSelected}
+                            data={this.state.selectedTransmitters} />
+                    : null
+                }
+                <Map selectedTransmitters={this.state.toDrawSelected} />
             </div>
         );
     }

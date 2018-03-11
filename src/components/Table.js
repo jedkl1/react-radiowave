@@ -37,13 +37,18 @@ function iconFormat(cell) {
 }
 
 function Table(props) {
+    const selectedTrasmitters = [];
+    props.selected.forEach((element) => {
+        selectedTrasmitters.push(element.id_nadajnik);
+    });
+
     const selectRowProp = {
         mode: 'checkbox',
         clickToSelect: true,
         bgColor: 'rgb(233, 149, 233)',
         onSelect: props.onRowSelect,
         onSelectAll: props.onSelectAll,
-        selected: props.selected.id_nadajnik,
+        selected: selectedTrasmitters,
     };
 
     const options = {
