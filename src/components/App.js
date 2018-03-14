@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ModalContainer, ModalDialog } from 'react-modal-dialog';
+import queryString from 'query-string';
 
 import '../styles/App.css';
 import Map from './Map';
@@ -92,6 +93,31 @@ class App extends Component {
         });
     }
 
+    componentDidMount() {
+        // create the Leaflet map object
+        if (this.props.location.search) {
+            const inputParams = queryString.parse(this.props.location.search).config;
+            const inputJSON = JSON.parse(inputParams);
+            console.log(inputJSON);
+            inputJSON.tra.forEach((transmitter) => {
+                fetch(`http://mapy.radiopolska.pl/api/transmitterById/pl/fm/${transmitter.id}`)
+                    .then(res => res.json())
+                    .then(
+                    (res) => {
+                        const tempArray = this.state.selectedTransmitters.slice();
+                        tempArray.push(res.data[0]);
+                        this.setState({ selectedTransmitters: tempArray }, function () {
+                            console.log(this.state.selectedTransmitters);
+                        });
+                    },
+                    (error) => {
+                        console.log(`Error: ${error}`);
+                    },
+                );
+            });
+        }
+    }
+
     handleSystemClick(id) {
         console.log(`System was set as ${id}`);
         this.setState({ system: id, selectedRows: [], selectedTransmitters: [] });
@@ -156,3 +182,6 @@ class App extends Component {
 }
 
 export default App;
+
+
+// http://localhost:9000/?config={%22tra%22:[{%22id%22:%22312%22},{%22id%22:%2276%22}]}
