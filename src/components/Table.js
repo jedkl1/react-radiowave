@@ -45,7 +45,7 @@ function Table(props) {
     const selectRowProp = {
         mode: 'checkbox',
         clickToSelect: true,
-        bgColor: 'rgb(233, 149, 233)',
+        bgColor: 'rgba(240, 129, 104, 0.7)',
         onSelect: props.onRowSelect,
         onSelectAll: props.onSelectAll,
         selected: selectedTrasmitters,

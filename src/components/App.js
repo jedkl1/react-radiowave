@@ -106,7 +106,8 @@ class App extends Component {
                     (res) => {
                         const tempArray = this.state.selectedTransmitters.slice();
                         tempArray.push(res.data[0]);
-                        this.setState({ selectedTransmitters: tempArray }, function () {
+                        this.setState({ selectedTransmitters: tempArray,
+                            toDrawSelected: tempArray }, function () {
                             console.log(this.state.selectedTransmitters);
                         });
                     },

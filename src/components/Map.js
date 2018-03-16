@@ -76,7 +76,6 @@ class Map extends Component {
                         },
                     );
             });
-            this.addMarkers();
             this.setView();
         }
     }
@@ -99,28 +98,15 @@ class Map extends Component {
         const imageBounds = [[boundsArray[2], boundsArray[3]], [boundsArray[1], boundsArray[0]]];
         const imageUrl = `Maps/${kml.name[0]}`;
         this.layersGroup.addLayer(L.imageOverlay(`http://home.elka.pw.edu.pl/~jklocek/current/${imageUrl}`, imageBounds, { opacity: 0.6 }));
-        // const centerBounds = [];
-        // centerBounds[0] = (boundsArray[0] + boundsArray[1]) / 2;
-        // centerBounds[1] = (boundsArray[2] + boundsArray[3]) / 2;
-        // const marker = L.marker([centerBounds[0], centerBounds[1]], { icon: config.myIcon }).addTo(this.map);
-        // marker.bindPopup(`<b>${element.name}</b><br><a target='_blank' href = ${element.linkToRP}>$
-        //     {element.transmitter}</a>`);
-        // this.markers.push(marker);
-        // averageBounds[0] += centerBounds[0];
-        // averageBounds[1] += centerBounds[1];
-
-        // console.log(this.state.kml);
-        // console.log(averageBounds);
-        // this.setView(averageBounds[0] / this.state.selectedTransmitters.length, averageBounds[1]
-        //     / this.state.selectedTransmitters.length);
+        this.addMarkers();
     }
 
     addMarkers() {
-        // ERROR Markers are not removing :(
         this.state.markers.forEach((marker) => { this.state.map.removeLayer(marker); });
         this.setState({ markers: [] }, function () {
             console.log(this.state.markers);
         });
+
         this.state.selectedTransmitters.forEach((element) => {
             const tempArray = this.state.markers.slice();
             const marker = L.marker([element.szerokosc, element.dlugosc],
@@ -137,12 +123,14 @@ class Map extends Component {
     setView() {
         let latitude = 0;
         let longitude = 0;
-        this.state.selectedTransmitters.forEach((element) => {
-            latitude += Number(element.szerokosc);
-            longitude += Number(element.dlugosc);
-        });
-        this.state.map.setView(new L.LatLng(latitude / this.state.selectedTransmitters.length,
-            longitude / this.state.selectedTransmitters.length), 7);
+        if (this.state.selectedTransmitters.length) {
+            this.state.selectedTransmitters.forEach((element) => {
+                latitude += Number(element.szerokosc);
+                longitude += Number(element.dlugosc);
+            });
+            this.state.map.setView(new L.LatLng(latitude / this.state.selectedTransmitters.length,
+                longitude / this.state.selectedTransmitters.length), 7);
+        }
     }
 
     init(id) {

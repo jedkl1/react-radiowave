@@ -1,22 +1,24 @@
 .button.system,
-.button.info {
+.button.info,
+.button.home,
+.button.checkStation {
     border-radius: 5px;
-    font-size: 1.7em;
-    background-color: #b140b1;
-    color: #111;
+    background-color: #D64A2B;
     border: 1px solid #c5c5c5;
+}
+
+.button.system,
+.button.info {
+    font-size: 1.7em;
     margin-right: .3em;
 }
 
 .button.home,
 .button.checkStation {
     width: 2.7em; height: 2.7em;
-    border-radius: 5px;
-    background-color: #b140b1;
     background-position: center;
     background-repeat: no-repeat;
     background-size: 75%;
-    border: 1px solid #c5c5c5;
 }
 
 .button.home {
