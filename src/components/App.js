@@ -22,6 +22,7 @@ class App extends Component {
         };
         this.handleSystemClick = this.handleSystemClick.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
+        this.handleShareClick = this.handleShareClick.bind(this);
         this.onRowSelect = this.onRowSelect.bind(this);
         this.onSelectAll = this.onSelectAll.bind(this);
         this.onDrawSelected = this.onDrawSelected.bind(this);
@@ -129,6 +130,13 @@ class App extends Component {
         window.location.reload();
     }
 
+    handleShareClick() {
+        let url = 'http://localhost:9000/?config={"tra":[';
+        url += this.state.toDrawSelected.map(element => `{"id":${element.id_nadajnik}}`).join(',');
+        url += ']}';
+        console.log(url);
+    }
+
     openDialog = () => this.setState({ isShowingModal: true })
 
     handleClose = () => this.setState({ isShowingModal: false })
@@ -149,7 +157,6 @@ class App extends Component {
                 <div id="buttons_container" className="container buttons">
                     <SystemButton id="home" class="home" title="Home" value="" onSystemClick={this.handleRefreshClick} /> <br />
                     <SystemButton id="stations" class="checkStation" title="Check stations to draw" value="" onSystemClick={this.openDialog} />
-
                 </div>
                 {
                     this.state.isShowingModal ?
@@ -165,6 +172,7 @@ class App extends Component {
                         </ModalContainer>
                     : null
                 }
+                <SystemButton id="share" class="share" title="Pobierz link do udostępnienia" value="" onSystemClick={this.handleShareClick} />
                 <SystemButton id="info" class="info" title="info" value="i" onSystemClick={this.handleRefreshClick} />
                 {
                     this.state.selectedTransmitters.length ?
@@ -183,6 +191,5 @@ class App extends Component {
 }
 
 export default App;
-
 
 // http://localhost:9000/?config={%22tra%22:[{%22id%22:%22312%22},{%22id%22:%2276%22}]}

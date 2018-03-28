@@ -3,7 +3,10 @@ import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
+import Search from './Search';
+
 let data = null;
+let selectedSearch = 'name';
 
 fetch('http://mapy.radiopolska.pl/api/transmitterByProgName/pl/fm/r')
     .then(res => res.json())
@@ -34,6 +37,15 @@ function iconFormat(cell) {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
     }} />);
+}
+
+function handleSearch(e) {
+    console.log(e);
+}
+
+function handleSelect(e) {
+    selectedSearch = e.target.value;
+    console.log(selectedSearch);
 }
 
 function Table(props) {
@@ -91,6 +103,11 @@ function Table(props) {
 
     return (
         <div>
+            <select id="searchSelection" onChange={handleSelect}>
+                <option value="name">Nazwa stacji</option>
+                <option value="freq">Częstotliwość</option>
+            </select>
+            <Search onChange={handleSearch} />
             <BootstrapTable
                 data={data}
                 selectRow={selectRowProp}

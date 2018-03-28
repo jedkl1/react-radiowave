@@ -1,7 +1,8 @@
 .button.system,
 .button.info,
 .button.home,
-.button.checkStation {
+.button.checkStation,
+.button.share {
     border-radius: 5px;
     background-color: #D64A2B;
     border: 1px solid #c5c5c5;
@@ -14,7 +15,8 @@
 }
 
 .button.home,
-.button.checkStation {
+.button.checkStation,
+.button.share {
     width: 2.7em; height: 2.7em;
     background-position: center;
     background-repeat: no-repeat;
@@ -29,11 +31,21 @@
     background-image: url('../../images/antenna-3.png');
 }
 
+.button.share {
+    background-image: url('../../images/share.png');
+}
+
 .button.info {
-    width: 1.5em; height: 1.5em;
+    width: 1.55em; height: 1.55em;
     position: absolute;
     z-index: 10;
     right: .2em;
-    bottom:.5em;
-    font-size: 1.7em;
+    bottom: 1em;
+}
+
+.button.share {
+    position: absolute;
+    z-index: 10;
+    right: .9em;
+    bottom: 5em;
 }
