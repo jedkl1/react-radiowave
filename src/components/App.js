@@ -7,6 +7,7 @@ import Map from './Map';
 import SystemButton from './Button';
 import Table from './Table';
 import LittleTable from './LittleTable';
+import Legend from './Legend';
 
 
 class App extends Component {
@@ -19,6 +20,7 @@ class App extends Component {
             selectedTransmitters: [],
             system: 'fm',
             toDrawSelected: [],
+            configurations: [],
         };
         this.handleSystemClick = this.handleSystemClick.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
@@ -27,6 +29,7 @@ class App extends Component {
         this.onSelectAll = this.onSelectAll.bind(this);
         this.onDrawSelected = this.onDrawSelected.bind(this);
         this.onDrawAllSelected = this.onDrawAllSelected.bind(this);
+        this.getConfigurations = this.getConfigurations.bind(this);
     }
 
     onRowSelect(row, isSelected, e) {
@@ -94,6 +97,22 @@ class App extends Component {
         });
     }
 
+    getConfigurations() {
+        console.log('conf');
+        fetch('http://mapy.radiopolska.pl/api/cfg')
+            .then(res => res.json())
+            .then(
+                (res) => {
+                    this.setState({ configurations: res.data }, function () {
+                        console.log(this.state.configurations);
+                    });
+                },
+                (error) => {
+                    console.log(`Error: ${error}`);
+                },
+            );
+    }
+
     componentDidMount() {
         // create the Leaflet map object
         if (this.props.location.search) {
@@ -118,6 +137,7 @@ class App extends Component {
                 );
             });
         }
+        this.getConfigurations();
     }
 
     handleSystemClick(id) {
@@ -158,6 +178,7 @@ class App extends Component {
                     <SystemButton id="home" class="home" title="Home" value="" onSystemClick={this.handleRefreshClick} /> <br />
                     <SystemButton id="stations" class="checkStation" title="Check stations to draw" value="" onSystemClick={this.openDialog} />
                 </div>
+                <Legend legend={this.state.configurations} />
                 {
                     this.state.isShowingModal ?
                         <ModalContainer>
@@ -192,4 +213,4 @@ class App extends Component {
 
 export default App;
 
-// http://localhost:9000/?config={%22tra%22:[{%22id%22:%22312%22},{%22id%22:%2276%22}]}
+// http://localhost:9000/l

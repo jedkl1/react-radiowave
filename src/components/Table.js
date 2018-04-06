@@ -11,13 +11,13 @@ let selectedSearch = 'name';
 fetch('http://mapy.radiopolska.pl/api/transmitterByProgName/pl/fm/r')
     .then(res => res.json())
     .then(
-    (res) => {
-        data = res.data;
-    },
-    (error) => {
-        console.log(`Error: ${error}`);
-    },
-);
+        (res) => {
+            data = res.data;
+        },
+        (error) => {
+            console.log(`Error: ${error}`);
+        },
+    );
 
 function radioMastFormat(cell, row) {
     return (<a href={`http://test.radiopolska.pl/wykaz/obiekt/${row.id_obiekt}`}>{cell}</a>);

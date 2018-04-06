@@ -9,6 +9,8 @@ const icon = require('../../images/antenna-3.png');
 
 const parseString = require('react-native-xml2js').parseString;
 
+/* eslint no-underscore-dangle: 0 */
+
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.
 const config = {};
@@ -62,13 +64,13 @@ class Map extends Component {
             this.state.markers.forEach((element) => { this.state.map.removeLayer(element); });
             this.state.markers = [];
             this.state.selectedTransmitters.forEach((element) => {
-                fetch(`http://home.elka.pw.edu.pl/~jklocek/current/Maps/${element.id_nadajnik}.kml`)
+                fetch(`http://mapy.radiopolska.pl/files/get/-/${element._mapahash}.kml`)
                     .then(res => res.text())
                     .then(
                         (res) => {
                             parseString(res, (err, result) => {
                                 const tempKml = result.kml.GroundOverlay[0];
-                                this.addLayer(tempKml);
+                                this.addLayer(tempKml, `${element._mapahash}.png`);
                             });
                         },
                         (error) => {
@@ -86,18 +88,16 @@ class Map extends Component {
         this.state.map.remove();
     }
 
-    addLayer(kml) {
+    addLayer(kml, png) {
         const boundsArray = [];
-        // const averageBounds = [0, 0];
 
-        boundsArray.push(Number(kml.LatLonBox[0].east[0]));
-        boundsArray.push(Number(kml.LatLonBox[0].north[0]));
-        boundsArray.push(Number(kml.LatLonBox[0].south[0]));
-        boundsArray.push(Number(kml.LatLonBox[0].west[0]));
+        boundsArray.push(Number(kml.LatLonBox[0].east[0]) - 0.008);
+        boundsArray.push(Number(kml.LatLonBox[0].north[0]) - 0.02);
+        boundsArray.push(Number(kml.LatLonBox[0].south[0]) - 0.02);
+        boundsArray.push(Number(kml.LatLonBox[0].west[0]) - 0.008);
 
         const imageBounds = [[boundsArray[2], boundsArray[3]], [boundsArray[1], boundsArray[0]]];
-        const imageUrl = `Maps/${kml.name[0]}`;
-        this.layersGroup.addLayer(L.imageOverlay(`http://home.elka.pw.edu.pl/~jklocek/current/${imageUrl}`, imageBounds, { opacity: 0.6 }));
+        this.layersGroup.addLayer(L.imageOverlay(`http://mapy.radiopolska.pl/files/get/-/${png}`, imageBounds, { opacity: 0.6 }));
         this.addMarkers();
     }
 
