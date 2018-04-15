@@ -48,79 +48,131 @@ function handleSelect(e) {
     console.log(selectedSearch);
 }
 
-function Table(props) {
-    const selectedTrasmitters = [];
-    props.selected.forEach((element) => {
-        selectedTrasmitters.push(element.id_nadajnik);
-    });
 
-    const selectRowProp = {
-        mode: 'checkbox',
-        clickToSelect: true,
-        bgColor: 'rgba(240, 129, 104, 0.7)',
-        onSelect: props.onRowSelect,
-        onSelectAll: props.onSelectAll,
-        selected: selectedTrasmitters,
-    };
-
-    const options = {
-        sizePerPageList: [{
-            text: '5', value: 5,
-        }, {
-            text: '10', value: 10,
-        },
-        {
-            text: '15', value: 15,
-        }],
-        sizePerPage: 10,
-    };
-
-
-    let table = null;
-    if (props.system === 'fm') {
-        table = (
-            <div>
-                <TableHeaderColumn isKey dataField="id_nadajnik" hidden>ID</TableHeaderColumn>
-                <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="10%">Ikona</TableHeaderColumn>
-                <TableHeaderColumn dataField="program" dataFormat={stationFormat} width="25%">Program</TableHeaderColumn>
-                <TableHeaderColumn dataField="mhz" width="15%">MHz</TableHeaderColumn>
-                <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>Obiekt nadawczy</TableHeaderColumn>
-            </div>);
-    } else if (props.system === 'dab') {
-        table = (
-            <div>
-                <TableHeaderColumn isKey dataField="id_nadajnik" hidden>ID</TableHeaderColumn>
-                <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="10%">Ikona</TableHeaderColumn>
-                <TableHeaderColumn dataField="multipleks" dataFormat={stationFormat} width="25%">Multipleks</TableHeaderColumn>
-                <TableHeaderColumn dataField="mhz" width="15%">MHz</TableHeaderColumn>
-                <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>Obiekt nadawczy</TableHeaderColumn>
-                <TableHeaderColumn dataField="kanal_nazwa" width="10%">Kanał</TableHeaderColumn>
-                <TableHeaderColumn dataField="nwoj" width="10%">woj.</TableHeaderColumn>
-            </div>);
-    } else if (props.system === 'dvbt') {
-        table = null;
+class Table extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedTransmitters: props.selected,
+            selectedIDs: [],
+            system: props.system,
+            filteredTransmitters: data,
+        };
+        this.btnRef = null;
+        this.updateSelectedIDs = this.updateSelectedIDs.bind(this);
     }
 
-    return (
-        <div>
-            <select id="searchSelection" onChange={handleSelect}>
-                <option value="name">Nazwa stacji</option>
-                <option value="freq">Częstotliwość</option>
-            </select>
-            <Search onChange={handleSearch} />
-            <BootstrapTable
-                data={data}
-                selectRow={selectRowProp}
-                striped
-                hover
-                condensed
-                pagination
-                search
-                options={options}>
-                { table.props.children }
-            </BootstrapTable>
-        </div>
-    );
+    onSelect(row, isSelected) {
+        let selected = this.state.selectedTransmitters.slice();
+        if (isSelected) {
+            selected.push(row);
+        } else {
+            selected = selected.filter(obj => obj.id_nadajnik !== row.id_nadajnik);
+        }
+        this.setState({ selectedTransmitters: selected }, function () {
+            this.props.callbackFromApp(this.state.selectedTransmitters);
+            this.updateSelectedIDs();
+        });
+    }
+
+    onSelectAll(isSelected) {
+        const pagingTransmitters = this.btnRef.getTableDataIgnorePaging();
+        this.setState({ filteredTransmitters: pagingTransmitters }, () => {
+            const transmitters = isSelected ? this.state.filteredTransmitters.map(
+                transmitter => transmitter) : [];
+            this.setState({ selectedTransmitters: transmitters }, function () {
+                this.props.callbackFromApp(this.state.selectedTransmitters);
+                this.updateSelectedIDs();
+            });
+        });
+    }
+
+    updateSelectedIDs() {
+        const IDs = [];
+        this.state.selectedTransmitters.forEach((transmitter) => {
+            IDs.push(transmitter.id_nadajnik);
+        });
+        this.setState({ selectedIDs: IDs });
+    }
+
+    componentDidMount() {
+        this.updateSelectedIDs();
+    }
+
+    // afterSearch(searchText, result) {
+    //     this.setState({ filteredTransmitters: result });
+    // }
+
+    render() {
+        const selectRowProp = {
+            mode: 'checkbox',
+            clickToSelect: true,
+            bgColor: 'rgba(240, 129, 104, 0.7)',
+            onSelect: this.onSelect.bind(this),
+            onSelectAll: this.onSelectAll.bind(this),
+            selected: this.state.selectedIDs,
+        };
+
+        const options = {
+            sizePerPageList: [{
+                text: '5', value: 5,
+            }, {
+                text: '10', value: 10,
+            },
+            {
+                text: '15', value: 15,
+            }],
+            sizePerPage: 10,
+            // afterSearch: this.afterSearch.bind(this),
+        };
+
+        let table = null;
+        if (this.state.system === 'fm') {
+            table = (
+                <div>
+                    <TableHeaderColumn isKey dataField="id_nadajnik" hidden>ID</TableHeaderColumn>
+                    <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="10%">Ikona</TableHeaderColumn>
+                    <TableHeaderColumn dataField="program" dataFormat={stationFormat} width="25%">Program</TableHeaderColumn>
+                    <TableHeaderColumn dataField="mhz" width="15%">MHz</TableHeaderColumn>
+                    <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>Obiekt nadawczy</TableHeaderColumn>
+                </div>);
+        } else if (this.state.system === 'dab') {
+            table = (
+                <div>
+                    <TableHeaderColumn isKey dataField="id_nadajnik" hidden>ID</TableHeaderColumn>
+                    <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="10%">Ikona</TableHeaderColumn>
+                    <TableHeaderColumn dataField="multipleks" dataFormat={stationFormat} width="25%">Multipleks</TableHeaderColumn>
+                    <TableHeaderColumn dataField="mhz" width="15%">MHz</TableHeaderColumn>
+                    <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>Obiekt nadawczy</TableHeaderColumn>
+                    <TableHeaderColumn dataField="kanal_nazwa" width="10%">Kanał</TableHeaderColumn>
+                    <TableHeaderColumn dataField="nwoj" width="10%">woj.</TableHeaderColumn>
+                </div>);
+        } else if (this.state.system === 'dvbt') {
+            table = null;
+        }
+        const myRef = el => this.btnRef = el;
+        return (
+            <div>
+                <select id="searchSelection" onChange={handleSelect}>
+                    <option value="name">Nazwa stacji</option>
+                    <option value="freq">Częstotliwość</option>
+                </select>
+                <Search onChange={handleSearch} />
+                <BootstrapTable
+                    ref={myRef}
+                    data={data}
+                    selectRow={selectRowProp}
+                    striped
+                    hover
+                    condensed
+                    pagination
+                    search
+                    options={options}>
+                    { table.props.children }
+                </BootstrapTable>
+            </div>
+        );
+    }
 }
 
 export default Table;

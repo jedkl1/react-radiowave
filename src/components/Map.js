@@ -5,7 +5,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../styles/Map.css';
 
-const icon = require('../../images/antenna-3.png');
+const icon = require('../../images/antenna-3-marker.png');
 
 const parseString = require('react-native-xml2js').parseString;
 
@@ -22,7 +22,7 @@ config.params = {
     minZoom: 5,
 };
 config.tileLayer = {
-    uri: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    uri: 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
     params: {
         minZoom: 5,
         attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
@@ -32,7 +32,7 @@ config.tileLayer = {
 };
 config.myIcon = L.icon({
     iconUrl: icon,
-    iconSize: [35, 40],
+    iconSize: [30, 65],
     // iconAnchor: [22, 94],
     popupAnchor: [-3, -76],
 });
@@ -58,13 +58,14 @@ class Map extends Component {
 
     componentDidUpdate(prevProps) {
     // code to run when the component receives new props or state
-        if (this.props.selectedTransmitters !== prevProps.selectedTransmitters) {
+        if (this.props.selectedTransmitters !== prevProps.selectedTransmitters ||
+            this.props.configuration !== prevProps.configuration) {
             this.state.selectedTransmitters = this.props.selectedTransmitters;
             this.layersGroup.clearLayers();
             this.state.markers.forEach((element) => { this.state.map.removeLayer(element); });
             this.state.markers = [];
             this.state.selectedTransmitters.forEach((element) => {
-                fetch(`http://mapy.radiopolska.pl/files/get/-/${element._mapahash}.kml`)
+                fetch(`http://mapy.radiopolska.pl/files/get/${this.props.configuration}/${element._mapahash}.kml`)
                     .then(res => res.text())
                     .then(
                         (res) => {
@@ -92,12 +93,12 @@ class Map extends Component {
         const boundsArray = [];
 
         boundsArray.push(Number(kml.LatLonBox[0].east[0]) - 0.008);
-        boundsArray.push(Number(kml.LatLonBox[0].north[0]) - 0.02);
-        boundsArray.push(Number(kml.LatLonBox[0].south[0]) - 0.02);
+        boundsArray.push(Number(kml.LatLonBox[0].north[0]) - 0.035);
+        boundsArray.push(Number(kml.LatLonBox[0].south[0]) - 0.035);
         boundsArray.push(Number(kml.LatLonBox[0].west[0]) - 0.008);
 
         const imageBounds = [[boundsArray[2], boundsArray[3]], [boundsArray[1], boundsArray[0]]];
-        this.layersGroup.addLayer(L.imageOverlay(`http://mapy.radiopolska.pl/files/get/-/${png}`, imageBounds, { opacity: 0.6 }));
+        this.layersGroup.addLayer(L.imageOverlay(`http://mapy.radiopolska.pl/files/get/${this.props.configuration}/${png}`, imageBounds, { opacity: 0.6 }));
         this.addMarkers();
     }
 

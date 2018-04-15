@@ -7,7 +7,7 @@ import Map from './Map';
 import SystemButton from './Button';
 import Table from './Table';
 import LittleTable from './LittleTable';
-import Legend from './Legend';
+import ConfigurationsBox from './ConfigurationsBox';
 
 
 class App extends Component {
@@ -21,47 +21,16 @@ class App extends Component {
             system: 'fm',
             toDrawSelected: [],
             configurations: [],
+            selectedConfiguration: null,
         };
         this.handleSystemClick = this.handleSystemClick.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
         this.handleShareClick = this.handleShareClick.bind(this);
-        this.onRowSelect = this.onRowSelect.bind(this);
-        this.onSelectAll = this.onSelectAll.bind(this);
         this.onDrawSelected = this.onDrawSelected.bind(this);
         this.onDrawAllSelected = this.onDrawAllSelected.bind(this);
         this.getConfigurations = this.getConfigurations.bind(this);
-    }
-
-    onRowSelect(row, isSelected, e) {
-        let tempArray = this.state.selectedTransmitters.slice();
-        if (isSelected) {
-            // add new object which was selected
-            tempArray.push(row);
-        } else if (!isSelected) {
-            // remove object which has same id_nadajnik as exist
-            tempArray = tempArray.filter(obj => obj.id_nadajnik !== row.id_nadajnik);
-        }
-        this.setState({ selectedTransmitters: tempArray }, function () {
-            console.log(this.state.selectedTransmitters);
-        });
-        console.log(e);
-    }
-
-    onSelectAll(isSelected, rows) {
-        let tempArray = this.state.selectedTransmitters.slice();
-        if (isSelected) {
-            rows.forEach((element) => {
-                tempArray.push(element);
-            });
-        } else {
-            rows.forEach((element) => {
-                tempArray = tempArray.filter(obj => obj.id_nadajnik !== element.id_nadajnik);
-            });
-        }
-
-        this.setState({ selectedTransmitters: tempArray }, function () {
-            console.log(this.state.selectedTransmitters);
-        });
+        this.getSelectedData = this.getSelectedData.bind(this);
+        this.getSelectedConfiguration = this.getSelectedConfiguration.bind(this);
     }
 
     onDrawSelected(row, isSelected, e) {
@@ -161,6 +130,16 @@ class App extends Component {
 
     handleClose = () => this.setState({ isShowingModal: false })
 
+    getSelectedData = (dataFromTable) => {
+        this.setState({ selectedTransmitters: dataFromTable }, function () {
+            console.log(this.state.selectedTransmitters);
+        });
+    }
+
+    getSelectedConfiguration = (dataFromConfiguration) => {
+        this.setState({ selectedConfiguration: dataFromConfiguration });
+    }
+
     render() {
         const modalStyle = {
             width: '50%',
@@ -178,7 +157,14 @@ class App extends Component {
                     <SystemButton id="home" class="home" title="Home" value="" onSystemClick={this.handleRefreshClick} /> <br />
                     <SystemButton id="stations" class="checkStation" title="Check stations to draw" value="" onSystemClick={this.openDialog} />
                 </div>
-                <Legend legend={this.state.configurations} />
+                {
+                    this.state.configurations.length ?
+                        <ConfigurationsBox
+                            system={this.state.system}
+                            configurations={this.state.configurations}
+                            callbackFromApp={this.getSelectedConfiguration} />
+                    : null
+                }
                 {
                     this.state.isShowingModal ?
                         <ModalContainer>
@@ -186,8 +172,7 @@ class App extends Component {
                                 <h1>Check stations</h1>
                                 <Table
                                     system={this.state.system}
-                                    onSelectAll={this.onSelectAll}
-                                    onRowSelect={this.onRowSelect}
+                                    callbackFromApp={this.getSelectedData}
                                     selected={this.state.selectedTransmitters} />
                             </ModalDialog>
                         </ModalContainer>
@@ -205,7 +190,9 @@ class App extends Component {
                             data={this.state.selectedTransmitters} />
                     : null
                 }
-                <Map selectedTransmitters={this.state.toDrawSelected} />
+                <Map
+                    selectedTransmitters={this.state.toDrawSelected}
+                    configuration={this.state.selectedConfiguration} />
             </div>
         );
     }
@@ -214,3 +201,4 @@ class App extends Component {
 export default App;
 
 // http://localhost:9000/l
+// AIzaSyAZgc-xDQ-6Y9aDjj2GztoxTMSnRC6DioM

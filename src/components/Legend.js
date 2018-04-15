@@ -3,9 +3,9 @@ import React from 'react';
 import './../styles/Legend.css';
 
 function Legend(props) {
-    if (props.legend.length) {
-        const colors = Object.keys(props.legend[0].legenda).map(i => props.legend[0].legenda[i]);
-        const voltages = Object.keys(props.legend[0].legenda);
+    if (props.legend) {
+        const colors = Object.keys(props.legend.legenda).map(i => props.legend.legenda[i]);
+        const voltages = Object.keys(props.legend.legenda);
 
         const legendFields = [];
         for (let i = 0; i < colors.length; i += 1) {

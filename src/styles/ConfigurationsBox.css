@@ -1,0 +1,18 @@
+.confsBox {
+    position: absolute;
+    width: 14%;
+    height: 3.5%;
+    left: .5em;
+    top: 14vh;
+    z-index: 5;
+    padding: 1vh;
+    background-color: rgba(214, 74, 43, 0.8);
+    border-radius: 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.confsBox:hover {
+    width: 18%;
+    height: auto;
+}
