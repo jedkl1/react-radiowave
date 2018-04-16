@@ -20,11 +20,11 @@ fetch('http://mapy.radiopolska.pl/api/transmitterByProgName/pl/fm/r')
     );
 
 function radioMastFormat(cell, row) {
-    return (<a href={`http://test.radiopolska.pl/wykaz/obiekt/${row.id_obiekt}`}>{cell}</a>);
+    return (<a href={`http://test.radiopolska.pl/wykaz/obiekt/${row.id_obiekt}`} target="_blank">{cell}</a>);
 }
 
 function stationFormat(cell, row) {
-    return (<a href={`http://test.radiopolska.pl/wykaz/program/${row.id_program}`}>{cell}</a>);
+    return (<a href={`http://test.radiopolska.pl/wykaz/program/${row.id_program}`} target="_blank">{cell}</a>);
 }
 
 function iconFormat(cell) {

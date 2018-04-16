@@ -31,6 +31,7 @@ class App extends Component {
         this.getConfigurations = this.getConfigurations.bind(this);
         this.getSelectedData = this.getSelectedData.bind(this);
         this.getSelectedConfiguration = this.getSelectedConfiguration.bind(this);
+        this.setConfiguration = this.setConfiguration.bind(this);
     }
 
     onDrawSelected(row, isSelected, e) {
@@ -105,8 +106,15 @@ class App extends Component {
                     },
                 );
             });
+            this.setConfiguration(inputJSON.cfg);
+        } else {
+            this.getConfigurations();
         }
-        this.getConfigurations();
+    }
+
+    setConfiguration(configuration) {
+        this.setState({ selectedConfiguration: configuration },
+                      () => { this.getConfigurations(); });
     }
 
     handleSystemClick(id) {
@@ -122,7 +130,9 @@ class App extends Component {
     handleShareClick() {
         let url = 'http://localhost:9000/?config={"tra":[';
         url += this.state.toDrawSelected.map(element => `{"id":${element.id_nadajnik}}`).join(',');
-        url += ']}';
+        url += '],';
+        url += `"cfg":"${this.state.selectedConfiguration}"`;
+        url += '}';
         console.log(url);
     }
 
@@ -162,6 +172,7 @@ class App extends Component {
                         <ConfigurationsBox
                             system={this.state.system}
                             configurations={this.state.configurations}
+                            selected={this.state.selectedConfiguration}
                             callbackFromApp={this.getSelectedConfiguration} />
                     : null
                 }

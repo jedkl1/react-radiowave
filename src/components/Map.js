@@ -65,7 +65,7 @@ class Map extends Component {
             this.state.markers.forEach((element) => { this.state.map.removeLayer(element); });
             this.state.markers = [];
             this.state.selectedTransmitters.forEach((element) => {
-                fetch(`http://mapy.radiopolska.pl/files/get/${this.props.configuration}/${element._mapahash}.kml`)
+                fetch(`http://mapy.radiopolska.pl/files/get/${this.props.configuration.cfg}/${element._mapahash}.kml`)
                     .then(res => res.text())
                     .then(
                         (res) => {
@@ -98,7 +98,7 @@ class Map extends Component {
         boundsArray.push(Number(kml.LatLonBox[0].west[0]) - 0.008);
 
         const imageBounds = [[boundsArray[2], boundsArray[3]], [boundsArray[1], boundsArray[0]]];
-        this.layersGroup.addLayer(L.imageOverlay(`http://mapy.radiopolska.pl/files/get/${this.props.configuration}/${png}`, imageBounds, { opacity: 0.6 }));
+        this.layersGroup.addLayer(L.imageOverlay(`http://mapy.radiopolska.pl/files/get/${this.props.configuration.cfg}/${png}`, imageBounds, { opacity: 0.6 }));
         this.addMarkers();
     }
 

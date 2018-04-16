@@ -18,7 +18,7 @@ class ConfigurationsBox extends Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.system !== prevProps.system) {
-            this.getPossibleConfiguration();
+            this.getPossibleConfiguration(prevProps);
         }
     }
 
@@ -26,7 +26,7 @@ class ConfigurationsBox extends Component {
         this.getPossibleConfiguration();
     }
 
-    getPossibleConfiguration() {
+    getPossibleConfiguration(prevProps) {
         const possibleConfs = [];
         // this.setState({ system: this.props.system });
         this.props.configurations.forEach((configuration) => {
@@ -34,10 +34,15 @@ class ConfigurationsBox extends Component {
                 possibleConfs.push(configuration);
             }
         });
-        this.setState({ possibleConfigurations: possibleConfs,
-            checkedConfiguration: possibleConfs[0] }, () => {
-            this.props.callbackFromApp(this.state.checkedConfiguration.cfg);
-        });
+        if (this.props.selected && this.props.system === prevProps.system) {
+            this.setState({ possibleConfigurations: possibleConfs,
+                checkedConfiguration: this.props.selected });
+        } else {
+            this.setState({ possibleConfigurations: possibleConfs,
+                checkedConfiguration: possibleConfs[0] }, () => {
+                this.props.callbackFromApp(this.state.checkedConfiguration);
+            });
+        }
     }
 
     returnPossibleRadio() {
@@ -60,7 +65,7 @@ class ConfigurationsBox extends Component {
         const configur = this.state.possibleConfigurations.filter(
             configuration => configuration.cfg === e.target.value);
         this.setState({ checkedConfiguration: configur[0] }, function () {
-            this.props.callbackFromApp(this.state.checkedConfiguration.cfg);
+            this.props.callbackFromApp(this.state.checkedConfiguration);
         });
     }
 
