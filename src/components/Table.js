@@ -132,8 +132,8 @@ class Table extends React.Component {
                 <div>
                     <TableHeaderColumn isKey dataField="id_nadajnik" hidden>ID</TableHeaderColumn>
                     <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="10%">Ikona</TableHeaderColumn>
-                    <TableHeaderColumn dataField="program" dataFormat={stationFormat} width="25%">Program</TableHeaderColumn>
-                    <TableHeaderColumn dataField="mhz" width="15%">MHz</TableHeaderColumn>
+                    <TableHeaderColumn dataField="program" dataFormat={stationFormat} width="35%">Program</TableHeaderColumn>
+                    <TableHeaderColumn dataField="mhz" width="7%">MHz</TableHeaderColumn>
                     <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>Obiekt nadawczy</TableHeaderColumn>
                 </div>);
         } else if (this.state.system === 'dab') {
