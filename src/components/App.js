@@ -9,6 +9,7 @@ import Table from './Table';
 import LittleTable from './LittleTable';
 import ConfigurationsBox from './ConfigurationsBox';
 
+let data = null;
 
 class App extends Component {
     state = { loading: false };
@@ -95,7 +96,7 @@ class App extends Component {
             const inputJSON = JSON.parse(inputParams);
             console.log(inputJSON);
             inputJSON.tra.forEach((transmitter) => {
-                fetch(`http://mapy.radiopolska.pl/api/transmitterById/pl/fm/${transmitter.id}`)
+                fetch(`http://mapy.radiopolska.pl/api/transmitterById/pl/${inputJSON.sys}/${transmitter.id}`)
                     .then(res => res.json())
                     .then(
                     (res) => {
@@ -116,6 +117,29 @@ class App extends Component {
         } else {
             this.getConfigurations();
             this.setStates();
+        }
+    }
+
+    componentDidUpdate(prevProps, prevStates) {
+        if (this.state.system !== prevStates.system) {
+            let dataUrl = 'http://mapy.radiopolska.pl/api/transmitterByProgName/pl/';
+            if (this.state.system === 'fm') {
+                dataUrl += 'fm/r';
+            } else if (this.state.system === 'dab') {
+                dataUrl += 'dab/m';
+            } else if (this.state.system === 'dvbt') {
+                dataUrl += 'dvbt/m';
+            }
+            fetch(dataUrl)
+                .then(res => res.json())
+                .then(
+                (res) => {
+                    data = res.data;
+                },
+                (error) => {
+                    console.log(`Error: ${error}`);
+                },
+            );
         }
     }
 
@@ -199,7 +223,8 @@ class App extends Component {
                                 <Table
                                     system={this.state.system}
                                     callbackFromApp={this.getSelectedData}
-                                    selected={this.state.selectedTransmitters} />
+                                    selected={this.state.selectedTransmitters}
+                                    data={data} />
                             </ModalDialog>
                         </ModalContainer>
                     : null
@@ -216,9 +241,11 @@ class App extends Component {
                             data={this.state.selectedTransmitters} />
                     : null
                 }
-                <Map
-                    selectedTransmitters={this.state.toDrawSelected}
-                    configuration={this.state.selectedConfiguration} />
+                {
+                    <Map
+                        selectedTransmitters={this.state.toDrawSelected}
+                        configuration={this.state.selectedConfiguration} />
+                }
             </div>
         );
     }

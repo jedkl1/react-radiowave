@@ -39,7 +39,7 @@ class ConfigurationsBox extends Component {
                 checkedConfiguration: this.props.selected }, () => {
                 console.log(this.state.possibleConfigurations);
             });
-        } else if (!this.props.selected) {
+        } else if (!this.props.selected || this.props.system !== prevProps.system) {
             this.setState({ possibleConfigurations: possibleConfs,
                 checkedConfiguration: possibleConfs[0] }, () => {
                 this.props.callbackFromApp(this.state.checkedConfiguration);

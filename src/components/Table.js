@@ -5,19 +5,8 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 import Search from './Search';
 
-let data = null;
+const data = null;
 let selectedSearch = 'name';
-
-fetch('http://mapy.radiopolska.pl/api/transmitterByProgName/pl/fm/r')
-    .then(res => res.json())
-    .then(
-        (res) => {
-            data = res.data;
-        },
-        (error) => {
-            console.log(`Error: ${error}`);
-        },
-    );
 
 function radioMastFormat(cell, row) {
     return (<a href={`http://test.radiopolska.pl/wykaz/obiekt/${row.id_obiekt}`} target="_blank">{cell}</a>);
@@ -160,7 +149,7 @@ class Table extends React.Component {
                 <Search onChange={handleSearch} />
                 <BootstrapTable
                     ref={myRef}
-                    data={data}
+                    data={this.props.data}
                     selectRow={selectRowProp}
                     striped
                     hover

@@ -40,9 +40,9 @@ function LittleTable(props) {
     } else if (props.system === 'dab') {
         table = (
             <div>
-                <TableHeaderColumn isKey dataField="id_nadajnik" hidden>ID</TableHeaderColumn>
+                <TableHeaderColumn isKey dataField="id_nadajnik" width="10%" hidden>ID</TableHeaderColumn>
                 <TableHeaderColumn dataField="multipleks" dataFormat={stationFormat} width="30%">Multipleks</TableHeaderColumn>
-                <TableHeaderColumn dataField="mhz" width="12%">MHz</TableHeaderColumn>
+                <TableHeaderColumn dataField="mhz" width="15%">MHz</TableHeaderColumn>
                 <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>Obiekt nadawczy</TableHeaderColumn>
             </div>);
     } else if (props.system === 'dvbt') {
