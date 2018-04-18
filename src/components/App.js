@@ -18,7 +18,7 @@ class App extends Component {
         this.state = {
             isShowingModal: false,
             selectedTransmitters: [],
-            system: 'fm',
+            system: null,
             toDrawSelected: [],
             configurations: [],
             selectedConfiguration: null,
@@ -67,14 +67,19 @@ class App extends Component {
         });
     }
 
-    getConfigurations() {
+    getConfigurations(configurationString = 'fm-std') {
         console.log('conf');
         fetch('http://mapy.radiopolska.pl/api/cfg')
             .then(res => res.json())
             .then(
                 (res) => {
                     this.setState({ configurations: res.data }, function () {
-                        console.log(this.state.configurations);
+                        this.state.configurations.forEach((configuration) => {
+                            if (configuration.cfg === configurationString) {
+                                this.setState({ selectedConfiguration: configuration },
+                                              () => { console.log(this.state.selectedConfiguration); });
+                            }
+                        });
                     });
                 },
                 (error) => {
@@ -106,15 +111,24 @@ class App extends Component {
                     },
                 );
             });
+            this.setStates(inputJSON);
             this.setConfiguration(inputJSON.cfg);
         } else {
             this.getConfigurations();
+            this.setStates();
         }
     }
 
-    setConfiguration(configuration) {
-        this.setState({ selectedConfiguration: configuration },
-                      () => { this.getConfigurations(); });
+    setStates(inputJSON = false) {
+        if (inputJSON) {
+            this.setState({ system: inputJSON.sys }, () => {});
+        } else {
+            this.setState({ system: 'fm' }, () => {});
+        }
+    }
+
+    setConfiguration(configurationString) {
+        this.getConfigurations(configurationString);
     }
 
     handleSystemClick(id) {
@@ -131,7 +145,8 @@ class App extends Component {
         let url = 'http://localhost:9000/?config={"tra":[';
         url += this.state.toDrawSelected.map(element => `{"id":${element.id_nadajnik}}`).join(',');
         url += '],';
-        url += `"cfg":"${this.state.selectedConfiguration}"`;
+        url += `"cfg":"${this.state.selectedConfiguration.cfg}",`;
+        url += `"sys":"${this.state.system}"`;
         url += '}';
         console.log(url);
     }
@@ -213,3 +228,4 @@ export default App;
 
 // http://localhost:9000/l
 // AIzaSyAZgc-xDQ-6Y9aDjj2GztoxTMSnRC6DioM
+// http://localhost:9000/?config={%22tra%22:[{%22id%22:253},{%22id%22:312}],%22cfg%22:%22fm-std%22,%22sys%22:%22fm%22}

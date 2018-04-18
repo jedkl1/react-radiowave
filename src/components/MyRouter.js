@@ -8,7 +8,7 @@ import App from './App';
 function MyRouter() {
     return (
         <Router>
-            <Route exact path="/" component={App} />
+            <Route path="/" component={App} />
         </Router>
     );
 }

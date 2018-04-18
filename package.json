@@ -24,6 +24,7 @@
     "reactabular": "^8.3.0",
     "redux": "^3.7.2",
     "set-default-browser": "^1.0.1",
+    "update": "^0.7.4",
     "url-loader": "^0.6.2"
   },
   "version": "0.1.0",
