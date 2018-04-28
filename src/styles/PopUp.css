@@ -1,0 +1,31 @@
+
+.PopUpWrapper {
+    border-radius: 12px;
+    background: white;
+    position: absolute;
+    padding: 9px;
+    right: 1vw;
+    top: 74vh;
+    z-index: 1;
+}
+
+.PopUpTipContainer {
+    width: 42px;
+    height: 20px;
+    position: absolute;
+    left: 80%;
+    padding-left: 10px;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.PopUpTip {
+    width: 17px;
+    height: 17px;
+    background-color: white;
+    transform: rotate(45deg);
+}
+
+#shareInput {
+    border-radius: 2px;
+}

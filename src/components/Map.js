@@ -112,8 +112,16 @@ class Map extends Component {
             const tempArray = this.state.markers.slice();
             const marker = L.marker([element.szerokosc, element.dlugosc],
                 { icon: config.myIcon }).addTo(this.state.map);
-            marker.bindPopup(`<b>${element.program}</b><br><a target='_blank'
-                href = http://test.radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>${element.obiekt}</a>`);
+            marker.bindPopup(
+                `<b>${element.program}</b><br>
+                <a>${element.mhz}MHz ${element.kategoria}</a><br>
+                <a>${element.skrot}</a>
+                <a target='_blank' href = http://test.radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
+                    ${element.obiekt}</a><br>
+                <a>Kod PI: ${element.pi} </a><br>
+                <a>ERP: ${element.erp} Pol: ${element.polaryzacja}</a><br>
+                <a>Wys. masztu: ${element.wys_npm} n.p.m </a><br>
+                <a>Wys. nadajnika: ${element.antena_npt} n.p.t </a>`);
             tempArray.push(marker);
             this.setState({ markers: tempArray }, function () {
                 console.log(this.state.markers);

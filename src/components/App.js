@@ -8,6 +8,7 @@ import SystemButton from './Button';
 import Table from './Table';
 import LittleTable from './LittleTable';
 import ConfigurationsBox from './ConfigurationsBox';
+import PopUp from './PopUp';
 
 let data = null;
 
@@ -18,6 +19,8 @@ class App extends Component {
         super(props);
         this.state = {
             isShowingModal: false,
+            isShowingInfo: true,
+            isShowingShare: false,
             selectedTransmitters: [],
             system: null,
             toDrawSelected: [],
@@ -35,7 +38,7 @@ class App extends Component {
         this.setConfiguration = this.setConfiguration.bind(this);
     }
 
-    onDrawSelected(row, isSelected, e) {
+    onDrawSelected(row, isSelected) {
         let tempArray = this.state.toDrawSelected.slice();
         if (isSelected) {
             // add new object which was selected
@@ -48,7 +51,6 @@ class App extends Component {
         this.setState({ toDrawSelected: tempArray }, function () {
             console.log(this.state.toDrawSelected);
         });
-        console.log(e);
     }
 
     onDrawAllSelected(isSelected, rows) {
@@ -69,7 +71,6 @@ class App extends Component {
     }
 
     getConfigurations(configurationString = 'fm-std') {
-        console.log('conf');
         fetch('http://mapy.radiopolska.pl/api/cfg')
             .then(res => res.json())
             .then(
@@ -94,7 +95,6 @@ class App extends Component {
         if (this.props.location.search) {
             const inputParams = queryString.parse(this.props.location.search).config;
             const inputJSON = JSON.parse(inputParams);
-            console.log(inputJSON);
             inputJSON.tra.forEach((transmitter) => {
                 fetch(`http://mapy.radiopolska.pl/api/transmitterById/pl/${inputJSON.sys}/${transmitter.id}`)
                     .then(res => res.json())
@@ -160,8 +160,7 @@ class App extends Component {
         this.setState({ system: id, selectedRows: [], selectedTransmitters: [] });
     }
 
-    handleRefreshClick(value) {
-        console.log(`Refresh ${value}`);
+    handleRefreshClick() {
         window.location.reload();
     }
 
@@ -172,12 +171,18 @@ class App extends Component {
         url += `"cfg":"${this.state.selectedConfiguration.cfg}",`;
         url += `"sys":"${this.state.system}"`;
         url += '}';
-        console.log(url);
+        this.setState({ uri: url, isShowingShare: !this.state.isShowingShare }, () => {
+            console.log('asdasd');
+        });
     }
 
     openDialog = () => this.setState({ isShowingModal: true })
 
     handleClose = () => this.setState({ isShowingModal: false })
+
+    handleInfoClose = () => this.setState({ isShowingInfo: false })
+
+    handleInfoClick = () => this.setState({ isShowingInfo: true })
 
     getSelectedData = (dataFromTable) => {
         this.setState({ selectedTransmitters: dataFromTable }, function () {
@@ -229,8 +234,24 @@ class App extends Component {
                         </ModalContainer>
                     : null
                 }
+                {
+                    this.state.isShowingInfo ?
+                        <ModalContainer>
+                            <ModalDialog style={modalStyle} onClose={this.handleInfoClose}>
+                                <a> Witaj w aplikacji Mapy serwisu RadioPolska.pl</a><br />
+                                <a> Wybierz interesujące Cię stacje z bazy danych serwisu</a> <br />
+                                <a> Zaznacz interesujące Cię stacje w małej tabelce by narysować ich mapy pokrycia </a>
+                            </ModalDialog>
+                        </ModalContainer>
+                        : null
+                }
                 <SystemButton id="share" class="share" title="Pobierz link do udostępnienia" value="" onSystemClick={this.handleShareClick} />
-                <SystemButton id="info" class="info" title="info" value="i" onSystemClick={this.handleRefreshClick} />
+                {
+                    this.state.isShowingShare ?
+                        <PopUp text={this.state.uri} />
+                    : null
+                }
+                <SystemButton id="info" class="info" title="info" value="i" onSystemClick={this.handleInfoClick} />
                 {
                     this.state.selectedTransmitters.length ?
                         <LittleTable
