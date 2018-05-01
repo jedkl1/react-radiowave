@@ -34,7 +34,7 @@ config.myIcon = L.icon({
     iconUrl: icon,
     iconSize: [30, 65],
     // iconAnchor: [22, 94],
-    popupAnchor: [-3, -76],
+    popupAnchor: [0, -36],
 });
 
 class Map extends Component {
@@ -46,6 +46,8 @@ class Map extends Component {
             selectedTransmitters: props.selectedTransmitters,
             markers: [],
             layersGroup: [],
+            geoLat: null,
+            geoLon: null,
         };
         this.mapNode = null;
         // this.setView = this.setView.bind(this);
@@ -54,6 +56,15 @@ class Map extends Component {
     componentDidMount() {
     // create the Leaflet map object
         if (!this.state.map) this.init(this.mapNode);
+        navigator.geolocation.getCurrentPosition((e) => {
+            this.setState({
+                geoLat: e.coords.latitude, geoLon: e.coords.longitude }, () => {
+                const marker = L.marker([this.state.geoLat, this.state.geoLon],
+                        { icon: config.myIcon }).addTo(this.state.map);
+                marker.bindPopup(
+                    'Twoja pozycja');
+            });
+        });
     }
 
     componentDidUpdate(prevProps) {
@@ -72,6 +83,7 @@ class Map extends Component {
                             parseString(res, (err, result) => {
                                 const tempKml = result.kml.GroundOverlay[0];
                                 this.addLayer(tempKml, `${element._mapahash}.png`);
+                                this.addDirectionalChar(element);
                             });
                         },
                         (error) => {
@@ -79,7 +91,9 @@ class Map extends Component {
                         },
                     );
             });
-            this.setView();
+            if (prevProps.configuration === this.props.configuration) {
+                this.setView();
+            }
         }
     }
 
@@ -102,30 +116,37 @@ class Map extends Component {
         this.addMarkers();
     }
 
+    addDirectionalChar(element) {
+        const boundsArray = [];
+
+        boundsArray.push(Number(element.dlugosc) - 0.7);
+        boundsArray.push(Number(element.szerokosc) + 0.45);
+        boundsArray.push(Number(element.szerokosc) - 0.45);
+        boundsArray.push(Number(element.dlugosc) + 0.7);
+
+        const imageBounds = [[boundsArray[2], boundsArray[3]], [boundsArray[1], boundsArray[0]]];
+        this.layersGroup.addLayer(L.imageOverlay(`http://mapy.radiopolska.pl/files/ant_pattern/${element.id_nadajnik}`, imageBounds, { opacity: 0.6 }));
+    }
+
     addMarkers() {
         this.state.markers.forEach((marker) => { this.state.map.removeLayer(marker); });
-        this.setState({ markers: [] }, function () {
-            console.log(this.state.markers);
-        });
+        this.setState({ markers: [] }, () => { });
 
         this.state.selectedTransmitters.forEach((element) => {
             const tempArray = this.state.markers.slice();
             const marker = L.marker([element.szerokosc, element.dlugosc],
                 { icon: config.myIcon }).addTo(this.state.map);
             marker.bindPopup(
-                `<b>${element.program}</b><br>
-                <a>${element.mhz}MHz ${element.kategoria}</a><br>
-                <a>${element.skrot}</a>
+                `${element.skrot}
                 <a target='_blank' href = http://test.radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
-                    ${element.obiekt}</a><br>
-                <a>Kod PI: ${element.pi} </a><br>
-                <a>ERP: ${element.erp} Pol: ${element.polaryzacja}</a><br>
-                <a>Wys. masztu: ${element.wys_npm} n.p.m </a><br>
-                <a>Wys. nadajnika: ${element.antena_npt} n.p.t </a>`);
+                ${element.obiekt}</a><br>
+                <b>${element.program}</b><br>
+                Częstotliwość: ${element.mhz} MHz ${element.kategoria}<br>
+                PI: ${element.pi} ERP: ${element.erp}kW Pol: ${element.polaryzacja}<br>
+                Wys. masztu: ${element.wys_npm} n.p.m<br>
+                Wys. nadajnika: ${element.antena_npt} n.p.t`);
             tempArray.push(marker);
-            this.setState({ markers: tempArray }, function () {
-                console.log(this.state.markers);
-            });
+            this.setState({ markers: tempArray }, () => { });
         });
     }
 

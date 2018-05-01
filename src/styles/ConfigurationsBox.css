@@ -1,12 +1,12 @@
 .confsBox {
     position: absolute;
     width: 14%;
-    height: 3.5%;
+    height: 5vh;
     left: .5em;
-    top: 10em;
+    top: 11.6em;
     z-index: 5;
     padding: 1vh;
-    background-color: rgba(214, 74, 43, 0.8);
+    background-color: #D64A2B;
     border-radius: 5px;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -15,4 +15,10 @@
 .confsBox:hover {
     width: 18%;
     height: auto;
+}
+
+.confsWhiteBox {
+    background: white;
+    border-radius: 5px;
+    padding: 5px;
 }

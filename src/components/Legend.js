@@ -17,10 +17,18 @@ function Legend(props) {
                 </div>,
             );
         }
+        legendFields.push(
+            <div className="legendField" key={'unit'}>
+                <div className="legendColor" style={{ backgroundColor: 'white' }} />
+                <b>db(µV/m)</b>
+            </div>,
+        );
 
         return (
             <div className="legendContainer">
-                {legendFields}
+                <div className="whiteLegend">
+                    {legendFields}
+                </div>
             </div>
         );
     }

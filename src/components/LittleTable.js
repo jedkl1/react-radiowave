@@ -33,20 +33,18 @@ function LittleTable(props) {
         table = (
             <div>
                 <TableHeaderColumn isKey dataField="id_nadajnik" width="10%" hidden>ID</TableHeaderColumn>
-                <TableHeaderColumn dataField="program" dataFormat={stationFormat} width="40%">Program</TableHeaderColumn>
                 <TableHeaderColumn dataField="mhz" width="12%">MHz</TableHeaderColumn>
+                <TableHeaderColumn dataField="program" dataFormat={stationFormat} width="40%">Program</TableHeaderColumn>
                 <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>Obiekt nadawczy</TableHeaderColumn>
             </div>);
-    } else if (props.system === 'dab') {
+    } else if (props.system === 'dab' || props.system === 'dvbt') {
         table = (
             <div>
                 <TableHeaderColumn isKey dataField="id_nadajnik" width="10%" hidden>ID</TableHeaderColumn>
+                <TableHeaderColumn dataField="kanal_nazwa" width="15%">Kanał</TableHeaderColumn>
                 <TableHeaderColumn dataField="multipleks" dataFormat={stationFormat} width="30%">Multipleks</TableHeaderColumn>
-                <TableHeaderColumn dataField="mhz" width="15%">MHz</TableHeaderColumn>
                 <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>Obiekt nadawczy</TableHeaderColumn>
             </div>);
-    } else if (props.system === 'dvbt') {
-        table = null;
     }
 
     return (

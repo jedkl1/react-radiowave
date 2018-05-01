@@ -10,4 +10,9 @@
 
 #searchInput {
     margin-left: 1em;
+    display: inline;
+}
+
+.searchContainer {
+    display: inline;
 }

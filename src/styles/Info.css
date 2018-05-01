@@ -1,0 +1,10 @@
+.imgContainer {
+    display: inline-block;
+    width: 20vw;
+    height: 20vh;
+}
+
+.imgContainer img {
+    max-width: 20vw;
+    max-height: 20vh;
+}

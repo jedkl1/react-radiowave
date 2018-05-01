@@ -8,8 +8,8 @@ a {
 }
 
 .grid {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
 }
 
 .container {
@@ -20,11 +20,11 @@ a {
 }
 
 .systems {
-  top: .5em;
+  top: .5vh;
 }
 
 .container.buttons {
-  top: 3.5em;
+  top: 4em;
 }
 
 .narcissus_x3xwbs {
@@ -33,7 +33,17 @@ a {
 
 .legendContainer {
   z-index: 1;
-  top: 2em;
+  top: .5vh;
+  background: #D64A2B;
+  border-radius: 5px;
+  padding: 5px;
   position: absolute;
-  right: .5em;
+  right: .5vh;
+}
+
+.whiteLegend {
+  padding: 5px;
+  height: 7vh;
+  border-radius: 5px;
+  background: white;
 }

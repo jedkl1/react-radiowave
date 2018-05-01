@@ -16,6 +16,10 @@ function stationFormat(cell, row) {
     return (<a href={`http://test.radiopolska.pl/wykaz/program/${row.id_program}`} target="_blank">{cell}</a>);
 }
 
+function muxFormat(cell, row) {
+    return (<a href={`http://test.radiopolska.pl/wykaz/mux/${row.id_multipleks}`} target="_blank">{cell}</a>);
+}
+
 function iconFormat(cell) {
     return (<div style={{
         width: '5em',
@@ -111,7 +115,7 @@ class Table extends React.Component {
             {
                 text: '15', value: 15,
             }],
-            sizePerPage: 10,
+            sizePerPage: 5,
             // afterSearch: this.afterSearch.bind(this),
         };
 
@@ -120,33 +124,34 @@ class Table extends React.Component {
             table = (
                 <div>
                     <TableHeaderColumn isKey dataField="id_nadajnik" hidden>ID</TableHeaderColumn>
-                    <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="10%">Ikona</TableHeaderColumn>
-                    <TableHeaderColumn dataField="program" dataFormat={stationFormat} width="35%">Program</TableHeaderColumn>
+                    <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="10%">Logotyp</TableHeaderColumn>
                     <TableHeaderColumn dataField="mhz" width="7%">MHz</TableHeaderColumn>
+                    <TableHeaderColumn dataField="program" dataFormat={stationFormat} width="35%">Program</TableHeaderColumn>
                     <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>Obiekt nadawczy</TableHeaderColumn>
+                    <TableHeaderColumn dataField="nwoj">Woj.</TableHeaderColumn>
                 </div>);
-        } else if (this.state.system === 'dab') {
+        } else if (this.state.system === 'dab' || this.state.system === 'dvbt') {
             table = (
                 <div>
                     <TableHeaderColumn isKey dataField="id_nadajnik" hidden>ID</TableHeaderColumn>
-                    <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="10%">Ikona</TableHeaderColumn>
-                    <TableHeaderColumn dataField="multipleks" dataFormat={stationFormat} width="25%">Multipleks</TableHeaderColumn>
-                    <TableHeaderColumn dataField="mhz" width="15%">MHz</TableHeaderColumn>
-                    <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>Obiekt nadawczy</TableHeaderColumn>
+                    <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="10%">Logotyp</TableHeaderColumn>
                     <TableHeaderColumn dataField="kanal_nazwa" width="10%">Kanał</TableHeaderColumn>
+                    <TableHeaderColumn dataField="mhz" width="12%">MHz</TableHeaderColumn>
+                    <TableHeaderColumn dataField="multipleks" dataFormat={muxFormat} width="22%">Multipleks</TableHeaderColumn>
+                    <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>Obiekt nadawczy</TableHeaderColumn>
                     <TableHeaderColumn dataField="nwoj" width="10%">woj.</TableHeaderColumn>
                 </div>);
-        } else if (this.state.system === 'dvbt') {
-            table = null;
         }
-        const myRef = el => this.btnRef = el;
+        const myRef = (el) => { this.btnRef = el; };
         return (
             <div>
-                <select id="searchSelection" onChange={handleSelect}>
-                    <option value="name">Nazwa stacji</option>
-                    <option value="freq">Częstotliwość</option>
-                </select>
-                <Search onChange={handleSearch} />
+                <div>
+                    <select id="searchSelection" onChange={handleSelect}>
+                        <option value="name">Nazwa stacji</option>
+                        <option value="freq">Częstotliwość</option>
+                    </select>
+                    <Search onChange={handleSearch} />
+                </div>
                 <BootstrapTable
                     ref={myRef}
                     data={this.props.data}

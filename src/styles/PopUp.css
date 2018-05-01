@@ -1,11 +1,11 @@
 
 .PopUpWrapper {
     border-radius: 12px;
-    background: white;
+    background: #D64A2B;
     position: absolute;
     padding: 9px;
     right: 1vw;
-    top: 74vh;
+    bottom: 19vh;
     z-index: 1;
 }
 
@@ -22,10 +22,10 @@
 .PopUpTip {
     width: 17px;
     height: 17px;
-    background-color: white;
+    background-color: #D64A2B;
     transform: rotate(45deg);
 }
 
 #shareInput {
-    border-radius: 2px;
+    border-radius: 5px;
 }

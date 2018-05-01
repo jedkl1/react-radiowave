@@ -9,11 +9,11 @@ import Table from './Table';
 import LittleTable from './LittleTable';
 import ConfigurationsBox from './ConfigurationsBox';
 import PopUp from './PopUp';
+import Info from './Info';
 
 let data = null;
 
 class App extends Component {
-    state = { loading: false };
 
     constructor(props) {
         super(props);
@@ -26,16 +26,24 @@ class App extends Component {
             toDrawSelected: [],
             configurations: [],
             selectedConfiguration: null,
+            fmClicked: true,
+            dabClicked: false,
+            dvbtClicked: false,
+            loading: false,
         };
         this.handleSystemClick = this.handleSystemClick.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
         this.handleShareClick = this.handleShareClick.bind(this);
+        this.handleInfoClick = this.handleInfoClick.bind(this);
         this.onDrawSelected = this.onDrawSelected.bind(this);
         this.onDrawAllSelected = this.onDrawAllSelected.bind(this);
         this.getConfigurations = this.getConfigurations.bind(this);
         this.getSelectedData = this.getSelectedData.bind(this);
         this.getSelectedConfiguration = this.getSelectedConfiguration.bind(this);
         this.setConfiguration = this.setConfiguration.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.handleInfoClose = this.handleInfoClose.bind(this);
+        this.openDialog = this.openDialog.bind(this);
     }
 
     onDrawSelected(row, isSelected) {
@@ -48,9 +56,7 @@ class App extends Component {
             tempArray = tempArray.filter(obj => obj.id_nadajnik !== row.id_nadajnik);
         }
 
-        this.setState({ toDrawSelected: tempArray }, function () {
-            console.log(this.state.toDrawSelected);
-        });
+        this.setState({ toDrawSelected: tempArray }, () => {});
     }
 
     onDrawAllSelected(isSelected, rows) {
@@ -65,9 +71,7 @@ class App extends Component {
             });
         }
 
-        this.setState({ toDrawSelected: tempArray }, function () {
-            console.log(this.state.toDrawSelected);
-        });
+        this.setState({ toDrawSelected: tempArray }, () => { });
     }
 
     getConfigurations(configurationString = 'fm-std') {
@@ -79,7 +83,7 @@ class App extends Component {
                         this.state.configurations.forEach((configuration) => {
                             if (configuration.cfg === configurationString) {
                                 this.setState({ selectedConfiguration: configuration },
-                                              () => { console.log(this.state.selectedConfiguration); });
+                                              () => { });
                             }
                         });
                     });
@@ -103,9 +107,7 @@ class App extends Component {
                         const tempArray = this.state.selectedTransmitters.slice();
                         tempArray.push(res.data[0]);
                         this.setState({ selectedTransmitters: tempArray,
-                            toDrawSelected: tempArray }, function () {
-                            console.log(this.state.selectedTransmitters);
-                        });
+                            toDrawSelected: tempArray }, () => { });
                     },
                     (error) => {
                         console.log(`Error: ${error}`);
@@ -156,8 +158,18 @@ class App extends Component {
     }
 
     handleSystemClick(id) {
-        console.log(`System was set as ${id}`);
-        this.setState({ system: id, selectedRows: [], selectedTransmitters: [] });
+        if (this.state.system !== id) {
+            data = null;
+        }
+
+        if (id === 'fm') {
+            this.setState({ fmClicked: true, dabClicked: false, dvbtClicked: false }, () => { });
+        } else if (id === 'dab') {
+            this.setState({ fmClicked: false, dabClicked: true, dvbtClicked: false }, () => { });
+        } else if (id === 'dvbt') {
+            this.setState({ fmClicked: false, dabClicked: false, dvbtClicked: true }, () => { });
+        }
+        this.setState({ system: id, selectedTransmitters: [] });
     }
 
     handleRefreshClick() {
@@ -165,51 +177,66 @@ class App extends Component {
     }
 
     handleShareClick() {
-        let url = 'http://localhost:9000/?config={"tra":[';
-        url += this.state.toDrawSelected.map(element => `{"id":${element.id_nadajnik}}`).join(',');
-        url += '],';
-        url += `"cfg":"${this.state.selectedConfiguration.cfg}",`;
-        url += `"sys":"${this.state.system}"`;
-        url += '}';
-        this.setState({ uri: url, isShowingShare: !this.state.isShowingShare }, () => {
-            console.log('asdasd');
-        });
+        if (this.state.selectedConfiguration) {
+            let url = 'http://localhost:9000/?config={"tra":[';
+            url += this.state.toDrawSelected.map(element => `{"id":${element.id_nadajnik}}`).join(',');
+            url += '],';
+            url += `"cfg":"${this.state.selectedConfiguration.cfg}",`;
+            url += `"sys":"${this.state.system}"`;
+            url += '}';
+            this.setState({ uri: url, isShowingShare: !this.state.isShowingShare }, () => { });
+        }
     }
 
-    openDialog = () => this.setState({ isShowingModal: true })
+    openDialog() { this.setState({ isShowingModal: true }); }
 
-    handleClose = () => this.setState({ isShowingModal: false })
+    handleClose() { this.setState({ isShowingModal: false }); }
 
-    handleInfoClose = () => this.setState({ isShowingInfo: false })
+    handleInfoClose() { this.setState({ isShowingInfo: false }); }
 
-    handleInfoClick = () => this.setState({ isShowingInfo: true })
+    handleInfoClick() { this.setState({ isShowingInfo: true }); }
 
-    getSelectedData = (dataFromTable) => {
-        this.setState({ selectedTransmitters: dataFromTable }, function () {
-            console.log(this.state.selectedTransmitters);
-        });
+    getSelectedData(dataFromTable) {
+        this.setState({ selectedTransmitters: dataFromTable }, () => { });
     }
 
-    getSelectedConfiguration = (dataFromConfiguration) => {
+    getSelectedConfiguration(dataFromConfiguration) {
         this.setState({ selectedConfiguration: dataFromConfiguration });
     }
 
     render() {
         const modalStyle = {
-            width: '50%',
+            width: '65%',
             textAlign: 'center',
         };
-
+        const infoStyle = {
+            width: '70%',
+            textAlign: 'center',
+        };
         return (
             <div id="gridId" className="grid">
                 <div id="systems_container" className="container systems">
-                    <SystemButton id="fm" class="system" title="Change system to FM" value="FM" onSystemClick={this.handleSystemClick} />
-                    <SystemButton id="dab" class="system" title="Change system to DAB+" value="DAB+" onSystemClick={this.handleSystemClick} />
-                    <SystemButton id="dvbt" class="system" title="Change system to DVB-T" value="DVB-T" onSystemClick={this.handleSystemClick} />
+                    {
+                        this.state.fmClicked ?
+                            <SystemButton id="fm" class={'system focus'} title="Zmień system na FM" value="FM" onSystemClick={this.handleSystemClick} />
+                        : <SystemButton id="fm" class={'system'} title="Zmień system na FM" value="FM" onSystemClick={this.handleSystemClick} />
+                    }
+                    {
+                        this.state.dabClicked ?
+                            <SystemButton id="dab" class={'system focus'} title="Zmień system na DAB+" value="DAB+" onSystemClick={this.handleSystemClick} />
+                        : <SystemButton id="dab" class={'system'} title="Zmień system na DAB+" value="DAB+" onSystemClick={this.handleSystemClick} />
+                    }
+                    {
+                        this.state.dvbtClicked ?
+                            <SystemButton id="dvbt" class={'system focus'} title="Zmień system na DVB-T" value="DVB-T" onSystemClick={this.handleSystemClick} />
+                        : <SystemButton id="dvbt" class={'system'} title="Zmień system na DVB-T" value="DVB-T" onSystemClick={this.handleSystemClick} />
+                    }
                 </div>
                 <div id="buttons_container" className="container buttons">
-                    <SystemButton id="home" class="home" title="Home" value="" onSystemClick={this.handleRefreshClick} /> <br />
-                    <SystemButton id="stations" class="checkStation" title="Check stations to draw" value="" onSystemClick={this.openDialog} />
+                    <SystemButton id="home" class="home" title="Odśwież" value="" onSystemClick={this.handleRefreshClick} /> <br />
+                    <div className="stationsWrapper">
+                        <SystemButton id="stations" class="checkStation" title="Wybierz stacje do narysowania pokrycia" value="" onSystemClick={this.openDialog} />
+                    </div>
                 </div>
                 {
                     this.state.configurations.length ?
@@ -224,12 +251,17 @@ class App extends Component {
                     this.state.isShowingModal ?
                         <ModalContainer>
                             <ModalDialog style={modalStyle} onClose={this.handleClose}>
-                                <h1>Check stations</h1>
-                                <Table
-                                    system={this.state.system}
-                                    callbackFromApp={this.getSelectedData}
-                                    selected={this.state.selectedTransmitters}
-                                    data={data} />
+                                <h3>Wybierz nadajniki</h3>
+                                {
+                                    data ?
+                                        <Table
+                                            system={this.state.system}
+                                            callbackFromApp={this.getSelectedData}
+                                            selected={this.state.selectedTransmitters}
+                                            data={data} />
+                                    : <h4>Trwa pobieranie nadajników z bazy danych.
+                                        Wróć tu ponownie za kilka sekund...</h4>
+                                }
                             </ModalDialog>
                         </ModalContainer>
                     : null
@@ -237,21 +269,23 @@ class App extends Component {
                 {
                     this.state.isShowingInfo ?
                         <ModalContainer>
-                            <ModalDialog style={modalStyle} onClose={this.handleInfoClose}>
-                                <a> Witaj w aplikacji Mapy serwisu RadioPolska.pl</a><br />
-                                <a> Wybierz interesujące Cię stacje z bazy danych serwisu</a> <br />
-                                <a> Zaznacz interesujące Cię stacje w małej tabelce by narysować ich mapy pokrycia </a>
+                            <ModalDialog style={infoStyle} onClose={this.handleInfoClose}>
+                                <Info />
                             </ModalDialog>
                         </ModalContainer>
                         : null
                 }
-                <SystemButton id="share" class="share" title="Pobierz link do udostępnienia" value="" onSystemClick={this.handleShareClick} />
+                <div className="shareWrapper">
+                    <SystemButton id="share" class="share" title="Pobierz link do udostępnienia" value="" onSystemClick={this.handleShareClick} />
+                </div>
                 {
                     this.state.isShowingShare ?
                         <PopUp text={this.state.uri} />
                     : null
                 }
-                <SystemButton id="info" class="info" title="info" value="i" onSystemClick={this.handleInfoClick} />
+                <div className="infoWrapper">
+                    <SystemButton id="infoBtn" class="info" title="Informacje" value="i" onSystemClick={this.handleInfoClick} />
+                </div>
                 {
                     this.state.selectedTransmitters.length ?
                         <LittleTable

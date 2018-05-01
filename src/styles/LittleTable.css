@@ -6,7 +6,7 @@
     top: 42vh;
     z-index: 5;
     padding: 1vh;
-    background-color: rgba(214, 74, 43, 0.8);
+    background-color: #D64A2B;
     border-radius: 5px;
 }
 
@@ -23,5 +23,5 @@
 }
 
 .react-bs-table.react-bs-table-bordered {
-    height: 86% !important;
+    height: 81% !important;
 }

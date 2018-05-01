@@ -36,9 +36,7 @@ class ConfigurationsBox extends Component {
         });
         if (this.props.selected && this.props.system === prevProps.system) {
             this.setState({ possibleConfigurations: possibleConfs,
-                checkedConfiguration: this.props.selected }, () => {
-                console.log(this.state.possibleConfigurations);
-            });
+                checkedConfiguration: this.props.selected }, () => { });
         } else if (!this.props.selected || this.props.system !== prevProps.system) {
             this.setState({ possibleConfigurations: possibleConfs,
                 checkedConfiguration: possibleConfs[0] }, () => {
@@ -57,7 +55,7 @@ class ConfigurationsBox extends Component {
                     name="configuration"
                     value={configuration.cfg}
                     onClick={this.onConfigurationChanged} />
-                                , configuration.nazwa, <br />);
+                                , configuration.nazwa);
             }
         });
         return radios;
@@ -76,20 +74,22 @@ class ConfigurationsBox extends Component {
             this.state.possibleConfigurations.length ?
                 <div>
                     <div className="confsBox">
-                        <b>Wybierz konfigurację mapy pokrycia</b>
-                        <form>
-                            <input
-                                type="radio"
-                                name="configuration"
-                                key={this.state.possibleConfigurations[0].cfg}
-                                value={this.state.possibleConfigurations[0].cfg}
-                                defaultChecked
-                                onClick={this.onConfigurationChanged} />
-                            {this.state.possibleConfigurations[0].nazwa} <br />
-                            {this.returnPossibleRadio()}
-                        </form>
-                        <br />
-                        <b>{this.state.checkedConfiguration.opis}</b>
+                        <div className="confsWhiteBox">
+                            <b>Wybierz konfigurację mapy pokrycia</b>
+                            <form>
+                                <input
+                                    type="radio"
+                                    name="configuration"
+                                    key={this.state.possibleConfigurations[0].cfg}
+                                    value={this.state.possibleConfigurations[0].cfg}
+                                    defaultChecked
+                                    onClick={this.onConfigurationChanged} />
+                                {this.state.possibleConfigurations[0].nazwa} <br />
+                                {this.returnPossibleRadio()}
+                            </form>
+                            <br />
+                            <b>{this.state.checkedConfiguration.opis}</b>
+                        </div>
                     </div>
                     <Legend legend={this.state.checkedConfiguration} />
                 </div>

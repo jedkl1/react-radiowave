@@ -4,14 +4,45 @@
 .button.checkStation,
 .button.share {
     border-radius: 5px;
+    background-color: white;
+    border: 1px solid #c5c5c5;
+}
+
+.button.system:hover,
+.button.info:hover,
+.button.home:hover,
+.button.checkStation:hover,
+.button.share:hover {
+    border-radius: 5px;
     background-color: #D64A2B;
     border: 1px solid #c5c5c5;
 }
 
-.button.system,
+.button.system.focus {
+    background-color: #D64A2B;
+    color: white;
+}
+
+.ButtonWrapper {
+    background: #D64A2B;
+    position: absolute;
+    padding: 5px;
+    z-index: 10;
+    border-radius: 5px;
+    margin-right: .3em;
+}
+
+.container .ButtonWrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.button.system {
+    font-size: 1.7em;
+}
+
 .button.info {
     font-size: 1.7em;
-    margin-right: .3em;
 }
 
 .button.home,
@@ -35,17 +66,28 @@
     background-image: url('../../images/share.png');
 }
 
-.button.info {
-    width: 1.55em; height: 1.55em;
-    position: absolute;
-    z-index: 10;
-    right: .2em;
-    bottom: 1em;
+.shareWrapper {
+    right: 4em;
+    bottom: 8em;
+    position: absolute; 
 }
 
-.button.share {
-    position: absolute;
-    z-index: 10;
-    right: .9em;
-    bottom: 5em;
+.infoWrapper {
+    right: 4em;
+    bottom: 4.2em;
+    position: absolute; 
+}
+
+.stationsWrapper {
+    top: 3.8em;
+    position: absolute; 
+}
+
+.button.info {
+    width: 1.55em; height: 1.55em;
+
+}
+
+SystemButton {
+    position: relative;
 }
