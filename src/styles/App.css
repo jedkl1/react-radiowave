@@ -20,7 +20,7 @@ a {
 }
 
 .systems {
-  top: .5vh;
+  top: .3em;
 }
 
 .container.buttons {
@@ -33,17 +33,17 @@ a {
 
 .legendContainer {
   z-index: 1;
-  top: .5vh;
+  top: .3em;
   background: #D64A2B;
   border-radius: 5px;
   padding: 5px;
   position: absolute;
-  right: .5vh;
+  right: .3em;
 }
 
 .whiteLegend {
   padding: 5px;
-  height: 7vh;
+  height: 4em;
   border-radius: 5px;
   background: white;
 }

@@ -4,8 +4,8 @@
     background: #D64A2B;
     position: absolute;
     padding: 9px;
-    right: 1vw;
-    bottom: 19vh;
+    right: .5em;
+    bottom: 9em;
     z-index: 1;
 }
 

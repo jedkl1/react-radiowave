@@ -1,11 +1,11 @@
 .confsBox {
     position: absolute;
     width: 14%;
-    height: 5vh;
+    height: 2.5em;
     left: .5em;
     top: 11.6em;
     z-index: 5;
-    padding: 1vh;
+    padding: .5em;
     background-color: #D64A2B;
     border-radius: 5px;
     text-overflow: ellipsis;

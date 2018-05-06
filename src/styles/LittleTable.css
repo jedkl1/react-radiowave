@@ -1,9 +1,9 @@
 .littleTable {
     position: absolute;
     width: 6%;
-    height: 30vh;
-    right: 1%;
-    top: 42vh;
+    height: 22em;
+    right: .5em;
+    bottom: 13em;
     z-index: 5;
     padding: 1vh;
     background-color: #D64A2B;
@@ -12,7 +12,7 @@
 
 .littleTable/*:hover*/ {
     width: 26%;
-    height: 30vh;
+    height: 22em;
 }
 
 .littleTable .react-bs-table-container {

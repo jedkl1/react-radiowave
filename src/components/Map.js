@@ -125,7 +125,7 @@ class Map extends Component {
         boundsArray.push(Number(element.dlugosc) + 0.7);
 
         const imageBounds = [[boundsArray[2], boundsArray[3]], [boundsArray[1], boundsArray[0]]];
-        this.layersGroup.addLayer(L.imageOverlay(`http://mapy.radiopolska.pl/files/ant_pattern/${element.id_nadajnik}`, imageBounds, { opacity: 0.6 }));
+        this.layersGroup.addLayer(L.imageOverlay(`http://mapy.radiopolska.pl/files/ant_pattern/${element.id_antena}`, imageBounds));
     }
 
     addMarkers() {
