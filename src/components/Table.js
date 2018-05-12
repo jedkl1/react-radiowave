@@ -6,7 +6,6 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import Search from './Search';
 
 const data = null;
-let selectedSearch = 'name';
 
 function radioMastFormat(cell, row) {
     return (<a href={`http://test.radiopolska.pl/wykaz/obiekt/${row.id_obiekt}`} target="_blank">{cell}</a>);
@@ -32,14 +31,14 @@ function iconFormat(cell) {
     }} />);
 }
 
-function handleSearch(e) {
-    console.log(e);
-}
+// function handleSearch(e) {
+//     console.log(e);
+// }
 
-function handleSelect(e) {
-    selectedSearch = e.target.value;
-    console.log(selectedSearch);
-}
+// function handleSelect(e) {
+//     selectedSearch = e.target.value;
+//     console.log(selectedSearch);
+// }
 
 
 class Table extends React.Component {
@@ -146,11 +145,11 @@ class Table extends React.Component {
         return (
             <div>
                 <div>
-                    <select id="searchSelection" onChange={handleSelect}>
+                    <select id="searchSelection">
                         <option value="name">Nazwa stacji</option>
                         <option value="freq">Częstotliwość</option>
                     </select>
-                    <Search onChange={handleSearch} />
+                    <Search />
                 </div>
                 <BootstrapTable
                     ref={myRef}

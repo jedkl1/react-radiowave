@@ -88,9 +88,9 @@ class App extends Component {
                         });
                     });
                 },
-                (error) => {
-                    console.log(`Error: ${error}`);
-                },
+                // (error) => {
+                //     console.log(`Error: ${error}`);
+                // },
             );
     }
 
@@ -109,9 +109,9 @@ class App extends Component {
                         this.setState({ selectedTransmitters: tempArray,
                             toDrawSelected: tempArray }, () => { });
                     },
-                    (error) => {
-                        console.log(`Error: ${error}`);
-                    },
+                    // (error) => {
+                    //     console.log(`Error: ${error}`);
+                    // },
                 );
             });
             this.setStates(inputJSON);
@@ -138,9 +138,9 @@ class App extends Component {
                 (res) => {
                     data = res.data;
                 },
-                (error) => {
-                    console.log(`Error: ${error}`);
-                },
+                // (error) => {
+                //     console.log(`Error: ${error}`);
+                // },
             );
         }
     }

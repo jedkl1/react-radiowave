@@ -86,9 +86,9 @@ class Map extends Component {
                                 this.addDirectionalChar(element);
                             });
                         },
-                        (error) => {
-                            console.log(`Error${error}`);
-                        },
+                        // (error) => {
+                        //     console.log(`Error${error}`);
+                        // },
                     );
             });
             if (prevProps.configuration === this.props.configuration) {
@@ -179,9 +179,10 @@ class Map extends Component {
     }
 
     render() {
+        const mapRef = (node) => { this.mapNode = node; };
         return (
             <div id="mapUI">
-                <div ref={node => this.mapNode = node} id="map" />
+                <div ref={mapRef} id="map" />
             </div>
         );
     }
