@@ -11,8 +11,10 @@ class ConfigurationsBox extends Component {
         this.state = {
             possibleConfigurations: [],
             checkedConfiguration: null,
+            checkedDirectional: true,
         };
         this.getPossibleConfiguration = this.getPossibleConfiguration.bind(this);
+        this.directionalChanged = this.directionalChanged.bind(this);
         this.onConfigurationChanged = this.onConfigurationChanged.bind(this);
     }
 
@@ -69,6 +71,14 @@ class ConfigurationsBox extends Component {
         });
     }
 
+    directionalChanged(e) {
+        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+
+        this.setState({
+            checkedDirectional: value,
+        }, function () { this.props.callbackDirectionals(this.state.checkedDirectional); });
+    }
+
     render() {
         return (
             this.state.possibleConfigurations.length ?
@@ -85,10 +95,16 @@ class ConfigurationsBox extends Component {
                                     defaultChecked
                                     onClick={this.onConfigurationChanged} />
                                 {this.state.possibleConfigurations[0].nazwa} <br />
-                                {this.returnPossibleRadio()}
+                                {this.returnPossibleRadio()} <br />
                             </form>
                             <br />
-                            <b>{this.state.checkedConfiguration.opis}</b>
+                            <b>{this.state.checkedConfiguration.opis}</b> <br />
+                            <input
+                                type="checkbox"
+                                name="directionalChars"
+                                checked={this.state.checkedDirectional}
+                                onChange={this.directionalChanged} />
+                                Rysuj charakterystyki kierunkowe anten <br />
                         </div>
                     </div>
                     <Legend legend={this.state.checkedConfiguration} />

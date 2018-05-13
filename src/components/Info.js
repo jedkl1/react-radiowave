@@ -45,7 +45,8 @@ function Info() {
             <h5> Aplikacja została wykonana podczas tworzenia pracy inżynierskiej. </h5>
             <a> Student: Jędrzej Klocek </a>
             <a> Prowadzący pracę: dr inż. Przemysław Korpas </a>
-            <a> Politechnika Warszawska 2018 </a>
+            <a> Politechnika Warszawska 2018 </a> <br />
+            <a> Mapy-RadioPolska.pl beta version: 1.0.1 </a>
 
         </div>
     );

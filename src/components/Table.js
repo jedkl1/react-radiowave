@@ -3,7 +3,7 @@ import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
-import Search from './Search';
+// import Search from './Search';
 
 const data = null;
 
@@ -124,9 +124,19 @@ class Table extends React.Component {
                 <div>
                     <TableHeaderColumn isKey dataField="id_nadajnik" hidden>ID</TableHeaderColumn>
                     <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="10%">Logotyp</TableHeaderColumn>
-                    <TableHeaderColumn dataField="mhz" width="7%">MHz</TableHeaderColumn>
-                    <TableHeaderColumn dataField="program" dataFormat={stationFormat} width="35%">Program</TableHeaderColumn>
-                    <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>Obiekt nadawczy</TableHeaderColumn>
+                    <TableHeaderColumn
+                        dataField="mhz"
+                        width="7%"
+                        filter={{ type: 'TextFilter' }}>MHz</TableHeaderColumn>
+                    <TableHeaderColumn
+                        dataField="program"
+                        dataFormat={stationFormat}
+                        width="35%"
+                        filter={{ type: 'TextFilter' }}>Program</TableHeaderColumn>
+                    <TableHeaderColumn
+                        dataField="obiekt"
+                        dataFormat={radioMastFormat}
+                        filter={{ type: 'TextFilter' }}>Obiekt nadawczy</TableHeaderColumn>
                     <TableHeaderColumn dataField="nwoj">Woj.</TableHeaderColumn>
                 </div>);
         } else if (this.state.system === 'dab' || this.state.system === 'dvbt') {
@@ -144,13 +154,13 @@ class Table extends React.Component {
         const myRef = (el) => { this.btnRef = el; };
         return (
             <div>
-                <div>
+                {/* <div>
                     <select id="searchSelection">
                         <option value="name">Nazwa stacji</option>
                         <option value="freq">Częstotliwość</option>
                     </select>
                     <Search />
-                </div>
+                </div> */}
                 <BootstrapTable
                     ref={myRef}
                     data={this.props.data}
@@ -159,7 +169,7 @@ class Table extends React.Component {
                     hover
                     condensed
                     pagination
-                    search
+                    // search
                     options={options}>
                     { table.props.children }
                 </BootstrapTable>

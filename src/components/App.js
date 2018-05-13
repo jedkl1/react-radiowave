@@ -30,6 +30,7 @@ class App extends Component {
             dabClicked: false,
             dvbtClicked: false,
             loading: false,
+            directionalChecked: true,
         };
         this.handleSystemClick = this.handleSystemClick.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
@@ -41,6 +42,7 @@ class App extends Component {
         this.getSelectedData = this.getSelectedData.bind(this);
         this.getSelectedConfiguration = this.getSelectedConfiguration.bind(this);
         this.setConfiguration = this.setConfiguration.bind(this);
+        this.getDirectionalCheckedStatus = this.getDirectionalCheckedStatus.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleInfoClose = this.handleInfoClose.bind(this);
         this.openDialog = this.openDialog.bind(this);
@@ -75,7 +77,7 @@ class App extends Component {
     }
 
     getConfigurations(configurationString = 'fm-std') {
-        fetch('http://mapy.radiopolska.pl/api/cfg')
+        fetch('https://mapy.radiopolska.pl/api/cfg')
             .then(res => res.json())
             .then(
                 (res) => {
@@ -100,7 +102,7 @@ class App extends Component {
             const inputParams = queryString.parse(this.props.location.search).config;
             const inputJSON = JSON.parse(inputParams);
             inputJSON.tra.forEach((transmitter) => {
-                fetch(`http://mapy.radiopolska.pl/api/transmitterById/pl/${inputJSON.sys}/${transmitter.id}`)
+                fetch(`https://mapy.radiopolska.pl/api/transmitterById/pl/${inputJSON.sys}/${transmitter.id}`)
                     .then(res => res.json())
                     .then(
                     (res) => {
@@ -124,13 +126,13 @@ class App extends Component {
 
     componentDidUpdate(prevProps, prevStates) {
         if (this.state.system !== prevStates.system) {
-            let dataUrl = 'http://mapy.radiopolska.pl/api/transmitterByProgName/pl/';
+            let dataUrl = 'https://mapy.radiopolska.pl/api/transmitterAll/pl/';
             if (this.state.system === 'fm') {
-                dataUrl += 'fm/r';
+                dataUrl += 'fm';
             } else if (this.state.system === 'dab') {
-                dataUrl += 'dab/m';
+                dataUrl += 'dab';
             } else if (this.state.system === 'dvbt') {
-                dataUrl += 'dvbt/m';
+                dataUrl += 'dvbt';
             }
             fetch(dataUrl)
                 .then(res => res.json())
@@ -178,7 +180,7 @@ class App extends Component {
 
     handleShareClick() {
         if (this.state.selectedConfiguration) {
-            let url = 'http://localhost:9000/?config={"tra":[';
+            let url = `${window.location.href}?config={"tra":[`;
             url += this.state.toDrawSelected.map(element => `{"id":${element.id_nadajnik}}`).join(',');
             url += '],';
             url += `"cfg":"${this.state.selectedConfiguration.cfg}",`;
@@ -202,6 +204,10 @@ class App extends Component {
 
     getSelectedConfiguration(dataFromConfiguration) {
         this.setState({ selectedConfiguration: dataFromConfiguration });
+    }
+
+    getDirectionalCheckedStatus(dataFromConfiguration) {
+        this.setState({ directionalChecked: dataFromConfiguration });
     }
 
     render() {
@@ -244,7 +250,8 @@ class App extends Component {
                             system={this.state.system}
                             configurations={this.state.configurations}
                             selected={this.state.selectedConfiguration}
-                            callbackFromApp={this.getSelectedConfiguration} />
+                            callbackFromApp={this.getSelectedConfiguration}
+                            callbackDirectionals={this.getDirectionalCheckedStatus} />
                     : null
                 }
                 {
@@ -254,11 +261,16 @@ class App extends Component {
                                 <h3>Wybierz nadajniki</h3>
                                 {
                                     data ?
-                                        <Table
-                                            system={this.state.system}
-                                            callbackFromApp={this.getSelectedData}
-                                            selected={this.state.selectedTransmitters}
-                                            data={data} />
+                                        <div>
+                                            <h3>Dla bezpieczeczenstwa swojego komputera nie próbuj rysować
+                                                wszystkich nadajników<br />
+                                                Nie udało mi się jeszcze zaimplementować kilku zapezpieczeń :)</h3>
+                                            <Table
+                                                system={this.state.system}
+                                                callbackFromApp={this.getSelectedData}
+                                                selected={this.state.selectedTransmitters}
+                                                data={data} />
+                                        </div>
                                     : <h4>Trwa pobieranie nadajników z bazy danych.
                                         Wróć tu ponownie za kilka sekund...</h4>
                                 }
@@ -299,7 +311,8 @@ class App extends Component {
                 {
                     <Map
                         selectedTransmitters={this.state.toDrawSelected}
-                        configuration={this.state.selectedConfiguration} />
+                        configuration={this.state.selectedConfiguration}
+                        directional={this.state.directionalChecked} />
                 }
             </div>
         );

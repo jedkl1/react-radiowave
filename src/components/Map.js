@@ -25,7 +25,7 @@ config.tileLayer = {
     uri: 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
     params: {
         minZoom: 5,
-        attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
         id: '',
         accessToken: '',
     },
@@ -45,6 +45,7 @@ class Map extends Component {
             tileLayer: null,
             selectedTransmitters: props.selectedTransmitters,
             markers: [],
+            directionalChars: [],
             layersGroup: [],
             geoLat: null,
             geoLon: null,
@@ -70,20 +71,21 @@ class Map extends Component {
     componentDidUpdate(prevProps) {
     // code to run when the component receives new props or state
         if (this.props.selectedTransmitters !== prevProps.selectedTransmitters ||
-            this.props.configuration !== prevProps.configuration) {
+            this.props.configuration !== prevProps.configuration || this.props.directional !== prevProps.directional) {
             this.state.selectedTransmitters = this.props.selectedTransmitters;
             this.layersGroup.clearLayers();
             this.state.markers.forEach((element) => { this.state.map.removeLayer(element); });
             this.state.markers = [];
+            this.state.directionalChars.forEach((element) => { this.state.map.removeLayer(element); });
+            this.state.directionalChars = [];
             this.state.selectedTransmitters.forEach((element) => {
-                fetch(`http://mapy.radiopolska.pl/files/get/${this.props.configuration.cfg}/${element._mapahash}.kml`)
+                fetch(`https://mapy.radiopolska.pl/files/get/${this.props.configuration.cfg}/${element._mapahash}.kml`)
                     .then(res => res.text())
                     .then(
                         (res) => {
                             parseString(res, (err, result) => {
                                 const tempKml = result.kml.GroundOverlay[0];
                                 this.addLayer(tempKml, `${element._mapahash}.png`);
-                                this.addDirectionalChar(element);
                             });
                         },
                         // (error) => {
@@ -112,26 +114,31 @@ class Map extends Component {
         boundsArray.push(Number(kml.LatLonBox[0].west[0]) - 0.008);
 
         const imageBounds = [[boundsArray[2], boundsArray[3]], [boundsArray[1], boundsArray[0]]];
-        this.layersGroup.addLayer(L.imageOverlay(`http://mapy.radiopolska.pl/files/get/${this.props.configuration.cfg}/${png}`, imageBounds, { opacity: 0.6 }));
+        this.layersGroup.addLayer(L.imageOverlay(`https://mapy.radiopolska.pl/files/get/${this.props.configuration.cfg}/${png}`, imageBounds, { opacity: 0.6 }));
+        if (this.props.directional) {
+            this.addDirectionalChar();
+        }
         this.addMarkers();
     }
 
-    addDirectionalChar(element) {
-        const boundsArray = [];
-
-        boundsArray.push(Number(element.dlugosc) - 0.7);
-        boundsArray.push(Number(element.szerokosc) + 0.45);
-        boundsArray.push(Number(element.szerokosc) - 0.45);
-        boundsArray.push(Number(element.dlugosc) + 0.7);
-
-        const imageBounds = [[boundsArray[2], boundsArray[3]], [boundsArray[1], boundsArray[0]]];
-        this.layersGroup.addLayer(L.imageOverlay(`http://mapy.radiopolska.pl/files/ant_pattern/${element.id_antena}`, imageBounds));
+    addDirectionalChar() {
+        this.state.directionalChars.forEach((marker) => { this.state.map.removeLayer(marker); });
+        this.setState({ directionalChars: [] }, () => { });
+        this.state.selectedTransmitters.forEach((element) => {
+            const tempArray = this.state.directionalChars.slice();
+            const marker = L.marker([element.szerokosc, element.dlugosc],
+                                    { icon: L.icon({
+                                        iconUrl: `https://mapy.radiopolska.pl/files/ant_pattern/${element.id_antena}`,
+                                        iconSize: [130, 130],
+                                    }) }).addTo(this.state.map);
+            tempArray.push(marker);
+            this.setState({ directionalChars: tempArray }, () => { });
+        });
     }
 
     addMarkers() {
         this.state.markers.forEach((marker) => { this.state.map.removeLayer(marker); });
         this.setState({ markers: [] }, () => { });
-
         this.state.selectedTransmitters.forEach((element) => {
             const tempArray = this.state.markers.slice();
             const marker = L.marker([element.szerokosc, element.dlugosc],
@@ -143,8 +150,8 @@ class Map extends Component {
                 <b>${element.program}</b><br>
                 Częstotliwość: ${element.mhz} MHz ${element.kategoria}<br>
                 PI: ${element.pi} ERP: ${element.erp}kW Pol: ${element.polaryzacja}<br>
-                Wys. masztu: ${element.wys_npm} n.p.m<br>
-                Wys. nadajnika: ${element.antena_npt} n.p.t`);
+                Wys. podst. masztu: ${element.wys_npm}m n.p.m<br>
+                Wys. umieszcz. nadajnika: ${element.antena_npt}m n.p.t`);
             tempArray.push(marker);
             this.setState({ markers: tempArray }, () => { });
         });
