@@ -1,18 +1,21 @@
 .littleTable {
     position: absolute;
-    width: 6%;
+    /* width: 6%; */
     height: 22em;
-    right: .5em;
-    bottom: 13em;
+    left: 50%;
+    transform:translate(-50%);
+    bottom: -20em;
     z-index: 5;
+    width: 36%;
     padding: 1vh;
     background-color: #D64A2B;
     border-radius: 5px;
 }
 
-.littleTable/*:hover*/ {
-    width: 26%;
-    height: 22em;
+.littleTable:hover {
+    width: 36%;
+    bottom: 0em;
+    transform:translate(-50%);
 }
 
 .littleTable .react-bs-table-container {
@@ -24,4 +27,14 @@
 
 .react-bs-table.react-bs-table-bordered {
     height: 81% !important;
+}
+
+.circleTip {
+    width: 15%;
+    height: 60px;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    position: absolute;
+    border-radius: 50%;
+    background-color: #D64A2B;
 }

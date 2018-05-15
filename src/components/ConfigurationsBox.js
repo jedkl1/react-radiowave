@@ -51,13 +51,16 @@ class ConfigurationsBox extends Component {
         const radios = [];
         this.state.possibleConfigurations.forEach((configuration) => {
             if (configuration.cfg !== this.state.possibleConfigurations[0].cfg) {
-                radios.push(<input
-                    key={configuration.cfg}
-                    type="radio"
-                    name="configuration"
-                    value={configuration.cfg}
-                    onClick={this.onConfigurationChanged} />
-                                , configuration.nazwa);
+                radios.push(
+                    <input
+                        id={configuration.cfg}
+                        key={configuration.cfg}
+                        type="radio"
+                        name="configuration"
+                        value={configuration.cfg}
+                        onClick={this.onConfigurationChanged} />
+                                , <label key={configuration.nazwa} htmlFor={configuration.cfg}>
+                                    {configuration.nazwa}</label>);
             }
         });
         return radios;
@@ -91,10 +94,14 @@ class ConfigurationsBox extends Component {
                                     type="radio"
                                     name="configuration"
                                     key={this.state.possibleConfigurations[0].cfg}
+                                    id={this.state.possibleConfigurations[0].cfg}
                                     value={this.state.possibleConfigurations[0].cfg}
                                     defaultChecked
                                     onClick={this.onConfigurationChanged} />
-                                {this.state.possibleConfigurations[0].nazwa} <br />
+                                <label htmlFor={this.state.possibleConfigurations[0].cfg}>
+                                    {this.state.possibleConfigurations[0].nazwa}
+                                </label>
+                                <br />
                                 {this.returnPossibleRadio()} <br />
                             </form>
                             <br />

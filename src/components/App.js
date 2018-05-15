@@ -312,7 +312,8 @@ class App extends Component {
                     <Map
                         selectedTransmitters={this.state.toDrawSelected}
                         configuration={this.state.selectedConfiguration}
-                        directional={this.state.directionalChecked} />
+                        directional={this.state.directionalChecked}
+                        system={this.state.system} />
                 }
             </div>
         );

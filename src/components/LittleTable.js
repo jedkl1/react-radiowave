@@ -49,6 +49,7 @@ function LittleTable(props) {
 
     return (
         <div className="littleTable">
+            <div className="circleTip" />
             <BootstrapTable
                 data={props.data}
                 selectRow={selectRowProp}
