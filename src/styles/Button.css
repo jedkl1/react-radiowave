@@ -27,7 +27,7 @@
     background: #D64A2B;
     position: absolute;
     padding: 5px;
-    z-index: 10;
+    z-index: 2;
     border-radius: 5px;
     margin-right: .3em;
 }
@@ -59,7 +59,7 @@
 }
 
 .button.checkStation {
-    background-image: url('../../images/antenna-3.png');
+    background-image: url('../../images/antenna-3.1.png');
 }
 
 .button.share {

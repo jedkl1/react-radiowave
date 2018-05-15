@@ -10,11 +10,23 @@
     border-radius: 5px;
     text-overflow: ellipsis;
     overflow: hidden;
+    -webkit-animation-fill-mode: forwards; /* Chrome 16+, Safari 4+ */
+    -moz-animation-fill-mode: forwards;    /* FF 5+ */
+    -o-animation-fill-mode: forwards;      /* Not implemented yet */
+    -ms-animation-fill-mode: forwards;     /* IE 10+ */
+    animation-fill-mode: forwards;
+    animation: changeDownWidth 1s;
 }
 
 .confsBox:hover {
-    width: 18%;
+    width: 24%;
     height: auto;
+    -webkit-animation-fill-mode: forwards; /* Chrome 16+, Safari 4+ */
+    -moz-animation-fill-mode: forwards;    /* FF 5+ */
+    -o-animation-fill-mode: forwards;      /* Not implemented yet */
+    -ms-animation-fill-mode: forwards;     /* IE 10+ */
+    animation-fill-mode: forwards;
+    animation: changeUpWidth 1s;
 }
 
 .confsWhiteBox {
@@ -22,3 +34,40 @@
     border-radius: 5px;
     padding: 5px;
 }
+
+@keyframes changeUpWidth {
+    from {width: 14%;}
+    to {width: 24%;}
+}
+
+@keyframes changeDownWidth {
+    from {width: 24%;}
+    to {width: 14%;}
+}
+
+
+@media screen and (max-width: 479px) {
+    /* start of phone styles */
+  
+    .confsBox:hover {
+        width: 96%;
+        height: auto;
+    }
+    
+    @keyframes changeUpWidth {
+        from {width: 14%;}
+        to {width: 96%;}
+    }
+    
+    @keyframes changeDownWidth {
+        from {width: 96%;}
+        to {width: 14%;}
+    }
+}
+
+@media screen and (max-width: 370px) {
+    .confsBox {
+      top: 15.6em;
+    }
+}
+  

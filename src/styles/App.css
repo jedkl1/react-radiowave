@@ -16,8 +16,8 @@ a {
 .container {
   position: absolute;
   left: .5em;
-  z-index: 10;
-  padding: 0px;
+  z-index: 2;
+  padding: 0px !important;
 }
 
 .systems {
@@ -47,4 +47,52 @@ a {
   height: 4em;
   border-radius: 5px;
   background: white;
+}
+
+.narcissus_x3xwbs {
+  top: 5px !important;
+  left: 5px !important;
+}
+
+@media screen and (max-width: 479px) {
+  /* start of phone styles */
+
+  .narcissus_17w311v {
+    padding: 3px !important;
+    width: 95% !important;
+  }
+
+  .narcissus_17w311v tr th:nth-child(3),
+  .narcissus_17w311v tr td:nth-child(3) {
+    width: 0% !important;
+  }
+
+  .narcissus_17w311v tr th:nth-child(4),
+  .narcissus_17w311v tr td:nth-child(4){
+    width: 15% !important;
+  }
+
+  .narcissus_17w311v tr th:nth-child(7),
+  .narcissus_17w311v tr td:nth-child(7){
+    width: 0% !important;
+  }
+
+  .narcissus_17w311v .filter.text-filter.form-control{
+    padding: 6px 2px;
+  }
+
+  .legendContainer {
+    top: 3.9em;
+  }
+
+  .whiteLegend {
+    height: 3em;
+  }
+}
+
+@media screen and (max-width: 370px) {
+  /* start of phone styles */
+  .container.buttons {
+    top: 7.9em;
+  }
 }

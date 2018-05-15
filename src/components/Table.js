@@ -123,10 +123,9 @@ class Table extends React.Component {
             table = (
                 <div>
                     <TableHeaderColumn isKey dataField="id_nadajnik" hidden>ID</TableHeaderColumn>
-                    <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="10%">Logotyp</TableHeaderColumn>
+                    <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="auto">Logotyp</TableHeaderColumn>
                     <TableHeaderColumn
                         dataField="mhz"
-                        width="7%"
                         filter={{ type: 'TextFilter' }}>MHz</TableHeaderColumn>
                     <TableHeaderColumn
                         dataField="program"
@@ -146,9 +145,9 @@ class Table extends React.Component {
                     <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="10%">Logotyp</TableHeaderColumn>
                     <TableHeaderColumn dataField="kanal_nazwa" width="10%" filter={{ type: 'TextFilter' }}>Kanał</TableHeaderColumn>
                     <TableHeaderColumn dataField="mhz" width="12%"filter={{ type: 'TextFilter' }}>MHz</TableHeaderColumn>
-                    <TableHeaderColumn dataField="multipleks" dataFormat={muxFormat} width="22%"filter={{ type: 'TextFilter' }}>Multipleks</TableHeaderColumn>
-                    <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}filter={{ type: 'TextFilter' }}>Obiekt nadawczy</TableHeaderColumn>
-                    <TableHeaderColumn dataField="nwoj" width="10%"filter={{ type: 'TextFilter' }}>woj.</TableHeaderColumn>
+                    <TableHeaderColumn dataField="multipleks" dataFormat={muxFormat} width="22%" filter={{ type: 'TextFilter' }}>Multipleks</TableHeaderColumn>
+                    <TableHeaderColumn dataField="nwoj" width="10%" filter={{ type: 'TextFilter' }}>woj.</TableHeaderColumn>
+                    <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat} filter={{ type: 'TextFilter' }}>Obiekt nadawczy</TableHeaderColumn>
                 </div>);
         }
         const myRef = (el) => { this.btnRef = el; };

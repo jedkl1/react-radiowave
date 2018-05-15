@@ -6,3 +6,16 @@
 .legendField {
     float: left;
 }
+
+@media screen and (max-width: 479px) {
+    /* start of phone styles */
+  
+    .legendColor {
+        width: 2.1em;
+        height: 1.05em;
+    }
+    
+    .legendField {
+        float: left;
+    }
+}
