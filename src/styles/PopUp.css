@@ -1,31 +1,43 @@
 
 .PopUpWrapper {
-    border-radius: 12px;
+    border-radius: 5px;
     background: #D64A2B;
     position: absolute;
-    padding: 9px;
+    padding: 5px;
     right: .5em;
-    bottom: 9em;
+    bottom: 8.6em;
     z-index: 1;
 }
 
 .PopUpTipContainer {
-    width: 42px;
+    width: 28px;
     height: 20px;
     position: absolute;
     left: 80%;
-    padding-left: 10px;
+    padding-left: 8px;
     overflow: hidden;
     pointer-events: none;
 }
 
 .PopUpTip {
-    width: 17px;
-    height: 17px;
+    width: 11px;
+    height: 11px;
     background-color: #D64A2B;
     transform: rotate(45deg);
 }
 
 #shareInput {
     border-radius: 5px;
+}
+
+@media screen and (max-width: 900px) {
+    /* start of phone styles */
+    .PopUpWrapper {
+        padding: 3px;
+    }
+
+    .PopUpTip {
+        width: 9px;
+        height: 9px;
+    }
 }

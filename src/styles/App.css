@@ -54,6 +54,11 @@ a {
   left: 5px !important;
 }
 
+.narcissus_17w311v tr th:nth-child(3),
+.narcissus_17w311v tr td:nth-child(3) {
+  padding: 1px;
+}
+
 @media screen and (max-width: 479px) {
   /* start of phone styles */
 
@@ -83,6 +88,7 @@ a {
 
   .legendContainer {
     top: 3.9em;
+    padding: 3px;
   }
 
   .whiteLegend {
@@ -94,5 +100,25 @@ a {
   /* start of phone styles */
   .container.buttons {
     top: 7.9em;
+  }
+
+  .legendContainer {
+    padding: 3px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  /* start of phone styles */
+  .narcissus_17w311v {
+    padding: 10px !important;
+    width: 75% !important;
+  }
+
+  .whiteLegend {
+    height: 3.2em;
+  }
+
+  .legendContainer {
+    padding: 3px;
   }
 }

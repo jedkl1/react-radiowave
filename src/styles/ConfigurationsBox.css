@@ -5,7 +5,7 @@
     left: .5em;
     top: 11.6em;
     z-index: 5;
-    padding: .5em;
+    padding: 5px;
     background-color: #D64A2B;
     border-radius: 5px;
     text-overflow: ellipsis;
@@ -52,6 +52,7 @@
     .confsBox:hover {
         width: 96%;
         height: auto;
+        padding: 3px;
     }
     
     @keyframes changeUpWidth {
@@ -68,6 +69,31 @@
 @media screen and (max-width: 370px) {
     .confsBox {
       top: 15.6em;
+      padding: 3px;
     }
 }
-  
+
+
+@media screen and (max-width: 900px) {
+    /* start landscape of phone styles */
+    
+    .confsBox {
+        width: 16%;
+        padding: 3px;
+    }
+
+    .confsBox:hover {
+        width: 90%;
+        height: auto;
+    }
+    
+    @keyframes changeUpWidth {
+        from {width: 14%;}
+        to {width: 90%;}
+    }
+    
+    @keyframes changeDownWidth {
+        from {width: 90%;}
+        to {width: 14%;}
+    }
+}

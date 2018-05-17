@@ -22,3 +22,16 @@
         max-height: 9em;
     }
 }
+
+@media screen and (max-width: 900px) {
+    /* start of phone styles */
+    .imgContainer {
+        width: 11em;
+        height: 11em;
+    }
+    
+    .imgContainer img {
+        max-width: 11em;
+        max-height: 11em;
+    }
+}

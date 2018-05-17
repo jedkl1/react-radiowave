@@ -91,3 +91,10 @@
 SystemButton {
     position: relative;
 }
+
+@media screen and (max-width: 900px) {
+    /* start of phone styles */
+    .ButtonWrapper {
+        padding: 3px;
+    }
+}

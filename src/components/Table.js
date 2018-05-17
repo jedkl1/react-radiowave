@@ -21,8 +21,8 @@ function muxFormat(cell, row) {
 
 function iconFormat(cell) {
     return (<div style={{
-        width: '5em',
-        height: '1.45em',
+        width: '6em',
+        height: '2.2em',
         backgroundImage: `url(http://radiopolska.pl/files/thumb/${cell}/300)`,
         borderRadius: '2px',
         backgroundSize: 'contain',
@@ -123,7 +123,7 @@ class Table extends React.Component {
             table = (
                 <div>
                     <TableHeaderColumn isKey dataField="id_nadajnik" hidden>ID</TableHeaderColumn>
-                    <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="auto">Logotyp</TableHeaderColumn>
+                    <TableHeaderColumn dataField="logo" dataFormat={iconFormat} width="10%">Logotyp</TableHeaderColumn>
                     <TableHeaderColumn
                         dataField="mhz"
                         filter={{ type: 'TextFilter' }}>MHz</TableHeaderColumn>

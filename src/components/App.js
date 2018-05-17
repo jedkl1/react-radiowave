@@ -22,6 +22,7 @@ class App extends Component {
             isShowingInfo: true,
             isShowingShare: false,
             selectedTransmitters: [],
+            selectedSystemTransmitters: [],
             system: null,
             toDrawSelected: [],
             configurations: [],
@@ -109,6 +110,7 @@ class App extends Component {
                         const tempArray = this.state.selectedTransmitters.slice();
                         tempArray.push(res.data[0]);
                         this.setState({ selectedTransmitters: tempArray,
+                            selectedSystemTransmitters: tempArray,
                             toDrawSelected: tempArray }, () => { });
                     },
                     // (error) => {
@@ -164,6 +166,12 @@ class App extends Component {
             data = null;
         }
 
+        const currentTransmitters = [];
+        this.state.selectedTransmitters.forEach((element) => {
+            if (element.typ === id) {
+                currentTransmitters.push(element);
+            }
+        });
         if (id === 'fm') {
             this.setState({ fmClicked: true, dabClicked: false, dvbtClicked: false }, () => { });
         } else if (id === 'dab') {
@@ -171,7 +179,7 @@ class App extends Component {
         } else if (id === 'dvbt') {
             this.setState({ fmClicked: false, dabClicked: false, dvbtClicked: true }, () => { });
         }
-        this.setState({ system: id, selectedTransmitters: [] });
+        this.setState({ system: id, selectedSystemTransmitters: currentTransmitters });
     }
 
     handleRefreshClick() {
@@ -199,7 +207,15 @@ class App extends Component {
     handleInfoClick() { this.setState({ isShowingInfo: true }); }
 
     getSelectedData(dataFromTable) {
-        this.setState({ selectedTransmitters: dataFromTable }, () => { });
+        this.setState({ selectedTransmitters: dataFromTable }, () => {
+            const currentTransmitters = [];
+            this.state.selectedTransmitters.forEach((element) => {
+                if (element.typ === this.state.system) {
+                    currentTransmitters.push(element);
+                }
+            });
+            this.setState({ selectedSystemTransmitters: currentTransmitters }, () => {});
+        });
     }
 
     getSelectedConfiguration(dataFromConfiguration) {
@@ -299,13 +315,13 @@ class App extends Component {
                     <SystemButton id="infoBtn" class="info" title="Informacje" value="i" onSystemClick={this.handleInfoClick} />
                 </div>
                 {
-                    this.state.selectedTransmitters.length ?
+                    this.state.selectedSystemTransmitters.length ?
                         <LittleTable
                             system={this.state.system}
                             onSelectAll={this.onDrawAllSelected}
                             onRowSelect={this.onDrawSelected}
                             selected={this.state.toDrawSelected}
-                            data={this.state.selectedTransmitters} />
+                            data={this.state.selectedSystemTransmitters} />
                     : null
                 }
                 {
