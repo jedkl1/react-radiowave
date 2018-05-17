@@ -20,7 +20,7 @@ function Legend(props) {
         legendFields.push(
             <div className="legendField" key={'unit'}>
                 <div className="legendColor" style={{ backgroundColor: 'white' }} />
-                <b>db(µV/m)</b>
+                <b>dB(µV/m)</b>
             </div>,
         );
 

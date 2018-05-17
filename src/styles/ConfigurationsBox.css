@@ -45,8 +45,39 @@
     to {width: 14%;}
 }
 
+@media screen and (max-width: 1200px) {
+    /* start landscape of phone styles */
+    
+    .confsBox {
+        width: 20%;
+    }
 
-@media screen and (max-width: 479px) {
+    .confsBox:hover {
+        width: 90%;
+        height: auto;
+    }
+    
+    @keyframes changeUpWidth {
+        from {width: 20%;}
+        to {width: 90%;}
+    }
+    
+    @keyframes changeDownWidth {
+        from {width: 90%;}
+        to {width: 20%;}
+    }
+}
+
+@media screen and (max-width: 900px) {
+    /* start landscape of phone styles */
+    
+    .confsBox {
+        padding: 3px;
+        top: 10.3em;
+    }
+}
+
+@media screen and (max-width: 481px) {
     /* start of phone styles */
   
     .confsBox:hover {
@@ -56,13 +87,13 @@
     }
     
     @keyframes changeUpWidth {
-        from {width: 14%;}
+        from {width: 20%;}
         to {width: 96%;}
     }
     
     @keyframes changeDownWidth {
         from {width: 96%;}
-        to {width: 14%;}
+        to {width: 20%;}
     }
 }
 
@@ -70,30 +101,5 @@
     .confsBox {
       top: 15.6em;
       padding: 3px;
-    }
-}
-
-
-@media screen and (max-width: 900px) {
-    /* start landscape of phone styles */
-    
-    .confsBox {
-        width: 16%;
-        padding: 3px;
-    }
-
-    .confsBox:hover {
-        width: 90%;
-        height: auto;
-    }
-    
-    @keyframes changeUpWidth {
-        from {width: 14%;}
-        to {width: 90%;}
-    }
-    
-    @keyframes changeDownWidth {
-        from {width: 90%;}
-        to {width: 14%;}
     }
 }

@@ -9,7 +9,7 @@
     max-height: 15em;
 }
 
-@media screen and (max-width: 479px) {
+@media screen and (max-width: 481px) {
     /* start of phone styles */
     .imgContainer {
         display: inline-block;

@@ -97,4 +97,17 @@ SystemButton {
     .ButtonWrapper {
         padding: 3px;
     }
+
+    .stationsWrapper {
+        top: 3.5em;
+    }
+
+    .shareWrapper {
+        right: 3.5em;
+        bottom: 7.8em;
+    }
+
+    .infoWrapper {
+        right: 3.5em;
+    }
 }

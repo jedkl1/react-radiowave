@@ -95,7 +95,8 @@ class Map extends Component {
                     );
                 }
             });
-            if (prevProps.configuration === this.props.configuration) {
+            if (prevProps.configuration === this.props.configuration &&
+                this.props.directional === prevProps.directional) {
                 this.setView();
             }
         }
@@ -148,15 +149,28 @@ class Map extends Component {
                 const tempArray = this.state.markers.slice();
                 const marker = L.marker([element.szerokosc, element.dlugosc],
                 { icon: config.myIcon }).addTo(this.state.map);
-                marker.bindPopup(
-                `${element.skrot}
-                <a target='_blank' href = http://test.radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
-                ${element.obiekt}</a><br>
-                <b>${element.program}</b><br>
-                Częstotliwość: ${element.mhz} MHz ${element.kategoria}<br>
-                PI: ${element.pi} ERP: ${element.erp}kW Pol: ${element.polaryzacja}<br>
-                Wys. podst. masztu: ${element.wys_npm}m n.p.m<br>
-                Wys. umieszcz. nadajnika: ${element.antena_npt}m n.p.t`);
+
+                if (this.props.system === 'fm') {
+                    marker.bindPopup(
+                        `${element.skrot}
+                        <a target='_blank' href = http://test.radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
+                        ${element.obiekt}</a><br>
+                        <b>${element.program}</b><br>
+                        Częstotliwość: ${element.mhz} MHz ${element.kategoria}<br>
+                        PI: ${element.pi} ERP: ${element.erp}kW Pol: ${element.polaryzacja}<br>
+                        Wys. podst. masztu: ${element.wys_npm}m n.p.m<br>
+                        Wys. umieszcz. nadajnika: ${element.antena_npt}m n.p.t`);
+                } else {
+                    marker.bindPopup(
+                        `${element.skrot}
+                        <a target='_blank' href = http://test.radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
+                        ${element.obiekt}</a><br>
+                        <b>${element.multipleks}</b><br>
+                        Częstotliwość: ${element.mhz} MHz ${element.kategoria}<br>
+                        PI: ${element.pi} ERP: ${element.erp}kW Pol: ${element.polaryzacja}<br>
+                        Wys. podst. masztu: ${element.wys_npm}m n.p.m<br>
+                        Wys. umieszcz. nadajnika: ${element.antena_npt}m n.p.t`);
+                }
                 tempArray.push(marker);
                 this.setState({ markers: tempArray }, () => { });
             }

@@ -54,13 +54,76 @@ a {
   left: 5px !important;
 }
 
-.narcissus_17w311v tr th:nth-child(3),
 .narcissus_17w311v tr td:nth-child(3) {
   padding: 1px;
 }
 
-@media screen and (max-width: 479px) {
+.narcissus_17w311v tr th:nth-child(3),
+.narcissus_17w311v tr td:nth-child(3) {
+  width: 6.2em !important;
+}
+
+.narcissus_17w311v tr th:nth-child(4),
+.narcissus_17w311v tr td:nth-child(4) {
+  width: 5em !important;
+}
+
+@media screen and (max-width: 900px) {
   /* start of phone styles */
+  .narcissus_17w311v {
+    padding: 10px !important;
+    width: 85% !important;
+  }
+
+  .whiteLegend {
+    height: 3.2em;
+  }
+
+  .legendContainer {
+    padding: 3px;
+    top: .1em;
+  }
+
+  .systems {
+    top: .1em;
+  }
+
+  .container.buttons {
+    top: 3.3em;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .narcissus_17w311v tr th:nth-child(4),
+  .narcissus_17w311v tr td:nth-child(4) {
+    width: 12% !important;
+    padding: 5px 1px;
+  }
+
+  .narcissus_17w311v tr td:nth-child(1),
+  .narcissus_17w311v tr td:nth-child(2),
+  .narcissus_17w311v tr td:nth-child(5),
+  .narcissus_17w311v tr td:nth-child(6) {
+    padding: 5px 1px;
+  }
+
+  .narcissus_17w311v tr th:nth-child(5),
+  .narcissus_17w311v tr td:nth-child(5) {
+    width: 33% !important;
+  }
+
+  .narcissus_17w311v tr th:nth-child(7),
+  .narcissus_17w311v tr td:nth-child(7) {
+    width: 0% !important;
+  }
+}
+
+@media screen and (max-width: 620px) {
+  /* start of phone styles */
+  .legendContainer {
+    top: 3.9em;
+    padding: 3px;
+  }
 
   .narcissus_17w311v {
     padding: 3px !important;
@@ -71,28 +134,22 @@ a {
   .narcissus_17w311v tr td:nth-child(3) {
     width: 0% !important;
   }
+}
 
-  .narcissus_17w311v tr th:nth-child(4),
-  .narcissus_17w311v tr td:nth-child(4){
-    width: 15% !important;
-  }
-
-  .narcissus_17w311v tr th:nth-child(7),
-  .narcissus_17w311v tr td:nth-child(7){
-    width: 0% !important;
-  }
+@media screen and (max-width: 481px) {
+  /* start of phone styles */
 
   .narcissus_17w311v .filter.text-filter.form-control{
     padding: 6px 2px;
   }
 
-  .legendContainer {
-    top: 3.9em;
-    padding: 3px;
-  }
-
   .whiteLegend {
     height: 3em;
+  }
+  
+  .narcissus_17w311v tr th:nth-child(5),
+  .narcissus_17w311v tr td:nth-child(5) {
+    width: 43% !important;
   }
 }
 
@@ -100,22 +157,6 @@ a {
   /* start of phone styles */
   .container.buttons {
     top: 7.9em;
-  }
-
-  .legendContainer {
-    padding: 3px;
-  }
-}
-
-@media screen and (max-width: 900px) {
-  /* start of phone styles */
-  .narcissus_17w311v {
-    padding: 10px !important;
-    width: 75% !important;
-  }
-
-  .whiteLegend {
-    height: 3.2em;
   }
 
   .legendContainer {

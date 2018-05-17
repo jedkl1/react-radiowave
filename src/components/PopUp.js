@@ -1,6 +1,7 @@
 
 
 import React from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import './../styles/PopUp.css';
 
@@ -12,6 +13,11 @@ function PopUp(props) {
                     id="shareInput"
                     type="text"
                     defaultValue={props.text} />
+                <CopyToClipboard
+                    text={props.text}
+                    onCopy={() => {}}>
+                    <button>Copy to clipboard</button>
+                </CopyToClipboard>
             </div>
             <div className="PopUpTipContainer">
                 <div className="PopUpTip" />
