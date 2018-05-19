@@ -100,10 +100,11 @@ class App extends Component {
     componentDidMount() {
         // create the Leaflet map object
         if (this.props.location.search) {
-            const inputParams = queryString.parse(this.props.location.search).config;
-            const inputJSON = JSON.parse(inputParams);
-            inputJSON.tra.forEach((transmitter) => {
-                fetch(`https://mapy.radiopolska.pl/api/transmitterById/pl/${inputJSON.sys}/${transmitter.id}`)
+            // ?name=ferret&color=purple
+            const inputParams = queryString.parse(this.props.location.search);
+            const transmitters = inputParams.tra.split(',');
+            transmitters.forEach((transmitter) => {
+                fetch(`https://mapy.radiopolska.pl/api/transmitterById/pl/${inputParams.sys}/${transmitter}`)
                     .then(res => res.json())
                     .then(
                     (res) => {
@@ -118,8 +119,8 @@ class App extends Component {
                     // },
                 );
             });
-            this.setStates(inputJSON);
-            this.setConfiguration(inputJSON.cfg);
+            this.setStates(inputParams.sys);
+            this.setConfiguration(inputParams.cfg);
         } else {
             this.getConfigurations();
             this.setStates();
@@ -149,9 +150,9 @@ class App extends Component {
         }
     }
 
-    setStates(inputJSON = false) {
-        if (inputJSON) {
-            this.setState({ system: inputJSON.sys }, () => {});
+    setStates(paramSystem = false) {
+        if (paramSystem) {
+            this.setState({ system: paramSystem }, () => {});
         } else {
             this.setState({ system: 'fm' }, () => {});
         }
@@ -183,17 +184,17 @@ class App extends Component {
     }
 
     handleRefreshClick() {
-        window.location.reload();
+        window.open(window.location.hostname, '_self');
     }
 
     handleShareClick() {
         if (this.state.selectedConfiguration) {
-            let url = `${window.location.href}?config={"tra":[`;
-            url += this.state.toDrawSelected.map(element => `{"id":${element.id_nadajnik}}`).join(',');
-            url += '],';
-            url += `"cfg":"${this.state.selectedConfiguration.cfg}",`;
-            url += `"sys":"${this.state.system}"`;
-            url += '}';
+            // ?name=ferret&color=purple
+            let url = `${window.location.hostname}?tra=`;
+            url += this.state.toDrawSelected.map(element => `${element.id_nadajnik}`).join(',');
+            url += '&';
+            url += `cfg=${this.state.selectedConfiguration.cfg}&`;
+            url += `sys=${this.state.system}`;
             this.setState({ uri: url, isShowingShare: !this.state.isShowingShare }, () => { });
         }
     }

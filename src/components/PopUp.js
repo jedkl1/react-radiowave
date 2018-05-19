@@ -16,7 +16,7 @@ function PopUp(props) {
                 <CopyToClipboard
                     text={props.text}
                     onCopy={() => {}}>
-                    <button>Copy to clipboard</button>
+                    <button className="CopyToClip">Skopiuj do schowka</button>
                 </CopyToClipboard>
             </div>
             <div className="PopUpTipContainer">

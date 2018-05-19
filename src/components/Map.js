@@ -57,7 +57,7 @@ class Map extends Component {
     componentDidMount() {
     // create the Leaflet map object
         if (!this.state.map) this.init(this.mapNode);
-        navigator.geolocation.getCurrentPosition((e) => {
+        setInterval(navigator.geolocation.getCurrentPosition((e) => {
             this.setState({
                 geoLat: e.coords.latitude, geoLon: e.coords.longitude }, () => {
                 const marker = L.marker([this.state.geoLat, this.state.geoLon],
@@ -65,7 +65,7 @@ class Map extends Component {
                 marker.bindPopup(
                     'Twoja pozycja');
             });
-        });
+        }), 3000);
     }
 
     componentDidUpdate(prevProps) {

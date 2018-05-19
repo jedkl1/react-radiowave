@@ -26,6 +26,12 @@
     transform: rotate(45deg);
 }
 
+.CopyToClip {
+    background-color: white;
+    border-radius: 5px;
+    border-style: hidden;
+}
+
 #shareInput {
     border-radius: 5px;
 }

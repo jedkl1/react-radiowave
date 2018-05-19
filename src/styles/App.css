@@ -64,7 +64,9 @@ a {
 }
 
 .narcissus_17w311v tr th:nth-child(4),
-.narcissus_17w311v tr td:nth-child(4) {
+.narcissus_17w311v tr td:nth-child(4),
+.narcissus_17w311v tr th:nth-child(7),
+.narcissus_17w311v tr td:nth-child(7) {
   width: 5em !important;
 }
 
@@ -91,9 +93,13 @@ a {
   .container.buttons {
     top: 3.3em;
   }
+
+  .leaflet-bottom.leaflet-left {
+    display: none;
+  }
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1000px) {
   .narcissus_17w311v tr th:nth-child(4),
   .narcissus_17w311v tr td:nth-child(4) {
     width: 12% !important;
@@ -112,8 +118,8 @@ a {
     width: 33% !important;
   }
 
-  .narcissus_17w311v tr th:nth-child(7),
-  .narcissus_17w311v tr td:nth-child(7) {
+  .narcissus_17w311v tr th:nth-child(3),
+  .narcissus_17w311v tr td:nth-child(3) {
     width: 0% !important;
   }
 }
@@ -130,8 +136,8 @@ a {
     width: 95% !important;
   }
 
-  .narcissus_17w311v tr th:nth-child(3),
-  .narcissus_17w311v tr td:nth-child(3) {
+  .narcissus_17w311v tr th:nth-child(7),
+  .narcissus_17w311v tr td:nth-child(7) {
     width: 0% !important;
   }
 }
@@ -161,5 +167,9 @@ a {
 
   .legendContainer {
     padding: 3px;
+  }
+
+  body {
+    font-size: 12px;
   }
 }
