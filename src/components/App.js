@@ -184,7 +184,7 @@ class App extends Component {
     }
 
     handleRefreshClick() {
-        window.open(window.location.hostname, '_self');
+        window.location.reload();
     }
 
     handleShareClick() {
