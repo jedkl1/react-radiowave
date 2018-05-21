@@ -14,6 +14,7 @@ const parseString = require('react-native-xml2js').parseString;
 // store the map configuration properties in an object,
 // we could also move this to a separate file & import it if desired.
 const config = {};
+
 config.params = {
     center: [52.1, 20.3],
     zoomControl: false,
@@ -22,12 +23,12 @@ config.params = {
     minZoom: 5,
 };
 config.tileLayer = {
-    uri: 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    uri: 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
     params: {
         minZoom: 5,
-        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-        id: '',
-        accessToken: '',
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors,<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        id: 'mapbox.outdoors',
+        accessToken: 'sk.eyJ1IjoiamVka2wiLCJhIjoiY2poZ2t6angxMWp0dzMwbzZsNG5uOWhlbyJ9.GFjxyXSEOU2ImK4c-CLm0A',
     },
 };
 config.myIcon = L.icon({
@@ -111,13 +112,17 @@ class Map extends Component {
     addLayer(kml, png) {
         const boundsArray = [];
 
-        boundsArray.push(Number(kml.LatLonBox[0].east[0]) - 0.008);
-        boundsArray.push(Number(kml.LatLonBox[0].north[0]) - 0.035);
-        boundsArray.push(Number(kml.LatLonBox[0].south[0]) - 0.035);
-        boundsArray.push(Number(kml.LatLonBox[0].west[0]) - 0.008);
+        boundsArray.push(Number(kml.LatLonBox[0].east[0]));
+        boundsArray.push(Number(kml.LatLonBox[0].north[0]));
+        boundsArray.push(Number(kml.LatLonBox[0].south[0]));
+        boundsArray.push(Number(kml.LatLonBox[0].west[0]));
+        const corner1 = L.latLng(boundsArray[2], boundsArray[3]);
+        const corner2 = L.latLng(boundsArray[1], boundsArray[0]);
+        const bounds = L.latLngBounds(corner1, corner2);
 
-        const imageBounds = [[boundsArray[2], boundsArray[3]], [boundsArray[1], boundsArray[0]]];
-        this.layersGroup.addLayer(L.imageOverlay(`https://mapy.radiopolska.pl/files/get/${this.props.configuration.cfg}/${png}`, imageBounds, { opacity: 0.6 }));
+        // const imageBounds = [[boundsArray[2], boundsArray[3]], [boundsArray[1], boundsArray[0]]];
+        this.layersGroup.addLayer(L.imageOverlay(`https://mapy.radiopolska.pl/files/get/${this.props.configuration.cfg}/${png}`,
+                                                 bounds, { opacity: 0.6 }));
         if (this.props.directional) {
             this.addDirectionalChar();
         }
@@ -192,7 +197,8 @@ class Map extends Component {
 
     init(id) {
         if (this.state.map) return;
-    // this function creates the Leaflet map object and is called after the Map component mounts
+        // this function creates the Leaflet map object and is called after the Map component mounts
+
         const map = L.map(id, config.params);
         L.control.zoom({ position: 'bottomleft' }).addTo(map);
         this.layersGroup = new L.LayerGroup();
@@ -216,3 +222,6 @@ class Map extends Component {
 }
 
 export default Map;
+
+
+// access_token = pk.eyJ1IjoiamVka2wiLCJhIjoiY2poZ2tzdGM2MWh6eDM2bmdwajJjYWM1MSJ9.eetF9FLkBjeuCg_fM4dDLg

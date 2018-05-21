@@ -183,9 +183,7 @@ class App extends Component {
         this.setState({ system: id, selectedSystemTransmitters: currentTransmitters });
     }
 
-    handleRefreshClick() {
-        window.location.reload();
-    }
+    handleRefreshClick() { }
 
     handleShareClick() {
         if (this.state.selectedConfiguration) {
@@ -256,7 +254,9 @@ class App extends Component {
                     }
                 </div>
                 <div id="buttons_container" className="container buttons">
-                    <SystemButton id="home" class="home" title="Odśwież" value="" onSystemClick={this.handleRefreshClick} /> <br />
+                    <a href={`https://${window.location.hostname}`}> {/* page must stay on https */}
+                        <SystemButton id="home" class="home" title="Odśwież" value="" onSystemClick={this.handleRefreshClick} />
+                    </a> <br />
                     <div className="stationsWrapper">
                         <SystemButton id="stations" class="checkStation" title="Wybierz stacje do narysowania pokrycia" value="" onSystemClick={this.openDialog} />
                     </div>
