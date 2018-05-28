@@ -37,44 +37,15 @@ class App extends Component {
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
         this.handleShareClick = this.handleShareClick.bind(this);
         this.handleInfoClick = this.handleInfoClick.bind(this);
-        this.onDrawSelected = this.onDrawSelected.bind(this);
-        this.onDrawAllSelected = this.onDrawAllSelected.bind(this);
         this.getConfigurations = this.getConfigurations.bind(this);
         this.getSelectedData = this.getSelectedData.bind(this);
+        this.getDrawData = this.getDrawData.bind(this);
         this.getSelectedConfiguration = this.getSelectedConfiguration.bind(this);
         this.setConfiguration = this.setConfiguration.bind(this);
         this.getDirectionalCheckedStatus = this.getDirectionalCheckedStatus.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleInfoClose = this.handleInfoClose.bind(this);
         this.openDialog = this.openDialog.bind(this);
-    }
-
-    onDrawSelected(row, isSelected) {
-        let tempArray = this.state.toDrawSelected.slice();
-        if (isSelected) {
-            // add new object which was selected
-            tempArray.push(row);
-        } else if (!isSelected) {
-            // remove object which has same id_nadajnik as exist
-            tempArray = tempArray.filter(obj => obj.id_nadajnik !== row.id_nadajnik);
-        }
-
-        this.setState({ toDrawSelected: tempArray }, () => {});
-    }
-
-    onDrawAllSelected(isSelected, rows) {
-        let tempArray = this.state.toDrawSelected.slice();
-        if (isSelected) {
-            rows.forEach((element) => {
-                tempArray.push(element);
-            });
-        } else {
-            rows.forEach((element) => {
-                tempArray = tempArray.filter(obj => obj.id_nadajnik !== element.id_nadajnik);
-            });
-        }
-
-        this.setState({ toDrawSelected: tempArray }, () => { });
     }
 
     getConfigurations(configurationString = 'fm-std') {
@@ -217,6 +188,10 @@ class App extends Component {
         });
     }
 
+    getDrawData(dataFromLittleTable) {
+        this.setState({ toDrawSelected: dataFromLittleTable }, () => {});
+    }
+
     getSelectedConfiguration(dataFromConfiguration) {
         this.setState({ selectedConfiguration: dataFromConfiguration });
     }
@@ -319,8 +294,7 @@ class App extends Component {
                     this.state.selectedSystemTransmitters.length ?
                         <LittleTable
                             system={this.state.system}
-                            onSelectAll={this.onDrawAllSelected}
-                            onRowSelect={this.onDrawSelected}
+                            callbackFromApp={this.getDrawData}
                             selected={this.state.toDrawSelected}
                             data={this.state.selectedSystemTransmitters} />
                     : null
@@ -328,6 +302,7 @@ class App extends Component {
                 {
                     <Map
                         selectedTransmitters={this.state.toDrawSelected}
+                        selectedMarkers={this.state.selectedSystemTransmitters}
                         configuration={this.state.selectedConfiguration}
                         directional={this.state.directionalChecked}
                         system={this.state.system} />

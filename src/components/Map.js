@@ -23,14 +23,19 @@ config.params = {
     minZoom: 5,
 };
 config.tileLayer = {
-    uri: 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
+    // uri: 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
+    uri: 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
     params: {
         minZoom: 5,
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors,<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        id: 'mapbox.outdoors',
-        accessToken: 'sk.eyJ1IjoiamVka2wiLCJhIjoiY2poZ2t6angxMWp0dzMwbzZsNG5uOWhlbyJ9.GFjxyXSEOU2ImK4c-CLm0A',
+        // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors,<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+        // id: 'mapbox.outdoors',
+        id: '',
+        // accessToken: 'sk.eyJ1IjoiamVka2wiLCJhIjoiY2poZ2t6angxMWp0dzMwbzZsNG5uOWhlbyJ9.GFjxyXSEOU2ImK4c-CLm0A',
+        accessToken: '',
     },
 };
+
 config.myIcon = L.icon({
     iconUrl: icon,
     iconSize: [30, 65],
@@ -79,27 +84,14 @@ class Map extends Component {
             this.state.markers = [];
             this.state.directionalChars.forEach((element) => { this.state.map.removeLayer(element); });
             this.state.directionalChars = [];
-            this.state.selectedTransmitters.forEach((element) => {
-                if (element.typ === this.props.system) {
-                    fetch(`https://mapy.radiopolska.pl/files/get/${this.props.configuration.cfg}/${element._mapahash}.kml`)
-                        .then(res => res.text())
-                        .then(
-                        (res) => {
-                            parseString(res, (err, result) => {
-                                const tempKml = result.kml.GroundOverlay[0];
-                                this.addLayer(tempKml, `${element._mapahash}.png`);
-                            });
-                        },
-                        // (error) => {
-                        //     console.log(`Error${error}`);
-                        // },
-                    );
-                }
-            });
+            this.drawLayersCharsMarkers();
             if (prevProps.configuration === this.props.configuration &&
                 this.props.directional === prevProps.directional) {
                 this.setView();
             }
+        }
+        if (this.props.selectedMarkers !== prevProps.selectedMarkers) {
+            this.addMarkers();
         }
     }
 
@@ -109,6 +101,84 @@ class Map extends Component {
         this.state.map.remove();
     }
 
+    async drawLayersCharsMarkers() {
+        this.state.selectedTransmitters.forEach(async (element) => {
+            if (element.typ === this.props.system) {
+                await fetch(`https://mapy.radiopolska.pl/files/get/${this.props.configuration.cfg}/${element._mapahash}.kml`)
+                    .then(async res => res.text())
+                    .then(
+                        async (res) => {
+                            parseString(res, (err, result) => {
+                                const kml = result.kml.GroundOverlay[0];
+
+                                const boundsArray = [];
+
+                                boundsArray.push(Number(kml.LatLonBox[0].east[0]));
+                                boundsArray.push(Number(kml.LatLonBox[0].north[0]));
+                                boundsArray.push(Number(kml.LatLonBox[0].south[0]));
+                                boundsArray.push(Number(kml.LatLonBox[0].west[0]));
+                                const corner1 = L.latLng(boundsArray[1], boundsArray[0]);
+                                const corner2 = L.latLng(boundsArray[2], boundsArray[3]);
+                                const bounds = L.latLngBounds(corner1, corner2);
+                                this.layersGroup.addLayer(L.imageOverlay(
+                                    `https://mapy.radiopolska.pl/files/get/${this.props.configuration.cfg}/${element._mapahash}.png`,
+                                    bounds, { opacity: 0.6 }));
+                            });
+                        },
+                        (error) => {
+                            console.log(`Error${error}`);
+                        },
+                        )
+                    .then(
+                            () => {
+                                if (this.props.directional) {
+                                    const tempArray = this.state.directionalChars.slice();
+                                    const marker = L.marker([element.szerokosc, element.dlugosc],
+                                                            { icon: L.icon({
+                                                                iconUrl: `https://mapy.radiopolska.pl/files/ant_pattern/${element.id_antena}`,
+                                                                iconSize: [130, 130],
+                                                            }) }).addTo(this.state.map);
+                                    tempArray.push(marker);
+                                    this.setState({ directionalChars: tempArray }, () => { });
+                                }
+                            },
+                        )
+                    .then(
+                            () => {
+                                const tempArray = this.state.markers.slice();
+                                const marker = L.marker([element.szerokosc, element.dlugosc],
+                                { icon: config.myIcon }).addTo(this.state.map);
+
+                                if (this.props.system === 'fm') {
+                                    marker.bindPopup(
+                                        `${element.skrot}
+                                        <a target='_blank' href = http://test.radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
+                                        ${element.obiekt}</a><br>
+                                        <b>${element.program}</b><br>
+                                        Częstotliwość: ${element.mhz} MHz ${element.kategoria}<br>
+                                        PI: ${element.pi} ERP: ${element.erp}kW Pol: ${element.polaryzacja}<br>
+                                        Wys. podst. masztu: ${element.wys_npm}m n.p.m<br>
+                                        Wys. umieszcz. nadajnika: ${element.antena_npt}m n.p.t`);
+                                } else {
+                                    marker.bindPopup(
+                                        `${element.skrot}
+                                        <a target='_blank' href = http://test.radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
+                                        ${element.obiekt}</a><br>
+                                        <b>${element.multipleks}</b><br>
+                                        Częstotliwość: ${element.mhz} MHz ${element.kategoria}<br>
+                                        PI: ${element.pi} ERP: ${element.erp}kW Pol: ${element.polaryzacja}<br>
+                                        Wys. podst. masztu: ${element.wys_npm}m n.p.m<br>
+                                        Wys. umieszcz. nadajnika: ${element.antena_npt}m n.p.t`);
+                                }
+                                tempArray.push(marker);
+                                this.setState({ markers: tempArray }, () => { });
+                                console.log('Done');
+                            },
+                            );
+            }
+        });
+    }
+
     addLayer(kml, png) {
         const boundsArray = [];
 
@@ -116,8 +186,8 @@ class Map extends Component {
         boundsArray.push(Number(kml.LatLonBox[0].north[0]));
         boundsArray.push(Number(kml.LatLonBox[0].south[0]));
         boundsArray.push(Number(kml.LatLonBox[0].west[0]));
-        const corner1 = L.latLng(boundsArray[2], boundsArray[3]);
-        const corner2 = L.latLng(boundsArray[1], boundsArray[0]);
+        const corner1 = L.latLng(boundsArray[1], boundsArray[0]);
+        const corner2 = L.latLng(boundsArray[2], boundsArray[3]);
         const bounds = L.latLngBounds(corner1, corner2);
 
         // const imageBounds = [[boundsArray[2], boundsArray[3]], [boundsArray[1], boundsArray[0]]];
@@ -149,7 +219,7 @@ class Map extends Component {
     addMarkers() {
         this.state.markers.forEach((marker) => { this.state.map.removeLayer(marker); });
         this.setState({ markers: [] }, () => { });
-        this.state.selectedTransmitters.forEach((element) => {
+        this.props.selectedMarkers.forEach((element) => {
             if (element.typ === this.props.system) {
                 const tempArray = this.state.markers.slice();
                 const marker = L.marker([element.szerokosc, element.dlugosc],

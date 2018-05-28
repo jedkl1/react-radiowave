@@ -109,9 +109,12 @@ class ConfigurationsBox extends Component {
                             <input
                                 type="checkbox"
                                 name="directionalChars"
+                                id="directionalChars"
                                 checked={this.state.checkedDirectional}
                                 onChange={this.directionalChanged} />
-                                Rysuj charakterystyki kierunkowe anten <br />
+                            <label htmlFor="directionalChars">
+                                    Rysuj charakterystyki kierunkowe anten
+                            </label>
                         </div>
                     </div>
                     <Legend legend={this.state.checkedConfiguration} />
