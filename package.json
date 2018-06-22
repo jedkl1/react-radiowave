@@ -11,6 +11,8 @@
     "lodash": "^4.17.5",
     "net": "^1.0.2",
     "node": "^9.5.0",
+    "proj4": "^2.4.4",
+    "proj4leaflet": "^1.0.2",
     "prop-types": "^15.6.0",
     "query-string": "^5.1.1",
     "react": "^15.6.2",
