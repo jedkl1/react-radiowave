@@ -42,11 +42,11 @@ function Info() {
                 <img src={shareImg} alt="Share info" />
                 <p>Udostępnij swoje pomiary znajomym</p>
             </div>
-            <h5> Aplikacja została wykonana podczas tworzenia pracy inżynierskiej. </h5>
-            <a> Student: Jędrzej Klocek </a>
-            <a> Prowadzący pracę: dr inż. Przemysław Korpas </a>
+            <h5> Aplikacja została wykonana jako przedmiot pracy inżynierskiej. </h5>
+            <a> Jędrzej Klocek, </a>
+            <a> Prowadzący pracę: dr inż. Przemysław Korpas, </a>
             <a> Politechnika Warszawska 2018 </a> <br />
-            <a> Mapy-RadioPolska.pl beta version: 1.0.1 </a>
+            <a> Mapy-RadioPolska.pl beta version: 1.0.2 </a>
 
         </div>
     );

@@ -184,7 +184,10 @@ class App extends Component {
                     currentTransmitters.push(element);
                 }
             });
-            this.setState({ selectedSystemTransmitters: currentTransmitters }, () => {});
+            const intersection = currentTransmitters.filter(transmitter =>
+                this.state.toDrawSelected.includes(transmitter));
+            this.setState({ selectedSystemTransmitters: currentTransmitters,
+                toDrawSelected: intersection }, () => {});
         });
     }
 

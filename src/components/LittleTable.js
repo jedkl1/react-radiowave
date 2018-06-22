@@ -5,11 +5,11 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import '../styles/LittleTable.css';
 
 function radioMastFormat(cell, row) {
-    return (<a href={`http://test.radiopolska.pl/wykaz/obiekt/${row.id_obiekt}`} target="_blank">{cell}</a>);
+    return (<a href={`http://radiopolska.pl/wykaz/obiekt/${row.id_obiekt}`} target="_blank">{cell}</a>);
 }
 
 function stationFormat(cell, row) {
-    return (<a href={`http://test.radiopolska.pl/wykaz/program/${row.id_program}`} target="_blank">{cell}</a>);
+    return (<a href={`http://radiopolska.pl/wykaz/program/${row.id_program}`} target="_blank">{cell}</a>);
 }
 
 
