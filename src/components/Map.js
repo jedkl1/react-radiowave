@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import L from 'leaflet';
 
-import proj4 from 'proj4';
-
 // postCSS import of Leaflet's CSS
 import 'leaflet/dist/leaflet.css';
 import '../styles/Map.css';
@@ -21,12 +19,10 @@ const config = {};
 
 config.params = {
     center: [52.1, 20.3],
-    crs: L.CRS.EPSG3857,
     zoomControl: false,
     zoom: 7,
     maxZoom: 18,
-    minZoom: 3,
-    worldCopyJump: true,
+    minZoom: 4,
 };
 config.tileLayer = {
     // uri: 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
@@ -34,7 +30,8 @@ config.tileLayer = {
     // uri: 'http://b.tile.stamen.com/terrain/{z}/{x}/{y}.png',
     // uri: 'https://maps.omniscale.net/v2/myomniscale-d7a6ecbd/style.default/{z}/{x}/{y}.png',
     params: {
-        // minZoom: 5,
+        minZoom: 4,
+        maxZoom: 16,
         // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors,<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
         // id: 'mapbox.outdoors',
@@ -69,25 +66,37 @@ class Map extends Component {
             markers: [],
             directionalChars: [],
             layersGroup: [],
-            geoLat: null,
-            geoLon: null,
+            gpsMarker: null,
         };
         this.mapNode = null;
+        this.watchPositionID = null;
+        this.gpsChanged = this.gpsChanged.bind(this);
         // this.setView = this.setView.bind(this);
+    }
+
+
+    gpsChanged(pos) {
+        if (this.state.gpsMarker) {
+            this.state.map.removeLayer(this.state.gpsMarker); // removing old one
+        }
+
+        const marker = L.marker([pos.coords.latitude, pos.coords.longitude],
+            { icon: config.gpsIcon }).addTo(this.state.map);
+        marker.bindPopup('Twoja pozycja');
+
+        this.setState({ gpsMarker: marker });
+
+        navigator.geolocation.clearWatch(this.watchPositionID);
     }
 
     componentDidMount() {
     // create the Leaflet map object
         if (!this.state.map) this.init(this.mapNode);
-        setInterval(navigator.geolocation.getCurrentPosition((e) => {
-            this.setState({
-                geoLat: e.coords.latitude, geoLon: e.coords.longitude }, () => {
-                const marker = L.marker([this.state.geoLat, this.state.geoLon],
-                        { icon: config.gpsIcon }).addTo(this.state.map);
-                marker.bindPopup(
-                    'Twoja pozycja');
-            });
-        }), 3000);
+
+        // watching user position
+        const id = navigator.geolocation.watchPosition(this.gpsChanged,
+                                                       (err) => { console.warn(`ERROR(${err.code}): ${err.message}`); });
+        this.watchPositionID = id;
     }
 
     componentDidUpdate(prevProps) {
@@ -131,32 +140,14 @@ class Map extends Component {
                                 boundsArray.push(Number(kml.LatLonBox[0].north[0]));
                                 boundsArray.push(Number(kml.LatLonBox[0].south[0]));
                                 boundsArray.push(Number(kml.LatLonBox[0].west[0]));
-                                // const corner1 = L.latLng(boundsArray[1], boundsArray[0]);
-                                // const corner2 = L.latLng(boundsArray[2], boundsArray[3]);
-
-                                const c1 = proj4(proj4('WGS84'),
-                                                 proj4('EPSG:3857'), [boundsArray[1], boundsArray[0]]);
-                                const c2 = proj4(proj4('EPSG:4326'),
-                                                 proj4('EPSG:3857'), [boundsArray[2], boundsArray[3]]);
-                                // const corner2 = proj4(proj4('EPSG:4326'),
-                                // proj4('EPSG:3857'), [boundsArray[2], boundsArray[3]]);
-
-                                // const corner1 = L.point(6918587.72, 2416467.85);
-                                // const corner2 = L.point(6283490.59, 1781790.90);
-
-                                console.log(c1, c2);
-                                // const bounds = L.latLngBounds(this.state.map.layerPointToLatLng(c1),
-                                //                               this.state.map.layerPointToLatLng(c2));
-
-                                // const bounds = L.latLng(element.szerokosc, element.dlugosc).toBounds(300000);
-
-                                console.log(L.point(c1));
-                                console.log(this.state.map.unproject(L.point(c1)));
-                                console.log(this.state.map.layerPointToLatLng(c1));
-                                console.log(L.bounds(c1, c2));
+                                const corner1 = L.latLng(boundsArray[1], boundsArray[0]);
+                                const corner2 = L.latLng(boundsArray[2], boundsArray[3]);
+                                const bounds = L.latLngBounds(corner1, corner2);
                                 this.layersGroup.addLayer(L.imageOverlay(
                                     `https://mapy.radiopolska.pl/files/get/${this.props.configuration.cfg}/${element._mapahash}.png`,
-                                    L.bounds(c1, c2), { opacity: 0.5 }));
+                                    bounds, { opacity: 0.6 }));
+
+                                this.layersGroup.addTo(this.state.map);
                             });
                         },
                         (error) => {
@@ -276,7 +267,6 @@ class Map extends Component {
         // this function creates the Leaflet map object and is called after the Map component mounts
 
         const map = L.map(id, config.params);
-        // map.options.crs = L.CRS.EPSG4326;
         L.control.zoom({ position: 'bottomleft' }).addTo(map);
         this.layersGroup = new L.LayerGroup();
         this.layersGroup.addTo(map);
