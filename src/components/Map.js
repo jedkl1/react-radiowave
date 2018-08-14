@@ -101,21 +101,24 @@ class Map extends Component {
 
     componentDidUpdate(prevProps) {
     // code to run when the component receives new props or state
-        if (this.props.selectedTransmitters !== prevProps.selectedTransmitters ||
-            this.props.configuration !== prevProps.configuration ||
-            (this.props.directional !== prevProps.directional && this.props.directional)) {
-            this.state.selectedTransmitters = this.props.selectedTransmitters;
-            this.layersGroup.clearLayers();
-            this.drawLayersCharsMarkers();
-            if (prevProps.configuration === this.props.configuration &&
-                this.props.directional === prevProps.directional) {
-                // this.setView();
+        if (prevProps.configuration) {
+            if (this.props.selectedTransmitters.length !== prevProps.selectedTransmitters.length ||
+                this.props.configuration.cfg !== prevProps.configuration.cfg ||
+                this.props.directional !== prevProps.directional) {
+                this.state.selectedTransmitters = this.props.selectedTransmitters;
+                this.layersGroup.clearLayers();
+                this.drawLayersCharsMarkers();
+                this.addMarkers();
+                if (prevProps.configuration === this.props.configuration &&
+                    this.props.directional === prevProps.directional) {
+                    // this.setView();
+                }
+            } else if (this.props.selectedMarkers !== prevProps.selectedMarkers) {
+                this.addMarkers();
+            } else if (this.props.directional !== prevProps.directional && !this.props.directional) {
+                this.state.directionalChars.forEach((element) => { this.state.map.removeLayer(element); });
+                this.state.directionalChars = [];
             }
-        } else if (this.props.selectedMarkers !== prevProps.selectedMarkers) {
-            this.addMarkers();
-        } else if (this.props.directional !== prevProps.directional && !this.props.directional) {
-            this.state.directionalChars.forEach((element) => { this.state.map.removeLayer(element); });
-            this.state.directionalChars = [];
         }
     }
 
@@ -127,6 +130,8 @@ class Map extends Component {
 
     async drawLayersCharsMarkers() {
         // this.state.selectedTransmitters.forEach(async (element) => {
+        this.state.directionalChars.forEach((marker) => { this.state.map.removeLayer(marker); });
+        this.setState({ directionalChars: [] }, () => { });
         for (let i = 0, p = Promise.resolve(); i < this.state.selectedTransmitters.length; i += 1) {
             if (i === 50) {
                 alert('Rysowanie powyżej 50 nadajników jednocześnie znacznie ograniczy pracę Twojego urządzenia');
@@ -176,10 +181,6 @@ class Map extends Component {
                         );
                 }
             }));
-
-            if (i === this.state.selectedTransmitters.length - 1) {
-                this.addMarkers();
-            }
         }
     }
 
