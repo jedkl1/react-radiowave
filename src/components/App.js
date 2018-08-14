@@ -151,7 +151,7 @@ class App extends Component {
         } else if (id === 'dvbt') {
             this.setState({ fmClicked: false, dabClicked: false, dvbtClicked: true }, () => { });
         }
-        this.setState({ system: id, selectedSystemTransmitters: currentTransmitters });
+        this.setState({ system: id, selectedSystemTransmitters: currentTransmitters }, () => { });
     }
 
     handleRefreshClick() { }

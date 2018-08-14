@@ -10,14 +10,24 @@ const transmittersImg = require('../../images/info/transmitters.png');
 const confsImg = require('../../images/info/confs.png');
 const tableImg = require('../../images/info/table.png');
 
+
+function InfoImage(props) {
+    return (
+        <div className="imgContainer">
+            <img src={props.src} alt={props.alt} />
+            <p>{props.hint}</p>
+        </div>
+    );
+}
+
 function Info() {
     return (
         <div>
             <h3> Witaj w aplikacji Mapy serwisu RadioPolska.pl</h3><br />
-            <div className="imgContainer">
-                <img src={systemImg} alt="System info" />
-                <p>Wybierz system, w którym chcesz zbadać pokrycie</p>
-            </div>
+            <InfoImage
+                src={systemImg}
+                alt={'System info'}
+                hint={'Wybierz system, w którym chcesz zbadać pokrycie'} />z
             <div className="imgContainer">
                 <img src={transmittersImg} alt="Check transmitter info" />
                 <p>Kliknij ten przycisk by przeszukać listę nadajników</p>

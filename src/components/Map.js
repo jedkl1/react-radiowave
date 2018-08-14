@@ -102,19 +102,20 @@ class Map extends Component {
     componentDidUpdate(prevProps) {
     // code to run when the component receives new props or state
         if (this.props.selectedTransmitters !== prevProps.selectedTransmitters ||
-            this.props.configuration !== prevProps.configuration || this.props.directional !== prevProps.directional) {
+            this.props.configuration !== prevProps.configuration ||
+            (this.props.directional !== prevProps.directional && this.props.directional)) {
             this.state.selectedTransmitters = this.props.selectedTransmitters;
             this.layersGroup.clearLayers();
-            this.state.directionalChars.forEach((element) => { this.state.map.removeLayer(element); });
-            this.state.directionalChars = [];
             this.drawLayersCharsMarkers();
-            this.addMarkers();
             if (prevProps.configuration === this.props.configuration &&
                 this.props.directional === prevProps.directional) {
                 // this.setView();
             }
         } else if (this.props.selectedMarkers !== prevProps.selectedMarkers) {
             this.addMarkers();
+        } else if (this.props.directional !== prevProps.directional && !this.props.directional) {
+            this.state.directionalChars.forEach((element) => { this.state.map.removeLayer(element); });
+            this.state.directionalChars = [];
         }
     }
 
@@ -125,9 +126,16 @@ class Map extends Component {
     }
 
     async drawLayersCharsMarkers() {
-        this.state.selectedTransmitters.forEach(async (element) => {
-            if (element.typ === this.props.system) {
-                await fetch(`https://mapy.radiopolska.pl/files/get/${this.props.configuration.cfg}/${element._mapahash}.kml`)
+        // this.state.selectedTransmitters.forEach(async (element) => {
+        for (let i = 0, p = Promise.resolve(); i < this.state.selectedTransmitters.length; i += 1) {
+            if (i === 50) {
+                alert('Rysowanie powyżej 50 nadajników jednocześnie znacznie ograniczy pracę Twojego urządzenia');
+                break;
+            }
+            p = p.then(() => new Promise((resolve) => {
+                const element = this.state.selectedTransmitters[i];
+                if (element.typ === this.props.system) {
+                    fetch(`https://mapy.radiopolska.pl/files/get/${this.props.configuration.cfg}/${element._mapahash}.kml`)
                     .then(res => res.text())
                     .then(
                         (res) => {
@@ -149,30 +157,30 @@ class Map extends Component {
 
                                 this.layersGroup.addTo(this.state.map);
                             });
+                            if (this.props.directional) {
+                                const tempArray = this.state.directionalChars.slice();
+                                const marker = L.marker([element.szerokosc, element.dlugosc],
+                                                        { icon: L.icon({
+                                                            iconUrl: `https://mapy.radiopolska.pl/files/ant_pattern/${element.id_antena}`,
+                                                            iconSize: [130, 130],
+                                                        }) }).addTo(this.state.map);
+                                tempArray.push(marker);
+                                this.setState({ directionalChars: tempArray }, () => { });
+                            }
+                            this.addMarkers();
+                            resolve();
                         },
                         (error) => {
                             console.log(`Error${error}`);
                         },
-                        )
-                    .then(
-                            () => {
-                                if (this.props.directional) {
-                                    const tempArray = this.state.directionalChars.slice();
-                                    const marker = L.marker([element.szerokosc, element.dlugosc],
-                                                            { icon: L.icon({
-                                                                iconUrl: `https://mapy.radiopolska.pl/files/ant_pattern/${element.id_antena}`,
-                                                                iconSize: [130, 130],
-                                                            }) }).addTo(this.state.map);
-                                    tempArray.push(marker);
-                                    this.setState({ directionalChars: tempArray }, () => { });
-                                }
-                            },
-                        )
-                    .then(
-                        () => { this.addMarkers(); },
-                    );
+                        );
+                }
+            }));
+
+            if (i === this.state.selectedTransmitters.length - 1) {
+                this.addMarkers();
             }
-        });
+        }
     }
 
     addLayer(kml, png) {
