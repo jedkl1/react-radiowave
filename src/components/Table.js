@@ -2,6 +2,7 @@
 import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import '../styles/Spinner.css';
 
 // import Search from './Search';
 
@@ -162,18 +163,32 @@ class Table extends React.Component {
                     </select>
                     <Search />
                 </div> */}
-                <BootstrapTable
-                    ref={myRef}
-                    data={this.props.data}
-                    selectRow={selectRowProp}
-                    striped
-                    hover
-                    condensed
-                    pagination
-                    // search
-                    options={options}>
-                    { table.props.children }
-                </BootstrapTable>
+                {
+                    this.props.data.length ?
+                        <BootstrapTable
+                            ref={myRef}
+                            data={this.props.data}
+                            selectRow={selectRowProp}
+                            striped
+                            hover
+                            condensed
+                            pagination
+                        // search
+                            options={options}>
+                            { table.props.children }
+                        </BootstrapTable>
+                    :
+                        <div>
+                            <h3>Trwa pobieranie nadajnijków, proszę czekać</h3>
+                            <div className="spinner">
+                                <div className="rect1" />
+                                <div className="rect2" />
+                                <div className="rect3" />
+                                <div className="rect4" />
+                                <div className="rect5" />
+                            </div>
+                        </div>
+                }
             </div>
         );
     }

@@ -11,7 +11,7 @@ import ConfigurationsBox from './ConfigurationsBox';
 import PopUp from './PopUp';
 import Info from './Info';
 
-let data = null;
+let data = [];
 
 class App extends Component {
 
@@ -47,7 +47,6 @@ class App extends Component {
         this.handleClose = this.handleClose.bind(this);
         this.handleInfoClose = this.handleInfoClose.bind(this);
         this.openDialog = this.openDialog.bind(this);
-        this.openConfiguration = this.openConfiguration.bind(this);
     }
 
     getConfigurations(configurationString = 'fm-std') {
@@ -110,6 +109,7 @@ class App extends Component {
             } else if (this.state.system === 'dvbt') {
                 dataUrl += 'dvbt';
             }
+            // console.log(dataUrl);
             fetch(dataUrl)
                 .then(res => res.json())
                 .then(
@@ -137,7 +137,7 @@ class App extends Component {
 
     handleSystemClick(id) {
         if (this.state.system !== id) {
-            data = null;
+            data = [];
         }
 
         const currentTransmitters = [];
@@ -171,8 +171,6 @@ class App extends Component {
     }
 
     openDialog() { this.setState({ isShowingModal: true }); }
-
-    openConfiguration() { this.setState({ openConfiguration: !this.state.openConfiguration }); }
 
     handleClose() { this.setState({ isShowingModal: false }); }
 
@@ -242,9 +240,6 @@ class App extends Component {
                     <div className="stationsWrapper">
                         <SystemButton id="stations" class="checkStation" title="Wybierz stacje do narysowania pokrycia" value="" onSystemClick={this.openDialog} />
                     </div>
-                    <div className="configurationWrapper">
-                        <SystemButton id="configuration" class="configuration" title="Zmien konfigurację" value="CON" onSystemClick={this.openConfiguration} />
-                    </div>
                 </div>
                 {
                     this.state.configurations.length ?
@@ -263,19 +258,16 @@ class App extends Component {
                             <ModalDialog style={modalStyle} onClose={this.handleClose}>
                                 <h3>Wybierz nadajniki</h3>
                                 {
-                                    data ?
-                                        <div>
-                                            <h3>Dla bezpieczeczenstwa swojego komputera nie próbuj rysować
-                                                wszystkich nadajników<br />
-                                                Nie udało mi się jeszcze zaimplementować kilku zapezpieczeń :)</h3>
-                                            <Table
-                                                system={this.state.system}
-                                                callbackFromApp={this.getSelectedData}
-                                                selected={this.state.selectedTransmitters}
-                                                data={data} />
-                                        </div>
-                                    : <h4>Trwa pobieranie nadajników z bazy danych.
-                                        Wróć tu ponownie za kilka sekund...</h4>
+                                    <div>
+                                        <h3>Dla bezpieczeczenstwa swojego komputera nie próbuj rysować
+                                            wszystkich nadajników<br />
+                                            Nie udało mi się jeszcze zaimplementować kilku zapezpieczeń :)</h3>
+                                        <Table
+                                            system={this.state.system}
+                                            callbackFromApp={this.getSelectedData}
+                                            selected={this.state.selectedTransmitters}
+                                            data={data} />
+                                    </div>
                                 }
                             </ModalDialog>
                         </ModalContainer>

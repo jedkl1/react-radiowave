@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import '../styles/ConfigurationsBox.css';
 import Legend from './Legend';
 
+import settingsIcon from '../../images/baseline_settings_black_36dp.png';
+
 class ConfigurationsBox extends Component {
 
 
@@ -12,10 +14,12 @@ class ConfigurationsBox extends Component {
             possibleConfigurations: [],
             checkedConfiguration: null,
             checkedDirectional: true,
+            isOpen: null,
         };
         this.getPossibleConfiguration = this.getPossibleConfiguration.bind(this);
         this.directionalChanged = this.directionalChanged.bind(this);
         this.onConfigurationChanged = this.onConfigurationChanged.bind(this);
+        this.openConfiguration = this.openConfiguration.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -82,11 +86,16 @@ class ConfigurationsBox extends Component {
         }, function () { this.props.callbackDirectionals(this.state.checkedDirectional); });
     }
 
+    openConfiguration() { this.setState({ isOpen: !this.state.isOpen }); }
+
     render() {
         return (
             this.state.possibleConfigurations.length ?
                 <div>
-                    <div className={`confsBox ${this.props.isOpen}`}>
+                    <div className={`confsBox ${this.state.isOpen}`}>
+                        <button onClick={this.openConfiguration}>
+                            <img src={settingsIcon} type="image/svg+xml" className={`Conf-logo ${this.state.isOpen}`} alt="Konfiguracja" />
+                        </button>
                         <div className="confsWhiteBox">
                             <b>Wybierz konfigurację mapy pokrycia</b>
                             <form>

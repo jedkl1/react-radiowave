@@ -1,11 +1,12 @@
 .confsBox {
     position: absolute;
-    width: 14%;
-    height: 2.5em;
+    width: 3.2em;
+    height: 3.2em;
     left: .5em;
-    top: 14.2em;
+    top: 11.6em;
     z-index: 5;
     padding: 5px;
+    display: -webkit-inline-box;
     background-color: #D64A2B;
     border-radius: 5px;
     text-overflow: ellipsis;
@@ -19,7 +20,7 @@
 }
 
 .confsBox.true {
-    width: 24%;
+    width: 30%;
     height: auto;
     -webkit-animation-fill-mode: forwards; /* Chrome 16+, Safari 4+ */
     -moz-animation-fill-mode: forwards;    /* FF 5+ */
@@ -29,6 +30,33 @@
     animation: changeUpWidth 1s;
 }
 
+.Conf-logo {
+    height: 26px;
+    -webkit-animation-fill-mode: forwards; /* Chrome 16+, Safari 4+ */
+    -moz-animation-fill-mode: forwards;    /* FF 5+ */
+    -o-animation-fill-mode: forwards;      /* Not implemented yet */
+    -ms-animation-fill-mode: forwards;     /* IE 10+ */
+    animation-fill-mode: forwards;
+}
+
+.Conf-logo.true {
+    animation: Conf-logo-spin-forward 1s linear;
+}
+
+.Conf-logo.false {
+    animation: Conf-logo-spin-back 1s linear;
+}
+
+@keyframes Conf-logo-spin-forward {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes Conf-logo-spin-back {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+}
+
 .confsWhiteBox {
     background: white;
     border-radius: 5px;
@@ -36,13 +64,13 @@
 }
 
 @keyframes changeUpWidth {
-    from {width: 14%;}
-    to {width: 24%;}
+    from {width: 3.2em;}
+    to {width: 30%;}
 }
 
 @keyframes changeDownWidth {
-    from {width: 24%;}
-    to {width: 14%;}
+    from {width: 30%;}
+    to {width: 3.2em;}
 }
 
 @media screen and (max-width: 1200px) {

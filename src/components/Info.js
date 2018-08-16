@@ -6,10 +6,10 @@ import './../styles/Info.css';
 const systemImg = require('../../images/info2/system.png');
 const shareImg = require('../../images/info2/share.png');
 const littleTableImg = require('../../images/info2/littleTable.png');
-// const transmittersImg = require('../../images/info/transmitters.png');
-// const infoImg = require('../../images/info/info.png');
-// const confsImg = require('../../images/info/confs.png');
-// const tableImg = require('../../images/info/table.png');
+const transmittersImg = require('../../images/info2/transmitters.png');
+const infoImg = require('../../images/info2/info.png');
+const confsImg = require('../../images/info2/confs.png');
+const tableImg = require('../../images/info2/table.png');
 
 
 // function InfoImage(props) {
@@ -92,6 +92,34 @@ class Info extends React.Component {
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
+                        <img width={1310} height={600} alt="400x300" src={transmittersImg} />
+                        <Carousel.Caption>
+                            <h3>Przycisk wyboru nadajników</h3>
+                            <p>Kliknij ten przycisk aby wybrać interesujące Cię nadajniki.</p>
+                        </Carousel.Caption>
+                    </Carousel.Item>
+                    <Carousel.Item>
+                        <img width={1310} height={600} alt="400x300" src={tableImg} />
+                        <Carousel.Caption>
+                            <h3>First slide label</h3>
+                            <p>Przeszukuj tabelkę i zaznacz interesujące Cię pozycje.</p>
+                        </Carousel.Caption>
+                    </Carousel.Item>
+                    <Carousel.Item>
+                        <img width={1310} height={600} alt="400x300" src={littleTableImg} />
+                        <Carousel.Caption>
+                            <h3>First slide label</h3>
+                            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                        </Carousel.Caption>
+                    </Carousel.Item>
+                    <Carousel.Item>
+                        <img width={1310} height={600} alt="400x300" src={confsImg} />
+                        <Carousel.Caption>
+                            <h3>First slide label</h3>
+                            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                        </Carousel.Caption>
+                    </Carousel.Item>
+                    <Carousel.Item>
                         <img width={1310} height={600} alt="400x300" src={shareImg} />
                         <Carousel.Caption>
                             <h3>First slide label</h3>
@@ -99,7 +127,7 @@ class Info extends React.Component {
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
-                        <img width={1310} height={600} alt="400x300" src={littleTableImg} />
+                        <img width={1310} height={600} alt="400x300" src={infoImg} />
                         <Carousel.Caption>
                             <h3>First slide label</h3>
                             <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
