@@ -3,7 +3,7 @@
     width: 14%;
     height: 2.5em;
     left: .5em;
-    top: 11.6em;
+    top: 14.2em;
     z-index: 5;
     padding: 5px;
     background-color: #D64A2B;
@@ -18,7 +18,7 @@
     animation: changeDownWidth 1s;
 }
 
-.confsBox:hover {
+.confsBox.true {
     width: 24%;
     height: auto;
     -webkit-animation-fill-mode: forwards; /* Chrome 16+, Safari 4+ */
@@ -52,7 +52,7 @@
         width: 20%;
     }
 
-    .confsBox:hover {
+    .confsBox.true {
         width: 90%;
         height: auto;
     }
@@ -80,7 +80,7 @@
 @media screen and (max-width: 481px) {
     /* start of phone styles */
   
-    .confsBox:hover {
+    .confsBox.true {
         width: 96%;
         height: auto;
         padding: 3px;

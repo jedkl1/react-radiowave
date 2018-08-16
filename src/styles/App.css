@@ -173,3 +173,7 @@ a {
     font-size: 12px;
   }
 }
+
+.btn {
+  display: -webkit-box;
+}

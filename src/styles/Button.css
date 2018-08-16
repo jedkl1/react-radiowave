@@ -83,6 +83,11 @@
     position: absolute; 
 }
 
+.configurationWrapper {
+    top: 7.6em;
+    position: absolute; 
+}
+
 .button.info {
     width: 1.55em; height: 1.55em;
 

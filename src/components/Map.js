@@ -67,13 +67,13 @@ class Map extends Component {
             directionalChars: [],
             layersGroup: [],
             gpsMarker: null,
+            interval: null,
         };
         this.mapNode = null;
-        this.watchPositionID = null;
         this.gpsChanged = this.gpsChanged.bind(this);
+        this.checkGeoLocation = this.checkGeoLocation.bind(this);
         // this.setView = this.setView.bind(this);
     }
-
 
     gpsChanged(pos) {
         if (this.state.gpsMarker) {
@@ -83,20 +83,21 @@ class Map extends Component {
         const marker = L.marker([pos.coords.latitude, pos.coords.longitude],
             { icon: config.gpsIcon }).addTo(this.state.map);
         marker.bindPopup('Twoja pozycja');
-
         this.setState({ gpsMarker: marker });
+    }
 
-        navigator.geolocation.clearWatch(this.watchPositionID);
+    checkGeoLocation() {
+        navigator.geolocation.getCurrentPosition(this.gpsChanged,
+                                                 (err) => { console.warn(`ERROR(${err.code}): ${err.message}`); });
     }
 
     componentDidMount() {
     // create the Leaflet map object
         if (!this.state.map) this.init(this.mapNode);
 
-        // watching user position
-        const id = navigator.geolocation.watchPosition(this.gpsChanged,
-                                                       (err) => { console.warn(`ERROR(${err.code}): ${err.message}`); });
-        this.watchPositionID = id;
+        // check user position in every second
+        const interval = setInterval(this.checkGeoLocation, 2000);
+        this.state.interval = interval;
     }
 
     componentDidUpdate(prevProps) {
@@ -126,6 +127,7 @@ class Map extends Component {
     // code to run just before unmounting the component
     // this destroys the Leaflet map object & related event listeners
         this.state.map.remove();
+        clearInterval(this.state.interval);
     }
 
     async drawLayersCharsMarkers() {
@@ -276,7 +278,7 @@ class Map extends Component {
         // this function creates the Leaflet map object and is called after the Map component mounts
 
         const map = L.map(id, config.params);
-        L.control.zoom({ position: 'bottomleft' }).addTo(map);
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
         this.layersGroup = new L.LayerGroup();
         this.layersGroup.addTo(map);
         // L.control.scale({ position: 'bottomleft' }).addTo(map);

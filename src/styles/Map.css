@@ -10,3 +10,7 @@
 .markerDrawTran {
     float: right;
 }
+
+.leaflet-bottom.leaflet-right .leaflet-control-zoom{
+    bottom: 8em;
+}

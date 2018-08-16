@@ -32,6 +32,7 @@ class App extends Component {
             dvbtClicked: false,
             loading: false,
             directionalChecked: true,
+            openConfiguration: false,
         };
         this.handleSystemClick = this.handleSystemClick.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
@@ -46,6 +47,7 @@ class App extends Component {
         this.handleClose = this.handleClose.bind(this);
         this.handleInfoClose = this.handleInfoClose.bind(this);
         this.openDialog = this.openDialog.bind(this);
+        this.openConfiguration = this.openConfiguration.bind(this);
     }
 
     getConfigurations(configurationString = 'fm-std') {
@@ -170,6 +172,8 @@ class App extends Component {
 
     openDialog() { this.setState({ isShowingModal: true }); }
 
+    openConfiguration() { this.setState({ openConfiguration: !this.state.openConfiguration }); }
+
     handleClose() { this.setState({ isShowingModal: false }); }
 
     handleInfoClose() { this.setState({ isShowingInfo: false }); }
@@ -191,8 +195,8 @@ class App extends Component {
         });
     }
 
-    getDrawData(dataFromLittleTable) {
-        this.setState({ toDrawSelected: dataFromLittleTable }, () => {});
+    getDrawData(dataFromLittleTable, openTable) {
+        this.setState({ toDrawSelected: dataFromLittleTable, isShowingModal: openTable }, () => {});
     }
 
     getSelectedConfiguration(dataFromConfiguration) {
@@ -238,11 +242,15 @@ class App extends Component {
                     <div className="stationsWrapper">
                         <SystemButton id="stations" class="checkStation" title="Wybierz stacje do narysowania pokrycia" value="" onSystemClick={this.openDialog} />
                     </div>
+                    <div className="configurationWrapper">
+                        <SystemButton id="configuration" class="configuration" title="Zmien konfigurację" value="CON" onSystemClick={this.openConfiguration} />
+                    </div>
                 </div>
                 {
                     this.state.configurations.length ?
                         <ConfigurationsBox
                             system={this.state.system}
+                            isOpen={this.state.openConfiguration}
                             configurations={this.state.configurations}
                             selected={this.state.selectedConfiguration}
                             callbackFromApp={this.getSelectedConfiguration}
@@ -299,7 +307,8 @@ class App extends Component {
                             system={this.state.system}
                             callbackFromApp={this.getDrawData}
                             selected={this.state.toDrawSelected}
-                            data={this.state.selectedSystemTransmitters} />
+                            data={this.state.selectedSystemTransmitters}
+                            addTransmiter={this.state.isShowingModal} />
                     : null
                 }
                 {

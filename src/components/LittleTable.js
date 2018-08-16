@@ -5,11 +5,11 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import '../styles/LittleTable.css';
 
 function radioMastFormat(cell, row) {
-    return (<a href={`http://radiopolska.pl/wykaz/obiekt/${row.id_obiekt}`} target="_blank">{cell}</a>);
+    return (<a href={`http://radiopolska.pl/wykaz/obiekt/${row.id_obiekt}`} title="Szczegóły" target="_blank">{cell}</a>);
 }
 
 function stationFormat(cell, row) {
-    return (<a href={`http://radiopolska.pl/wykaz/program/${row.id_program}`} target="_blank">{cell}</a>);
+    return (<a href={`http://radiopolska.pl/wykaz/program/${row.id_program}`} title="Szczegóły" target="_blank">{cell}</a>);
 }
 
 
@@ -19,10 +19,12 @@ class LittleTable extends React.Component {
         this.state = {
             selectedTransmitters: props.selected,
             selectedIDs: [],
-            open: false,
+            open: true,
+            addTransmiter: false,
         };
         this.updateSelectedIDs = this.updateSelectedIDs.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.handleAddTransmiterClick = this.handleAddTransmiterClick.bind(this);
     }
 
     updateSelectedIDs() {
@@ -40,6 +42,8 @@ class LittleTable extends React.Component {
     componentDidUpdate(prevProps) {
         if (this.props.selected !== prevProps.selected) {
             this.updateSelectedIDs();
+        } else if (this.props.addTransmiter !== prevProps.addTransmiter) {
+            this.state.addTransmiter = this.props.addTransmiter;
         }
     }
 
@@ -54,7 +58,7 @@ class LittleTable extends React.Component {
         }
 
         this.setState({ selectedTransmitters: tempArray }, () => {
-            this.props.callbackFromApp(this.state.selectedTransmitters);
+            this.props.callbackFromApp(this.state.selectedTransmitters, this.state.addTransmiter);
             this.updateSelectedIDs();
         });
     }
@@ -79,6 +83,13 @@ class LittleTable extends React.Component {
 
     handleClick() {
         this.setState({ open: !this.state.open }, () => {});
+    }
+
+    handleAddTransmiterClick() {
+        this.setState({ addTransmiter: true }, () => {
+            this.props.callbackFromApp(
+                this.state.selectedTransmitters, this.state.addTransmiter);
+        });
     }
 
     render() {
@@ -122,8 +133,13 @@ class LittleTable extends React.Component {
                     striped
                     hover
                     condensed>
-                    {table.props.children}
+                    {table.props.children }
                 </BootstrapTable>
+                <div className={'AddTransmitter'}>
+                    <button onClick={this.handleAddTransmiterClick}>
+                    Dodaj nadajnik
+                    </button>
+                </div>
             </div>
         );
     }

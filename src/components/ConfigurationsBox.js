@@ -86,7 +86,7 @@ class ConfigurationsBox extends Component {
         return (
             this.state.possibleConfigurations.length ?
                 <div>
-                    <div className="confsBox">
+                    <div className={`confsBox ${this.props.isOpen}`}>
                         <div className="confsWhiteBox">
                             <b>Wybierz konfigurację mapy pokrycia</b>
                             <form>

@@ -8,15 +8,15 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 const data = null;
 
 function radioMastFormat(cell, row) {
-    return (<a href={`http://radiopolska.pl/wykaz/obiekt/${row.id_obiekt}`} target="_blank">{cell}</a>);
+    return (<a href={`http://radiopolska.pl/wykaz/obiekt/${row.id_obiekt}`} title="Szczegóły" target="_blank">{cell}</a>);
 }
 
 function stationFormat(cell, row) {
-    return (<a href={`http://radiopolska.pl/wykaz/program/${row.id_program}`} target="_blank">{cell}</a>);
+    return (<a href={`http://radiopolska.pl/wykaz/program/${row.id_program}`} title="Szczegóły" target="_blank">{cell}</a>);
 }
 
 function muxFormat(cell, row) {
-    return (<a href={`http://radiopolska.pl/wykaz/mux/${row.id_multipleks}`} target="_blank">{cell}</a>);
+    return (<a href={`http://radiopolska.pl/wykaz/mux/${row.id_multipleks}`} title="Szczegóły" target="_blank">{cell}</a>);
 }
 
 function iconFormat(cell) {
@@ -115,6 +115,9 @@ class Table extends React.Component {
                 text: '15', value: 15,
             }],
             sizePerPage: 5,
+            components: {
+                totalText: 'asdasd',
+            },
             // afterSearch: this.afterSearch.bind(this),
         };
 
