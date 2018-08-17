@@ -7,7 +7,6 @@ import settingsIcon from '../../images/baseline_settings_black_36dp.png';
 
 class ConfigurationsBox extends Component {
 
-
     constructor(props) {
         super(props);
         this.state = {
@@ -91,41 +90,51 @@ class ConfigurationsBox extends Component {
     render() {
         return (
             this.state.possibleConfigurations.length ?
-                <div>
-                    <div className={`confsBox ${this.state.isOpen}`}>
-                        <button onClick={this.openConfiguration}>
-                            <img src={settingsIcon} type="image/svg+xml" className={`Conf-logo ${this.state.isOpen}`} alt="Konfiguracja" />
-                        </button>
-                        <div className="confsWhiteBox">
-                            <b>Wybierz konfigurację mapy pokrycia</b>
-                            <form>
-                                <input
-                                    type="radio"
-                                    name="configuration"
-                                    key={this.state.possibleConfigurations[0].cfg}
-                                    id={this.state.possibleConfigurations[0].cfg}
-                                    value={this.state.possibleConfigurations[0].cfg}
-                                    defaultChecked
-                                    onClick={this.onConfigurationChanged} />
-                                <label htmlFor={this.state.possibleConfigurations[0].cfg}>
-                                    {this.state.possibleConfigurations[0].nazwa}
-                                </label>
-                                <br />
-                                {this.returnPossibleRadio()} <br />
-                            </form>
-                            <br />
-                            <b>{this.state.checkedConfiguration.opis}</b> <br />
-                            <input
-                                type="checkbox"
-                                name="directionalChars"
-                                id="directionalChars"
-                                checked={this.state.checkedDirectional}
-                                onChange={this.directionalChanged} />
-                            <label htmlFor="directionalChars">
+                <div className={'componentWidth'}>
+                    {
+                        this.state.isOpen ?
+                            <div className={`confsBox ${this.state.isOpen}`}>
+                                <div className={'ButtonHeaderWrap'}>
+                                    <button onClick={this.openConfiguration} className={'confsButton'}>
+                                        <img src={settingsIcon} type="image/svg+xml" className={`Conf-logo ${this.state.isOpen}`} alt="Konfiguracja" />
+                                    </button>
+                                    <b className={'WhiteParagraph'}>Wybierz konfigurację mapy pokrycia</b>
+                                </div>
+                                <div className="confsWhiteBox">
+                                    <form>
+                                        <input
+                                            type="radio"
+                                            name="configuration"
+                                            key={this.state.possibleConfigurations[0].cfg}
+                                            id={this.state.possibleConfigurations[0].cfg}
+                                            value={this.state.possibleConfigurations[0].cfg}
+                                            defaultChecked
+                                            onClick={this.onConfigurationChanged} />
+                                        <label htmlFor={this.state.possibleConfigurations[0].cfg}>
+                                            {this.state.possibleConfigurations[0].nazwa}
+                                        </label>
+                                        <br />
+                                        {this.returnPossibleRadio()}
+                                    </form>
+                                    <b>{this.state.checkedConfiguration.opis}</b> <br />
+                                    <input
+                                        type="checkbox"
+                                        name="directionalChars"
+                                        id="directionalChars"
+                                        checked={this.state.checkedDirectional}
+                                        onChange={this.directionalChanged} />
+                                    <label htmlFor="directionalChars">
                                     Rysuj charakterystyki kierunkowe anten
-                            </label>
-                        </div>
-                    </div>
+                                    </label>
+                                </div>
+                            </div>
+                        :
+                            <div className={`confsBox ${this.state.isOpen}`}>
+                                <button onClick={this.openConfiguration} className={'confsButton'}>
+                                    <img src={settingsIcon} type="image/svg+xml" className={`Conf-logo ${this.state.isOpen}`} alt="Konfiguracja" />
+                                </button>
+                            </div>
+                    }
                     <Legend legend={this.state.checkedConfiguration} />
                 </div>
                 : null

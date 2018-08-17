@@ -1,37 +1,73 @@
-.imgContainer {
-    display: inline-block;
-    width: 25em;
-    height: 15em;
+.IntroImageWrapper {
+    width: 1312px;
+    height: 600px;
+    background-color: #615D5D;
 }
 
-.imgContainer img {
-    max-width: 25em;
-    max-height: 15em;
-}
-
-@media screen and (max-width: 481px) {
-    /* start of phone styles */
-    .imgContainer {
-        display: inline-block;
-        width: 9em;
-        height: 9em;
-    }
-    
-    .imgContainer img {
-        max-width: 9em;
-        max-height: 9em;
-    }
+.IntroImage {
+    width: 600px;
+    height: 470px;
+    padding-top: 130px;
 }
 
 @media screen and (max-width: 900px) {
     /* start of phone styles */
-    .imgContainer {
-        width: 11em;
-        height: 11em;
+    .IntroImageWrapper {
+        width: 630px;
+        height: 600px;
+        background-color: #615D5D;
     }
     
-    .imgContainer img {
-        max-width: 11em;
-        max-height: 11em;
+    .IntroImage {
+        width: 370px;
+        height: 400px;
+        padding-top: 140px;
+    }
+}
+
+@media screen and (max-width: 481px) {
+    /* start of phone styles */
+    .IntroImageWrapper {
+        width: 460px;
+        height: 600px;
+        background-color: #615D5D;
+    }
+    
+    .IntroImage {
+        width: 300px;
+        height: 400px;
+        padding-top: 230px;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    /* start of phone styles */
+
+    .IntroImageWrapper {
+        width: 400px;
+        height: 520px;
+        background-color: #615D5D;
+    }
+    
+    .IntroImage {
+        width: 280px;
+        height: 350px;
+        padding-top: 140px;
+    }
+}
+
+@media screen and (max-width: 370px) {
+    /* start of phone styles */
+
+    .IntroImageWrapper {
+        width: 340px;
+        height: 420px;
+        background-color: #615D5D;
+    }
+    
+    .IntroImage {
+        width: 210px;
+        height: 280px;
+        padding-top: 100px;
     }
 }

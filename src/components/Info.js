@@ -3,13 +3,13 @@ import { Carousel } from 'react-bootstrap';
 
 import './../styles/Info.css';
 
-const systemImg = require('../../images/info2/system.png');
-const shareImg = require('../../images/info2/share.png');
-const littleTableImg = require('../../images/info2/littleTable.png');
-const transmittersImg = require('../../images/info2/transmitters.png');
-const infoImg = require('../../images/info2/info.png');
-const confsImg = require('../../images/info2/confs.png');
-const tableImg = require('../../images/info2/table.png');
+const systemImg = require('../../images/info/system.png');
+const shareImg = require('../../images/info/share.png');
+const littleTableImg = require('../../images/info/littleTable.png');
+const transmittersImg = require('../../images/info/transmitters.png');
+const infoImg = require('../../images/info/info.png');
+const confsImg = require('../../images/info/confs.png');
+const tableImg = require('../../images/info/table.png');
 
 
 // function InfoImage(props) {
@@ -85,49 +85,63 @@ class Info extends React.Component {
                     direction={direction}
                     onSelect={this.handleSelect}>
                     <Carousel.Item>
-                        <img width={1310} height={600} alt="400x300" src={systemImg} />
+                        <div className={'IntroImageWrapper'}>
+                            <img className={'IntroImage'} alt="WyborSystemuImage" src={systemImg} />
+                        </div>
                         <Carousel.Caption>
                             <h3>Przyciski wyboru systemu</h3>
                             <p>Wybierz system, w którym chcesz zbadać pokrycie</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
-                        <img width={1310} height={600} alt="400x300" src={transmittersImg} />
+                        <div className={'IntroImageWrapper'}>
+                            <img className={'IntroImage'} alt="WyborSystemuImage" src={transmittersImg} />
+                        </div>
                         <Carousel.Caption>
                             <h3>Przycisk wyboru nadajników</h3>
                             <p>Kliknij ten przycisk aby wybrać interesujące Cię nadajniki.</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
-                        <img width={1310} height={600} alt="400x300" src={tableImg} />
+                        <div className={'IntroImageWrapper'}>
+                            <img className={'IntroImage'} alt="WyborSystemuImage" src={tableImg} />
+                        </div>
                         <Carousel.Caption>
                             <h3>First slide label</h3>
                             <p>Przeszukuj tabelkę i zaznacz interesujące Cię pozycje.</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
-                        <img width={1310} height={600} alt="400x300" src={littleTableImg} />
+                        <div className={'IntroImageWrapper'}>
+                            <img className={'IntroImage'} alt="WyborSystemuImage" src={littleTableImg} />
+                        </div>
                         <Carousel.Caption>
                             <h3>First slide label</h3>
                             <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
-                        <img width={1310} height={600} alt="400x300" src={confsImg} />
+                        <div className={'IntroImageWrapper'}>
+                            <img className={'IntroImage'} alt="WyborSystemuImage" src={confsImg} />
+                        </div>
                         <Carousel.Caption>
                             <h3>First slide label</h3>
                             <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
-                        <img width={1310} height={600} alt="400x300" src={shareImg} />
+                        <div className={'IntroImageWrapper'}>
+                            <img className={'IntroImage'} alt="WyborSystemuImage" src={shareImg} />
+                        </div>
                         <Carousel.Caption>
                             <h3>First slide label</h3>
                             <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
-                        <img width={1310} height={600} alt="400x300" src={infoImg} />
+                        <div className={'IntroImageWrapper'}>
+                            <img className={'IntroImage'} alt="WyborSystemuImage" src={infoImg} />
+                        </div>
                         <Carousel.Caption>
                             <h3>First slide label</h3>
                             <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>

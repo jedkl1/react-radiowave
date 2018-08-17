@@ -26,7 +26,7 @@
 .ButtonWrapper {
     background: #D64A2B;
     position: absolute;
-    padding: 5px;
+    padding: 3px;
     z-index: 2;
     border-radius: 5px;
     margin-right: .3em;
@@ -51,7 +51,7 @@
     width: 2.7em; height: 2.7em;
     background-position: center;
     background-repeat: no-repeat;
-    background-size: 75%;
+    background-size: 85%;
 }
 
 .button.home {
@@ -79,7 +79,7 @@
 }
 
 .stationsWrapper {
-    top: 3.8em;
+    top: 7.8em;
     position: absolute; 
 }
 
@@ -104,7 +104,7 @@ SystemButton {
     }
 
     .stationsWrapper {
-        top: 3.5em;
+        top: 4em;
     }
 
     .shareWrapper {
@@ -114,5 +114,12 @@ SystemButton {
 
     .infoWrapper {
         right: 3.5em;
+    }
+}
+
+@media screen and (max-width: 370px) {
+    /* start of phone styles */   
+    .stationsWrapper {
+        top: 0em;
     }
 }

@@ -112,7 +112,7 @@ class Map extends Component {
                 this.addMarkers();
                 if (prevProps.configuration === this.props.configuration &&
                     this.props.directional === prevProps.directional) {
-                    // this.setView();
+                    this.setView();
                 }
             } else if (this.props.selectedMarkers !== prevProps.selectedMarkers) {
                 this.addMarkers();

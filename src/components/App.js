@@ -233,15 +233,14 @@ class App extends Component {
                         : <SystemButton id="dvbt" class={'system'} title="Zmień system na DVB-T" value="DVB-T" onSystemClick={this.handleSystemClick} />
                     }
                 </div>
+                <a href={`https://${window.location.hostname}`}> {/* page must stay on https */}
+                    <SystemButton id="home" class="home" title="Odśwież" value="" onSystemClick={this.handleRefreshClick} />
+                </a>
                 <div id="buttons_container" className="container buttons">
-                    <a href={`https://${window.location.hostname}`}> {/* page must stay on https */}
-                        <SystemButton id="home" class="home" title="Odśwież" value="" onSystemClick={this.handleRefreshClick} />
-                    </a> <br />
-                    <div className="stationsWrapper">
-                        <SystemButton id="stations" class="checkStation" title="Wybierz stacje do narysowania pokrycia" value="" onSystemClick={this.openDialog} />
+                    <div className="stationsWrapper ButtonWrapper">
+                        <button id="stations" className="button checkStation" title="Wybierz stacje do narysowania pokrycia" value="" onClick={this.openDialog} />
                     </div>
-                </div>
-                {
+                    {
                     this.state.configurations.length ?
                         <ConfigurationsBox
                             system={this.state.system}
@@ -252,6 +251,7 @@ class App extends Component {
                             callbackDirectionals={this.getDirectionalCheckedStatus} />
                     : null
                 }
+                </div>
                 {
                     this.state.isShowingModal ?
                         <ModalContainer>

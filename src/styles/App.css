@@ -15,17 +15,18 @@ a {
 
 .container {
   position: absolute;
+  width: 99.3%;
   left: .5em;
   z-index: 2;
   padding: 0px !important;
 }
 
 .systems {
-  top: .3em;
+  top: 4.3em;
 }
 
 .container.buttons {
-  top: 4em;
+  top: .3em;
 }
 
 .narcissus_x3xwbs {
@@ -37,9 +38,9 @@ a {
   top: .3em;
   background: #D64A2B;
   border-radius: 5px;
-  padding: 5px;
+  padding: 3px;
   position: absolute;
-  right: .3em;
+  right: 0em;
 }
 
 .whiteLegend {
@@ -87,7 +88,7 @@ a {
   }
 
   .systems {
-    top: .1em;
+    top: 4em;
   }
 
   .container.buttons {
@@ -166,6 +167,7 @@ a {
   }
 
   .legendContainer {
+    top: 0em;
     padding: 3px;
   }
 
