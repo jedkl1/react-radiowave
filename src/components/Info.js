@@ -45,40 +45,6 @@ class Info extends React.Component {
 
         return (
             <div>
-                {/* <h3> Witaj w aplikacji Mapy serwisu RadioPolska.pl</h3><br />
-            <InfoImage
-                src={systemImg}
-                alt={'System info'}
-                hint={'Wybierz system, w którym chcesz zbadać pokrycie'} />z
-            <div className="imgContainer">
-                <img src={transmittersImg} alt="Check transmitter info" />
-                <p>Kliknij ten przycisk by przeszukać listę nadajników</p>
-            </div>
-            <div className="imgContainer">
-                <img src={tableImg} alt="Table info" />
-                <p>Zaznacz interesujące Cię nadajniki</p>
-            </div>asd
-            <div className="imgContainer">
-                <img src={littleTableImg} alt="LittleTable info" />
-                <p>W tej tabelce zaznacz docelowe nadajniki do narysowania</p>
-            </div>
-            { <div className="imgContainer">
-                <img src={infoImg} alt="Information info img" />
-                <p>Wróć tutaj</p>
-            </div> }
-            <div className="imgContainer">
-                <img src={confsImg} alt="Confs info" />
-                <p>Zmieniaj konfiguracje map pokrycia</p>
-            </div>
-            <div className="imgContainer">
-                <img src={shareImg} alt="Share info" />
-                <p>Udostępnij swoje pomiary znajomym</p>
-            </div>
-            <h5> Aplikacja została wykonana jako przedmiot pracy inżynierskiej. </h5>
-            <a> Jędrzej Klocek, </a>
-            <a> Prowadzący pracę: dr inż. Przemysław Korpas, </a>
-            <a> Politechnika Warszawska 2018 </a> <br />
-            <a> Mapy-RadioPolska.pl beta version: 1.0.2 </a> */}
                 <h3> Witaj w aplikacji Mapy serwisu RadioPolska.pl</h3>
                 <Carousel
                     activeIndex={index}
@@ -95,7 +61,7 @@ class Info extends React.Component {
                     </Carousel.Item>
                     <Carousel.Item>
                         <div className={'IntroImageWrapper'}>
-                            <img className={'IntroImage'} alt="WyborSystemuImage" src={transmittersImg} />
+                            <img className={'IntroImage'} alt="WyborNadajnikowImage" src={transmittersImg} />
                         </div>
                         <Carousel.Caption>
                             <h3>Przycisk wyboru nadajników</h3>
@@ -104,47 +70,47 @@ class Info extends React.Component {
                     </Carousel.Item>
                     <Carousel.Item>
                         <div className={'IntroImageWrapper'}>
-                            <img className={'IntroImage'} alt="WyborSystemuImage" src={tableImg} />
+                            <img className={'IntroImage'} alt="WyborNadajnikaImage" src={tableImg} />
                         </div>
                         <Carousel.Caption>
-                            <h3>First slide label</h3>
+                            <h3>Wybierz nadajniki</h3>
                             <p>Przeszukuj tabelkę i zaznacz interesujące Cię pozycje.</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
                         <div className={'IntroImageWrapper'}>
-                            <img className={'IntroImage'} alt="WyborSystemuImage" src={littleTableImg} />
+                            <img className={'IntroImage'} alt="RysujNadajnikiImage" src={littleTableImg} />
                         </div>
                         <Carousel.Caption>
-                            <h3>First slide label</h3>
-                            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                            <h3>Rysuj nadajniki</h3>
+                            <p>Wybieraj nadajniki by narysować je na mapie.</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
                         <div className={'IntroImageWrapper'}>
-                            <img className={'IntroImage'} alt="WyborSystemuImage" src={confsImg} />
+                            <img className={'IntroImage'} alt="ZmienKonfiguracjeImage" src={confsImg} />
                         </div>
                         <Carousel.Caption>
-                            <h3>First slide label</h3>
-                            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                            <h3>Zmień konfigurację</h3>
+                            <p>Wejdź tutaj by zmieniać konfiguracje map.</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
                         <div className={'IntroImageWrapper'}>
-                            <img className={'IntroImage'} alt="WyborSystemuImage" src={shareImg} />
+                            <img className={'IntroImage'} alt="UdostepnijImage" src={shareImg} />
                         </div>
                         <Carousel.Caption>
-                            <h3>First slide label</h3>
-                            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                            <h3>Udostępnij</h3>
+                            <p>Udostępniaj swoje mapy znajomym.</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
                         <div className={'IntroImageWrapper'}>
-                            <img className={'IntroImage'} alt="WyborSystemuImage" src={infoImg} />
+                            <img className={'IntroImage'} alt="WrocTutajImage" src={infoImg} />
                         </div>
                         <Carousel.Caption>
-                            <h3>First slide label</h3>
-                            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                            <h3>Instrukcja</h3>
+                            <p>Kliknij ten przycisk by wrócić do tej instrukcji.</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                 </Carousel>
