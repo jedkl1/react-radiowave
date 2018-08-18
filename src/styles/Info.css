@@ -10,6 +10,22 @@
     padding-top: 130px;
 }
 
+@media screen and (max-width: 1420px) {
+    /* start of phone styles */
+    .IntroImageWrapper {
+        width: 1030px;
+        height: 500px;
+        background-color: #615D5D;
+    }
+    
+    .IntroImage {
+        width: 270px;
+        height: 360px;
+        padding-top: 180px;
+    }
+}
+
+
 @media screen and (max-width: 900px) {
     /* start of phone styles */
     .IntroImageWrapper {
