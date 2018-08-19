@@ -11,6 +11,8 @@ import ConfigurationsBox from './ConfigurationsBox';
 import PopUp from './PopUp';
 import Info from './Info';
 
+const logoIcon = require('../../images/icons/logoIcon.png');
+
 let data = [];
 
 class App extends Component {
@@ -234,7 +236,7 @@ class App extends Component {
                     }
                 </div>
                 <a href={`https://${window.location.hostname}`}> {/* page must stay on https */}
-                    <SystemButton id="home" class="home" title="Odśwież" value="" onSystemClick={this.handleRefreshClick} />
+                    <img id="home" className="button home" alt="Odswiez" src={logoIcon} />
                 </a>
                 <div id="buttons_container" className="container buttons">
                     <div className="stationsWrapper ButtonWrapper">

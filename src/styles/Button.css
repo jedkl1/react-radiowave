@@ -45,7 +45,6 @@
     font-size: 1.7em;
 }
 
-.button.home,
 .button.checkStation,
 .button.share {
     width: 2.7em; height: 2.7em;
@@ -55,7 +54,15 @@
 }
 
 .button.home {
-    background-image: url('../../images/home.png');
+    position: absolute;
+    z-index: 2;
+    top: .5em;
+    left: .5em;
+    width: 16.8em; height: 2.7em;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-image: url('../../images/icons/logoIcon.png');
 }
 
 .button.checkStation {
