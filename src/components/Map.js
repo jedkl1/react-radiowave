@@ -5,8 +5,8 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../styles/Map.css';
 
-const icon = require('../../images/antenna-3-marker.png');
-const gpsIcon = require('../../images/receiver.png');
+const icon = require('../../images/icons/transmitter_half.png');
+const gpsIcon = require('../../images/icons/yagi_half.png');
 
 const parseString = require('react-native-xml2js').parseString;
 

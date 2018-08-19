@@ -3,7 +3,7 @@
     width: 3.1em;
     height: 3.1em;
     left: 0em;
-    top: 11.6em;
+    top: 11em;
     z-index: 5;
     padding: 3px;
     display: block;
@@ -156,7 +156,7 @@
 
 @media screen and (max-width: 370px) {
     .confsBox {
-      top: 3.6em;
+      top: 3.3em;
       padding: 3px;
     }
 }

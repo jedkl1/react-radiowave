@@ -55,7 +55,7 @@ class Info extends React.Component {
                             <img className={'IntroImage'} alt="WyborSystemuImage" src={systemImg} />
                         </div>
                         <Carousel.Caption>
-                            <h3>Przyciski wyboru systemu</h3>
+                            <h3>Wybór systemu</h3>
                             <p>Wybierz system, w którym chcesz zbadać pokrycie</p>
                         </Carousel.Caption>
                     </Carousel.Item>
@@ -64,8 +64,8 @@ class Info extends React.Component {
                             <img className={'IntroImage'} alt="WyborNadajnikowImage" src={transmittersImg} />
                         </div>
                         <Carousel.Caption>
-                            <h3>Przycisk wyboru nadajników</h3>
-                            <p>Kliknij ten przycisk aby wybrać interesujące Cię nadajniki.</p>
+                            <h3>Przeszukaj nadajniki</h3>
+                            <p>Kliknij ten przycisk by przejrzeć listę nadajników.</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
@@ -118,7 +118,7 @@ class Info extends React.Component {
                 <a> Jędrzej Klocek, </a>
                 <a> Prowadzący pracę: dr inż. Przemysław Korpas, </a>
                 <a> Politechnika Warszawska 2018 </a> <br />
-                <a> Mapy-RadioPolska.pl beta version: 1.0.2 </a>
+                <a> Mapy-RadioPolska.pl beta version: 1.1.0 </a>
             </div>
         );
     }

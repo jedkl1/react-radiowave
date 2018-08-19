@@ -22,7 +22,7 @@ a {
 }
 
 .systems {
-  top: 4.3em;
+  top: 3.7em;
 }
 
 .container.buttons {
@@ -77,35 +77,6 @@ a {
   line-height: 1.9em !important;
 }
 
-@media screen and (max-width: 900px) {
-  /* start of phone styles */
-  .narcissus_17w311v {
-    padding: 10px !important;
-    width: 85% !important;
-  }
-
-  .whiteLegend {
-    height: 3.2em;
-  }
-
-  .legendContainer {
-    padding: 3px;
-    top: .1em;
-  }
-
-  .systems {
-    top: 4em;
-  }
-
-  .container.buttons {
-    top: 3.3em;
-  }
-
-  .leaflet-bottom.leaflet-right {
-    display: none;
-  }
-}
-
 @media screen and (max-width: 1000px) {
   .narcissus_17w311v tr th:nth-child(4),
   .narcissus_17w311v tr td:nth-child(4) {
@@ -128,6 +99,35 @@ a {
   .narcissus_17w311v tr th:nth-child(3),
   .narcissus_17w311v tr td:nth-child(3) {
     width: 0% !important;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  /* start of phone styles */
+  .narcissus_17w311v {
+    padding: 10px !important;
+    width: 85% !important;
+  }
+
+  .whiteLegend {
+    height: 3.2em;
+  }
+
+  .legendContainer {
+    padding: 3px;
+    top: -2.7em;
+  }
+
+  .systems {
+    top: 3.7em;
+  }
+
+  .container.buttons {
+    top: 3.3em;
+  }
+
+  .leaflet-bottom.leaflet-right {
+    display: none;
   }
 }
 
@@ -173,7 +173,7 @@ a {
   }
 
   .legendContainer {
-    top: 0em;
+    top: -0.5em;
     padding: 3px;
   }
 

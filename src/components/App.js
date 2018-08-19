@@ -238,10 +238,10 @@ class App extends Component {
                 <a href={`https://${window.location.hostname}`}> {/* page must stay on https */}
                     <img id="home" className="button home" alt="Odswiez" src={logoIcon} />
                 </a>
+                <div className="stationsWrapper ButtonWrapper">
+                    <button id="stations" className="button checkStation" title="Wybierz stacje do narysowania pokrycia" value="" onClick={this.openDialog} />
+                </div>
                 <div id="buttons_container" className="container buttons">
-                    <div className="stationsWrapper ButtonWrapper">
-                        <button id="stations" className="button checkStation" title="Wybierz stacje do narysowania pokrycia" value="" onClick={this.openDialog} />
-                    </div>
                     {
                     this.state.configurations.length ?
                         <ConfigurationsBox
