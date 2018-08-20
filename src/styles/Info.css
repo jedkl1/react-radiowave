@@ -1,27 +1,38 @@
 .IntroImageWrapper {
-    width: 1312px;
+    width: 1182px;
     height: 600px;
-    background-color: #615D5D;
+    background-color: #FFF;
 }
 
 .IntroImage {
     width: 600px;
-    height: 470px;
-    padding-top: 130px;
+    height: 450px;
+    padding-top: 100px;
+}
+
+.carousel-caption {
+    color: #000;
+}
+
+.carousel-indicators li {
+    background-color: #000;
+}
+
+.carousel-indicators .active {
+    background-color: #222;
 }
 
 @media screen and (max-width: 1420px) {
     /* start of phone styles */
     .IntroImageWrapper {
-        width: 1030px;
+        width: 936px;
         height: 500px;
-        background-color: #615D5D;
     }
     
     .IntroImage {
-        width: 270px;
-        height: 360px;
-        padding-top: 180px;
+        width: 590px;
+        height: 380px;
+        padding-top: 60px;
     }
 }
 
@@ -31,7 +42,6 @@
     .IntroImageWrapper {
         width: 630px;
         height: 600px;
-        background-color: #615D5D;
     }
     
     .IntroImage {
@@ -46,13 +56,12 @@
     .IntroImageWrapper {
         width: 460px;
         height: 600px;
-        background-color: #615D5D;
     }
     
     .IntroImage {
-        width: 300px;
-        height: 400px;
-        padding-top: 230px;
+        width: 340px;
+        height: 420px;
+        padding-top: 210px;
     }
 }
 
@@ -60,15 +69,14 @@
     /* start of phone styles */
 
     .IntroImageWrapper {
-        width: 400px;
+        width: 398px;
         height: 520px;
-        background-color: #615D5D;
     }
     
     .IntroImage {
-        width: 280px;
+        width: 300px;
         height: 350px;
-        padding-top: 140px;
+        padding-top: 170px;
     }
 }
 
@@ -76,14 +84,13 @@
     /* start of phone styles */
 
     .IntroImageWrapper {
-        width: 340px;
+        width: 336px;
         height: 420px;
-        background-color: #615D5D;
     }
     
     .IntroImage {
-        width: 210px;
-        height: 270px;
-        padding-top: 100px;
+        width: 260px;
+        height: 290px;
+        padding-top: 140px;
     }
 }

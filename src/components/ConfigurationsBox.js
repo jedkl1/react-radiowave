@@ -14,11 +14,13 @@ class ConfigurationsBox extends Component {
             checkedConfiguration: null,
             checkedDirectional: true,
             isOpen: null,
+            automaticZoom: this.props.automaticZoom,
         };
         this.getPossibleConfiguration = this.getPossibleConfiguration.bind(this);
         this.directionalChanged = this.directionalChanged.bind(this);
         this.onConfigurationChanged = this.onConfigurationChanged.bind(this);
         this.openConfiguration = this.openConfiguration.bind(this);
+        this.zoomChanged = this.zoomChanged.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -78,11 +80,19 @@ class ConfigurationsBox extends Component {
     }
 
     directionalChanged(e) {
-        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-
+        const target = e.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
         this.setState({
             checkedDirectional: value,
-        }, function () { this.props.callbackDirectionals(this.state.checkedDirectional); });
+        }, function () { this.props.callbackDirectionals(this.state.checkedDirectional, this.state.automaticZoom); });
+    }
+
+    zoomChanged(e) {
+        const target = e.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        this.setState({
+            automaticZoom: value,
+        }, function () { this.props.callbackDirectionals(this.state.checkedDirectional, this.state.automaticZoom); });
     }
 
     openConfiguration() { this.setState({ isOpen: !this.state.isOpen }); }
@@ -116,15 +126,26 @@ class ConfigurationsBox extends Component {
                                         <br />
                                         {this.returnPossibleRadio()}
                                     </form>
-                                    <b>{this.state.checkedConfiguration.opis}</b> <br />
+                                    <b>{this.state.checkedConfiguration.opis}</b> <br /> <br />
                                     <input
                                         type="checkbox"
                                         name="directionalChars"
                                         id="directionalChars"
+                                        value={this.state.checkedDirectional}
                                         checked={this.state.checkedDirectional}
                                         onChange={this.directionalChanged} />
                                     <label htmlFor="directionalChars">
                                     Rysuj charakterystyki kierunkowe anten
+                                    </label> <br />
+                                    <input
+                                        type="checkbox"
+                                        name="automatiZoom"
+                                        id="automaticZoom"
+                                        value={this.state.automaticZoom}
+                                        checked={this.state.automaticZoom}
+                                        onChange={this.zoomChanged} />
+                                    <label htmlFor="automaticZoom">
+                                    Automatyczny zoom i wyśrodkowanie map
                                     </label>
                                 </div>
                             </div>

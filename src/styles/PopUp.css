@@ -1,11 +1,12 @@
 
 .PopUpWrapper {
-    border-radius: 5px;
+    border-radius: 3px;
     background: #D64A2B;
     position: absolute;
-    padding: 5px;
+    padding: 3px;
     right: .5em;
     bottom: 8.6em;
+    max-width: 25em;
     z-index: 1;
 }
 
@@ -13,15 +14,28 @@
     width: 28px;
     height: 20px;
     position: absolute;
-    left: 87%;
+    left: 86%;
     padding-left: 8px;
     overflow: hidden;
     pointer-events: none;
 }
 
+.PopUpContent {
+    background-color: #FFF;
+    border-radius: 3px;
+}
+
+.PopUpContent a {
+    width: 24em;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .PopUpTip {
     width: 11px;
-    height: 11px;
+    height: 8px;
     background-color: #D64A2B;
     transform: rotate(45deg);
 }
@@ -29,7 +43,14 @@
 .CopyToClip {
     background-color: white;
     border-radius: 5px;
-    border-style: hidden;
+    border: 3px solid;
+    width: 100%;
+    border-color: #D64A2B;
+}
+
+.CopyToClip:hover {
+    background-color: #D64A2B;
+    color: white;
 }
 
 #shareInput {

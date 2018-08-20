@@ -25,6 +25,8 @@
     "react-modal-dialog": "^4.0.7",
     "react-native-xml2js": "^1.0.3",
     "react-router-dom": "^4.2.2",
+    "react-toastify": "^4.2.0",
+    "react-toasts": "^2.0.13",
     "react-xml-parser": "^1.0.4",
     "reactabular": "^8.3.0",
     "redux": "^3.7.2",

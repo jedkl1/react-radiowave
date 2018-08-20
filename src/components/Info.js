@@ -43,6 +43,36 @@ class Info extends React.Component {
     render() {
         const { index, direction } = this.state;
 
+        const full = (<div>
+            <Carousel.Item>
+                <div className={'IntroImageWrapper'}>
+                    <img className={'IntroImage'} alt="WyborSystemuImage" src={systemImg} />
+                </div>
+                <Carousel.Caption>
+                    <h3>Wybór systemu</h3>
+                    <p>Wybierz system, w którym chcesz zbadać pokrycie</p>
+                </Carousel.Caption>
+            </Carousel.Item>
+            <Carousel.Item>
+                <div className={'IntroImageWrapper'}>
+                    <img className={'IntroImage'} alt="WyborNadajnikowImage" src={transmittersImg} />
+                </div>
+                <Carousel.Caption>
+                    <h3>Przeszukaj nadajniki</h3>
+                    <p>Kliknij ten przycisk by przejrzeć listę nadajników.</p>
+                </Carousel.Caption>
+            </Carousel.Item>
+            <Carousel.Item>
+                <div className={'IntroImageWrapper'}>
+                    <img className={'IntroImage'} alt="WyborNadajnikaImage" src={tableImg} />
+                </div>
+                <Carousel.Caption>
+                    <h3>Wybierz nadajniki</h3>
+                    <p>Przeszukuj tabelkę i zaznacz interesujące Cię pozycje.</p>
+                </Carousel.Caption>
+            </Carousel.Item>
+        </div>);
+
         return (
             <div>
                 <h3> Witaj w aplikacji Mapy serwisu RadioPolska.pl</h3>
@@ -50,33 +80,13 @@ class Info extends React.Component {
                     activeIndex={index}
                     direction={direction}
                     onSelect={this.handleSelect}>
-                    <Carousel.Item>
-                        <div className={'IntroImageWrapper'}>
-                            <img className={'IntroImage'} alt="WyborSystemuImage" src={systemImg} />
-                        </div>
-                        <Carousel.Caption>
-                            <h3>Wybór systemu</h3>
-                            <p>Wybierz system, w którym chcesz zbadać pokrycie</p>
-                        </Carousel.Caption>
-                    </Carousel.Item>
-                    <Carousel.Item>
-                        <div className={'IntroImageWrapper'}>
-                            <img className={'IntroImage'} alt="WyborNadajnikowImage" src={transmittersImg} />
-                        </div>
-                        <Carousel.Caption>
-                            <h3>Przeszukaj nadajniki</h3>
-                            <p>Kliknij ten przycisk by przejrzeć listę nadajników.</p>
-                        </Carousel.Caption>
-                    </Carousel.Item>
-                    <Carousel.Item>
-                        <div className={'IntroImageWrapper'}>
-                            <img className={'IntroImage'} alt="WyborNadajnikaImage" src={tableImg} />
-                        </div>
-                        <Carousel.Caption>
-                            <h3>Wybierz nadajniki</h3>
-                            <p>Przeszukuj tabelkę i zaznacz interesujące Cię pozycje.</p>
-                        </Carousel.Caption>
-                    </Carousel.Item>
+                    {
+                        this.props.showFull ?
+                            full.props.children
+                        :
+                        null
+                    }
+
                     <Carousel.Item>
                         <div className={'IntroImageWrapper'}>
                             <img className={'IntroImage'} alt="RysujNadajnikiImage" src={littleTableImg} />
@@ -115,10 +125,9 @@ class Info extends React.Component {
                     </Carousel.Item>
                 </Carousel>
                 <h5> Aplikacja została wykonana jako przedmiot pracy inżynierskiej. </h5>
-                <a> Jędrzej Klocek, </a>
-                <a> Prowadzący pracę: dr inż. Przemysław Korpas, </a>
-                <a> Politechnika Warszawska 2018 </a> <br />
-                <a> Mapy-RadioPolska.pl beta version: 1.1.0 </a>
+                Autor: Jędrzej Klocek, opiekun: dr inż. Przemysław Korpas,
+                Politechnika Warszawska 2018 <br />
+                Mapy-RadioPolska.pl beta version: 1.1.0
             </div>
         );
     }

@@ -111,7 +111,7 @@ class Map extends Component {
                 this.drawLayersCharsMarkers();
                 this.addMarkers();
                 if (prevProps.configuration === this.props.configuration &&
-                    this.props.directional === prevProps.directional) {
+                    this.props.directional === prevProps.directional && this.props.automaticZoom) {
                     this.setView();
                 }
             } else if (this.props.selectedMarkers !== prevProps.selectedMarkers) {
@@ -250,7 +250,7 @@ class Map extends Component {
                         ${element.obiekt}</a><br>
                         <b>${element.multipleks}</b><br>
                         Częstotliwość: ${element.mhz} MHz ${element.kategoria}<br>
-                        PI: ${element.pi} ERP: ${element.erp}kW Pol: ${element.polaryzacja}<br>
+                        ERP: ${element.erp}kW Pol: ${element.polaryzacja}<br>
                         Wys. podst. masztu: ${element.wys_npm}m n.p.m<br>
                         Wys. umieszcz. nadajnika: ${element.antena_npt}m n.p.t`);
                 }
@@ -268,7 +268,7 @@ class Map extends Component {
                 latitude += Number(element.szerokosc);
                 longitude += Number(element.dlugosc);
             });
-            this.state.map.setView(new L.LatLng(latitude / this.state.selectedTransmitters.length,
+            this.state.map.setView(new L.LatLng((latitude / this.state.selectedTransmitters.length) - 1,
                 longitude / this.state.selectedTransmitters.length), 7);
         }
     }

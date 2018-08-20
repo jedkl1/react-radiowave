@@ -77,22 +77,22 @@
     .littleTable {
         width: 65%;
         height: 18em;
-        bottom: -17em;
+        bottom: -18em;
         padding: 3px;
     }
 
     .littleTable.true {
         width: 65%;
-        bottom: 1em;
+        bottom: .3em;
     }
 
     @keyframes changeUpVerticalPosition {
         from {bottom: -17em;}
-        to {bottom: 1em;}
+        to {bottom: .3em;}
     }
     
     @keyframes changeDownVerticalPosition {
-        from {bottom: 1em;}
+        from {bottom: .3em;}
         to {bottom: -17em;}
     }
 }
@@ -107,6 +107,23 @@
 
     .littleTable.true {
         width: 95%;
+    }
+}
+
+@media screen and (max-width: 370px) {
+    /* start of phone styles */
+    
+    .littleTable {
+        width: 100%;
+        padding: 3px;
+    }
+
+    .littleTable.true {
+        width: 100%;
+    }
+
+    .littleTable .react-bs-table-container {
+        height: 89%;
     }
 }
 

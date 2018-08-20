@@ -35,6 +35,8 @@ class App extends Component {
             loading: false,
             directionalChecked: true,
             openConfiguration: false,
+            showFullInfo: true,
+            automaticZoom: false,
         };
         this.handleSystemClick = this.handleSystemClick.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
@@ -49,6 +51,7 @@ class App extends Component {
         this.handleClose = this.handleClose.bind(this);
         this.handleInfoClose = this.handleInfoClose.bind(this);
         this.openDialog = this.openDialog.bind(this);
+        this.checkQueryString = this.checkQueryString.bind(this);
     }
 
     getConfigurations(configurationString = 'fm-std') {
@@ -72,7 +75,10 @@ class App extends Component {
     }
 
     componentDidMount() {
-        // create the Leaflet map object
+        this.checkQueryString();
+    }
+
+    checkQueryString() {
         if (this.props.location.search) {
             // ?name=ferret&color=purple
             const inputParams = queryString.parse(this.props.location.search);
@@ -84,9 +90,11 @@ class App extends Component {
                     (res) => {
                         const tempArray = this.state.selectedTransmitters.slice();
                         tempArray.push(res.data[0]);
-                        this.setState({ selectedTransmitters: tempArray,
+                        this.setState({
+                            selectedTransmitters: tempArray,
                             selectedSystemTransmitters: tempArray,
-                            toDrawSelected: tempArray }, () => { });
+                            showFullInfo: false },
+                                      () => { console.log(this.state.selectedTransmitters); });
                     },
                     // (error) => {
                     //     console.log(`Error: ${error}`);
@@ -95,6 +103,7 @@ class App extends Component {
             });
             this.setStates(inputParams.sys);
             this.setConfiguration(inputParams.cfg);
+            this.setZoom(inputParams.zoom);
         } else {
             this.getConfigurations();
             this.setStates();
@@ -137,6 +146,10 @@ class App extends Component {
         this.getConfigurations(configurationString);
     }
 
+    setZoom(isAutomatic) {
+        this.setState({ automaticZoom: isAutomatic });
+    }
+
     handleSystemClick(id) {
         if (this.state.system !== id) {
             data = [];
@@ -163,11 +176,15 @@ class App extends Component {
     handleShareClick() {
         if (this.state.selectedConfiguration) {
             // ?name=ferret&color=purple
-            let url = `${window.location.hostname}?tra=`;
+            const domain = window.location.port.length ?
+                    `${window.location.protocol}//${window.location.hostname}:${window.location.port}${window.location.pathname}`
+                    :
+                    `${window.location.protocol}//${window.location.hostname}${window.location.pathname}`;
+            let url = `${domain}?tra=`;
             url += this.state.toDrawSelected.map(element => `${element.id_nadajnik}`).join(',');
-            url += '&';
-            url += `cfg=${this.state.selectedConfiguration.cfg}&`;
-            url += `sys=${this.state.system}`;
+            url += `&cfg=${this.state.selectedConfiguration.cfg}&`;
+            url += `sys=${this.state.system}&`;
+            url += `zoom=${this.state.automaticZoom}`;
             this.setState({ uri: url, isShowingShare: !this.state.isShowingShare }, () => { });
         }
     }
@@ -203,8 +220,8 @@ class App extends Component {
         this.setState({ selectedConfiguration: dataFromConfiguration });
     }
 
-    getDirectionalCheckedStatus(dataFromConfiguration) {
-        this.setState({ directionalChecked: dataFromConfiguration });
+    getDirectionalCheckedStatus(dataFromConfiguration, automaticZoom) {
+        this.setState({ directionalChecked: dataFromConfiguration, automaticZoom });
     }
 
     render() {
@@ -216,6 +233,10 @@ class App extends Component {
             width: '70%',
             textAlign: 'center',
         };
+        const domain = window.location.port.length ?
+                    `${window.location.protocol}//${window.location.hostname}:${window.location.port}${window.location.pathname}`
+                    :
+                    `${window.location.protocol}//${window.location.hostname}${window.location.pathname}`;
         return (
             <div id="gridId" className="grid">
                 <div id="systems_container" className="container systems">
@@ -235,7 +256,7 @@ class App extends Component {
                         : <SystemButton id="dvbt" class={'system'} title="Zmień system na DVB-T" value="DVB-T" onSystemClick={this.handleSystemClick} />
                     }
                 </div>
-                <a href={`https://${window.location.hostname}`}> {/* page must stay on https */}
+                <a href={domain}> {/* page must stay on https */}
                     <img id="home" className="button home" alt="Odswiez" src={logoIcon} />
                 </a>
                 <div className="stationsWrapper ButtonWrapper">
@@ -279,7 +300,7 @@ class App extends Component {
                     this.state.isShowingInfo ?
                         <ModalContainer>
                             <ModalDialog style={infoStyle} onClose={this.handleInfoClose}>
-                                <Info />
+                                <Info showFull={this.state.showFullInfo} />
                             </ModalDialog>
                         </ModalContainer>
                         : null
@@ -311,7 +332,8 @@ class App extends Component {
                         selectedMarkers={this.state.selectedSystemTransmitters}
                         configuration={this.state.selectedConfiguration}
                         directional={this.state.directionalChecked}
-                        system={this.state.system} />
+                        system={this.state.system}
+                        automaticZoom={this.state.automaticZoom} />
                 }
             </div>
         );
