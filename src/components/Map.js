@@ -103,7 +103,7 @@ class Map extends Component {
     componentDidUpdate(prevProps) {
     // code to run when the component receives new props or state
         if (prevProps.configuration) {
-            if (this.props.selectedTransmitters.length !== prevProps.selectedTransmitters.length ||
+            if (this.props.selectedTransmitters !== prevProps.selectedTransmitters ||
                 this.props.configuration.cfg !== prevProps.configuration.cfg ||
                 this.props.directional !== prevProps.directional) {
                 this.state.selectedTransmitters = this.props.selectedTransmitters;

@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-// import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 
+import 'react-toastify/dist/ReactToastify.css';
 import './../styles/PopUp.css';
 
 class PopUp extends React.Component {
@@ -14,23 +15,24 @@ class PopUp extends React.Component {
         };
     }
 
-    // copyClicked() {
-    //     toast.success('Skopiowano do schowka', {
-    //         position: toast.POSITION.TOP_LEFT,
-    //     });
-    // }
+    copyClicked() {
+        toast.success('Skopiowano do schowka', {
+            position: toast.POSITION.BOTTOM_CENTER,
+        });
+    }
 
     render() {
         return (
             <div>
                 <div className="PopUpWrapper">
                     <div className="PopUpContent">
-                        <a href={this.props.text}>{this.props.text}</a>
+                        <a href={this.props.text} target="_blank">{this.props.text}</a>
                         <CopyToClipboard
                             text={this.props.text}
                             onCopy={() => {}}>
                             <button
-                                className="CopyToClip">
+                                className="CopyToClip"
+                                onClick={this.copyClicked}>
                     Skopiuj do schowka</button>
                         </CopyToClipboard>
                     </div>
@@ -38,7 +40,7 @@ class PopUp extends React.Component {
                         <div className="PopUpTip" />
                     </div>
                 </div>
-                {/* S<ToastContainer autoClose={1000} /> */}
+                <ToastContainer autoClose={2000} />
             </div>
         );
     }

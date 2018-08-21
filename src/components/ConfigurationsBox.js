@@ -12,21 +12,31 @@ class ConfigurationsBox extends Component {
         this.state = {
             possibleConfigurations: [],
             checkedConfiguration: null,
-            checkedDirectional: true,
+            checkedDirectional: false,
             isOpen: null,
-            automaticZoom: this.props.automaticZoom,
+            automaticZoom: false,
+            checkMultiple: false,
         };
         this.getPossibleConfiguration = this.getPossibleConfiguration.bind(this);
         this.directionalChanged = this.directionalChanged.bind(this);
         this.onConfigurationChanged = this.onConfigurationChanged.bind(this);
         this.openConfiguration = this.openConfiguration.bind(this);
         this.zoomChanged = this.zoomChanged.bind(this);
+        this.checkMultipleChanged = this.checkMultipleChanged.bind(this);
     }
 
     componentDidUpdate(prevProps) {
         if (this.props.system !== prevProps.system) {
             this.getPossibleConfiguration(prevProps);
         }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            checkedDirectional: nextProps.checkedDirectional,
+            checkMultiple: nextProps.checkMultiple,
+            automaticZoom: nextProps.automaticZoom,
+        });
     }
 
     componentDidMount() {
@@ -84,7 +94,10 @@ class ConfigurationsBox extends Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         this.setState({
             checkedDirectional: value,
-        }, function () { this.props.callbackDirectionals(this.state.checkedDirectional, this.state.automaticZoom); });
+        }, function () {
+            this.props.callbackDirectionals(
+            this.state.checkedDirectional, this.state.automaticZoom, this.state.checkMultiple);
+        });
     }
 
     zoomChanged(e) {
@@ -92,7 +105,21 @@ class ConfigurationsBox extends Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         this.setState({
             automaticZoom: value,
-        }, function () { this.props.callbackDirectionals(this.state.checkedDirectional, this.state.automaticZoom); });
+        }, function () {
+            this.props.callbackDirectionals(
+            this.state.checkedDirectional, this.state.automaticZoom, this.state.checkMultiple);
+        });
+    }
+
+    checkMultipleChanged(e) {
+        const target = e.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        this.setState({
+            checkMultiple: value,
+        }, function () {
+            this.props.callbackDirectionals(
+                this.state.checkedDirectional, this.state.automaticZoom, this.state.checkMultiple);
+        });
     }
 
     openConfiguration() { this.setState({ isOpen: !this.state.isOpen }); }
@@ -146,7 +173,20 @@ class ConfigurationsBox extends Component {
                                         onChange={this.zoomChanged} />
                                     <label htmlFor="automaticZoom">
                                     Automatyczny zoom i wyśrodkowanie map
-                                    </label>
+                                    </label> <br />
+                                    <input
+                                        type="checkbox"
+                                        name="checkMultiple"
+                                        id="checkMultiple"
+                                        value={this.state.checkMultiple}
+                                        checked={this.state.checkMultiple}
+                                        onChange={this.checkMultipleChanged} />
+                                    <label htmlFor="checkMultiple">
+                                        Zezwól na rysowanie wielu map pokrycia.
+                                    </label> <br />
+                                    <b style={{ color: 'red' }}>UWAGA: </b>
+                                    Może to spowodować spadek wydajności pracy Twojego urządzenia
+                                    oraz jakości obserwacji map pokrycia.
                                 </div>
                             </div>
                         :

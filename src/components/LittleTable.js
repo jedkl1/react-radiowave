@@ -51,6 +51,9 @@ class LittleTable extends React.Component {
         let tempArray = this.state.selectedTransmitters.slice();
         if (isSelected) {
             // add new object which was selected
+            if (!this.props.checkMultiple) {
+                tempArray = [];
+            }
             tempArray.push(row);
         } else if (!isSelected) {
             // remove object which has same id_nadajnik as exist
@@ -93,14 +96,23 @@ class LittleTable extends React.Component {
     }
 
     render() {
-        const selectRowProp = {
+        const selectRowProp = this.props.checkMultiple ? {
             mode: 'checkbox',
             clickToSelect: true,
             bgColor: 'rgba(240, 129, 104, 0.7)',
             onSelect: this.onDrawSelected.bind(this),
             onSelectAll: this.onDrawAllSelected.bind(this),
             selected: this.state.selectedIDs,
-        };
+        }
+        :
+        {
+            mode: 'radio',
+            clickToSelect: true,
+            bgColor: 'rgba(240, 129, 104, 0.7)',
+            onSelect: this.onDrawSelected.bind(this),
+            selected: this.state.selectedIDs,
+        }
+        ;
 
         let table = null;
         if (this.props.system === 'fm') {
@@ -122,25 +134,27 @@ class LittleTable extends React.Component {
         }
 
         return (
-
-            <div className={`littleTable ${this.state.open}`}>
-                {
-                    <button className="circleButton" onClick={this.handleClick} />
+            this.props.data ?
+                <div className={`littleTable ${this.state.open}`}>
+                    {
+                        <button className="circleButton" onClick={this.handleClick} />
                 }
-                <BootstrapTable
-                    data={this.props.data}
-                    selectRow={selectRowProp}
-                    striped
-                    hover
-                    condensed>
-                    {table.props.children }
-                </BootstrapTable>
-                <div className={'AddTransmitter'}>
-                    <button onClick={this.handleAddTransmiterClick}>
+                    <BootstrapTable
+                        data={this.props.data}
+                        selectRow={selectRowProp}
+                        striped
+                        hover
+                        condensed>
+                        {table.props.children }
+                    </BootstrapTable>
+                    <div className={'AddTransmitter'}>
+                        <button className={'button'} onClick={this.handleAddTransmiterClick}>
                     Dodaj nadajnik
-                    </button>
+                        </button>
+                    </div>
                 </div>
-            </div>
+            :
+            null
         );
     }
 }

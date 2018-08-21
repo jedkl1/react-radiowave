@@ -33,10 +33,11 @@ class App extends Component {
             dabClicked: false,
             dvbtClicked: false,
             loading: false,
-            directionalChecked: true,
+            directionalChecked: false,
             openConfiguration: false,
             showFullInfo: true,
             automaticZoom: false,
+            checkMultiple: false,
         };
         this.handleSystemClick = this.handleSystemClick.bind(this);
         this.handleRefreshClick = this.handleRefreshClick.bind(this);
@@ -74,7 +75,7 @@ class App extends Component {
             );
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.checkQueryString();
     }
 
@@ -82,31 +83,37 @@ class App extends Component {
         if (this.props.location.search) {
             // ?name=ferret&color=purple
             const inputParams = queryString.parse(this.props.location.search);
-            const transmitters = inputParams.tra.split(',');
-            transmitters.forEach((transmitter) => {
-                fetch(`https://mapy.radiopolska.pl/api/transmitterById/pl/${inputParams.sys}/${transmitter}`)
-                    .then(res => res.json())
-                    .then(
-                    (res) => {
-                        const tempArray = this.state.selectedTransmitters.slice();
-                        tempArray.push(res.data[0]);
-                        this.setState({
-                            selectedTransmitters: tempArray,
-                            selectedSystemTransmitters: tempArray,
-                            showFullInfo: false },
-                                      () => { console.log(this.state.selectedTransmitters); });
-                    },
+            this.setState({
+                system: inputParams.sys,
+                checkMultiple: inputParams.mult,
+                automaticZoom: inputParams.zoom,
+                directionalChecked: inputParams.dirC,
+            }, () => {
+                console.log('Input params are set');
+                const transmitters = inputParams.tra.split(',');
+                transmitters.forEach((transmitter) => {
+                    fetch(`https://mapy.radiopolska.pl/api/transmitterById/pl/${inputParams.sys}/${transmitter}`)
+                        .then(res => res.json())
+                        .then(
+                        (res) => {
+                            const tempArray = this.state.selectedTransmitters.slice();
+                            tempArray.push(res.data[0]);
+                            this.setState({
+                                selectedTransmitters: tempArray,
+                                selectedSystemTransmitters: tempArray,
+                                showFullInfo: false },
+                                          () => { console.log(this.state.selectedTransmitters); });
+                        },
                     // (error) => {
                     //     console.log(`Error: ${error}`);
                     // },
                 );
+                });
             });
-            this.setStates(inputParams.sys);
             this.setConfiguration(inputParams.cfg);
-            this.setZoom(inputParams.zoom);
         } else {
             this.getConfigurations();
-            this.setStates();
+            this.setSystems(false);
         }
     }
 
@@ -134,21 +141,21 @@ class App extends Component {
         }
     }
 
-    setStates(paramSystem = false) {
-        if (paramSystem) {
-            this.setState({ system: paramSystem }, () => {});
+    setSystems(params = false) {
+        if (params) {
+            this.setState({ system: params }, () => {});
         } else {
             this.setState({ system: 'fm' }, () => {});
         }
     }
 
-    setConfiguration(configurationString) {
-        this.getConfigurations(configurationString);
-    }
+    setConfiguration(configurationString) { this.getConfigurations(configurationString); }
 
-    setZoom(isAutomatic) {
-        this.setState({ automaticZoom: isAutomatic });
-    }
+    setZoom(isAutomatic) { this.setState({ automaticZoom: isAutomatic }, () => { }); }
+
+    setMultiple(isMultiple) { this.setState({ checkMultiple: isMultiple }, () => { }); }
+
+    setDirectional(isDirectional) { this.setState({ directionalChecked: isDirectional }, () => { }); }
 
     handleSystemClick(id) {
         if (this.state.system !== id) {
@@ -184,7 +191,9 @@ class App extends Component {
             url += this.state.toDrawSelected.map(element => `${element.id_nadajnik}`).join(',');
             url += `&cfg=${this.state.selectedConfiguration.cfg}&`;
             url += `sys=${this.state.system}&`;
-            url += `zoom=${this.state.automaticZoom}`;
+            url += `zoom=${this.state.automaticZoom}&`;
+            url += `mult=${this.state.checkMultiple}&`;
+            url += `dirC=${this.state.directionalChecked}`;
             this.setState({ uri: url, isShowingShare: !this.state.isShowingShare }, () => { });
         }
     }
@@ -193,7 +202,7 @@ class App extends Component {
 
     handleClose() { this.setState({ isShowingModal: false }); }
 
-    handleInfoClose() { this.setState({ isShowingInfo: false }); }
+    handleInfoClose() { this.setState({ isShowingInfo: false, showFullInfo: true }); }
 
     handleInfoClick() { this.setState({ isShowingInfo: true }); }
 
@@ -220,8 +229,16 @@ class App extends Component {
         this.setState({ selectedConfiguration: dataFromConfiguration });
     }
 
-    getDirectionalCheckedStatus(dataFromConfiguration, automaticZoom) {
-        this.setState({ directionalChecked: dataFromConfiguration, automaticZoom });
+    getDirectionalCheckedStatus(dataFromConfiguration, automaticZoom, checkMultiple) {
+        if (this.state.checkMultiple !== checkMultiple) {
+            this.setState({
+                directionalChecked: dataFromConfiguration,
+                automaticZoom,
+                checkMultiple,
+                toDrawSelected: [] });
+        } else {
+            this.setState({ directionalChecked: dataFromConfiguration, automaticZoom, checkMultiple });
+        }
     }
 
     render() {
@@ -267,6 +284,9 @@ class App extends Component {
                     this.state.configurations.length ?
                         <ConfigurationsBox
                             system={this.state.system}
+                            automaticZoom={this.state.automaticZoom}
+                            checkMultiple={this.state.checkMultiple}
+                            directionalChecked={this.state.directionalChecked}
                             isOpen={this.state.openConfiguration}
                             configurations={this.state.configurations}
                             selected={this.state.selectedConfiguration}
@@ -323,6 +343,7 @@ class App extends Component {
                             callbackFromApp={this.getDrawData}
                             selected={this.state.toDrawSelected}
                             data={this.state.selectedSystemTransmitters}
+                            checkMultiple={this.state.checkMultiple}
                             addTransmiter={this.state.isShowingModal} />
                     : null
                 }
