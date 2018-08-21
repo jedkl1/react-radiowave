@@ -53,6 +53,9 @@ class App extends Component {
         this.handleInfoClose = this.handleInfoClose.bind(this);
         this.openDialog = this.openDialog.bind(this);
         this.checkQueryString = this.checkQueryString.bind(this);
+        this.zoomChanged = this.zoomChanged.bind(this);
+        this.directionalChanged = this.directionalChanged.bind(this);
+        this.checkMultipleChanged = this.checkMultipleChanged.bind(this);
     }
 
     getConfigurations(configurationString = 'fm-std') {
@@ -75,7 +78,7 @@ class App extends Component {
             );
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.checkQueryString();
     }
 
@@ -85,9 +88,9 @@ class App extends Component {
             const inputParams = queryString.parse(this.props.location.search);
             this.setState({
                 system: inputParams.sys,
-                checkMultiple: inputParams.mult,
-                automaticZoom: inputParams.zoom,
-                directionalChecked: inputParams.dirC,
+                checkMultiple: inputParams.mult === 'true',
+                automaticZoom: inputParams.zoom === 'true',
+                directionalChecked: inputParams.dirC === 'true',
             }, () => {
                 console.log('Input params are set');
                 const transmitters = inputParams.tra.split(',');
@@ -198,6 +201,30 @@ class App extends Component {
         }
     }
 
+    directionalChanged(e) {
+        const target = e.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        this.setState({
+            directionalChecked: value,
+        });
+    }
+
+    zoomChanged(e) {
+        const target = e.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        this.setState({
+            automaticZoom: value,
+        });
+    }
+
+    checkMultipleChanged(e) {
+        const target = e.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        this.setState({
+            checkMultiple: value,
+        });
+    }
+
     openDialog() { this.setState({ isShowingModal: true }); }
 
     handleClose() { this.setState({ isShowingModal: false }); }
@@ -286,6 +313,9 @@ class App extends Component {
                             system={this.state.system}
                             automaticZoom={this.state.automaticZoom}
                             checkMultiple={this.state.checkMultiple}
+                            zoomChanged={this.zoomChanged}
+                            directionalChanged={this.directionalChanged}
+                            checkMultipleChanged={this.checkMultipleChanged}
                             directionalChecked={this.state.directionalChecked}
                             isOpen={this.state.openConfiguration}
                             configurations={this.state.configurations}

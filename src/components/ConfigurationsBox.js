@@ -12,31 +12,17 @@ class ConfigurationsBox extends Component {
         this.state = {
             possibleConfigurations: [],
             checkedConfiguration: null,
-            checkedDirectional: false,
-            isOpen: null,
-            automaticZoom: false,
-            checkMultiple: false,
+            isOpen: false,
         };
         this.getPossibleConfiguration = this.getPossibleConfiguration.bind(this);
-        this.directionalChanged = this.directionalChanged.bind(this);
         this.onConfigurationChanged = this.onConfigurationChanged.bind(this);
         this.openConfiguration = this.openConfiguration.bind(this);
-        this.zoomChanged = this.zoomChanged.bind(this);
-        this.checkMultipleChanged = this.checkMultipleChanged.bind(this);
     }
 
     componentDidUpdate(prevProps) {
         if (this.props.system !== prevProps.system) {
             this.getPossibleConfiguration(prevProps);
         }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            checkedDirectional: nextProps.checkedDirectional,
-            checkMultiple: nextProps.checkMultiple,
-            automaticZoom: nextProps.automaticZoom,
-        });
     }
 
     componentDidMount() {
@@ -89,39 +75,6 @@ class ConfigurationsBox extends Component {
         });
     }
 
-    directionalChanged(e) {
-        const target = e.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        this.setState({
-            checkedDirectional: value,
-        }, function () {
-            this.props.callbackDirectionals(
-            this.state.checkedDirectional, this.state.automaticZoom, this.state.checkMultiple);
-        });
-    }
-
-    zoomChanged(e) {
-        const target = e.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        this.setState({
-            automaticZoom: value,
-        }, function () {
-            this.props.callbackDirectionals(
-            this.state.checkedDirectional, this.state.automaticZoom, this.state.checkMultiple);
-        });
-    }
-
-    checkMultipleChanged(e) {
-        const target = e.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        this.setState({
-            checkMultiple: value,
-        }, function () {
-            this.props.callbackDirectionals(
-                this.state.checkedDirectional, this.state.automaticZoom, this.state.checkMultiple);
-        });
-    }
-
     openConfiguration() { this.setState({ isOpen: !this.state.isOpen }); }
 
     render() {
@@ -158,9 +111,8 @@ class ConfigurationsBox extends Component {
                                         type="checkbox"
                                         name="directionalChars"
                                         id="directionalChars"
-                                        value={this.state.checkedDirectional}
-                                        checked={this.state.checkedDirectional}
-                                        onChange={this.directionalChanged} />
+                                        checked={this.props.directionalChecked === true}
+                                        onChange={this.props.directionalChanged} />
                                     <label htmlFor="directionalChars">
                                     Rysuj charakterystyki kierunkowe anten
                                     </label> <br />
@@ -168,9 +120,8 @@ class ConfigurationsBox extends Component {
                                         type="checkbox"
                                         name="automatiZoom"
                                         id="automaticZoom"
-                                        value={this.state.automaticZoom}
-                                        checked={this.state.automaticZoom}
-                                        onChange={this.zoomChanged} />
+                                        checked={this.props.automaticZoom === true}
+                                        onChange={this.props.zoomChanged} />
                                     <label htmlFor="automaticZoom">
                                     Automatyczny zoom i wyśrodkowanie map
                                     </label> <br />
@@ -178,9 +129,8 @@ class ConfigurationsBox extends Component {
                                         type="checkbox"
                                         name="checkMultiple"
                                         id="checkMultiple"
-                                        value={this.state.checkMultiple}
-                                        checked={this.state.checkMultiple}
-                                        onChange={this.checkMultipleChanged} />
+                                        checked={this.props.checkMultiple === true}
+                                        onChange={this.props.checkMultipleChanged} />
                                     <label htmlFor="checkMultiple">
                                         Zezwól na rysowanie wielu map pokrycia.
                                     </label> <br />
