@@ -100,6 +100,14 @@
     padding: 5px;
 }
 
+.label-without-margin {
+    margin-bottom: 0px;
+}
+
+.label-margin-right {
+    margin-left: 18px;
+}
+
 @keyframes changeUpWidth {
     from {width: 3.3em;}
     to {width: 30%;}

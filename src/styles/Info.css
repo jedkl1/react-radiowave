@@ -15,11 +15,11 @@
 }
 
 .carousel-indicators li {
-    background-color: #000;
+    background-color: #000 !important;
 }
 
 .carousel-indicators .active {
-    background-color: #222;
+    background-color: #333 !important;
 }
 
 @media screen and (max-width: 1420px) {

@@ -58,6 +58,7 @@ class ConfigurationsBox extends Component {
                         key={configuration.cfg}
                         type="radio"
                         name="configuration"
+                        checked={this.props.selected.cfg === configuration.cfg}
                         value={configuration.cfg}
                         onClick={this.onConfigurationChanged} />
                                 , <label key={configuration.nazwa} htmlFor={configuration.cfg}>
@@ -97,8 +98,9 @@ class ConfigurationsBox extends Component {
                                             name="configuration"
                                             key={this.state.possibleConfigurations[0].cfg}
                                             id={this.state.possibleConfigurations[0].cfg}
+                                            checked={
+                                                this.props.selected.cfg === this.state.possibleConfigurations[0].cfg}
                                             value={this.state.possibleConfigurations[0].cfg}
-                                            defaultChecked
                                             onClick={this.onConfigurationChanged} />
                                         <label htmlFor={this.state.possibleConfigurations[0].cfg}>
                                             {this.state.possibleConfigurations[0].nazwa}
@@ -131,10 +133,10 @@ class ConfigurationsBox extends Component {
                                         id="checkMultiple"
                                         checked={this.props.checkMultiple === true}
                                         onChange={this.props.checkMultipleChanged} />
-                                    <label htmlFor="checkMultiple">
+                                    <label className="label-without-margin" htmlFor="checkMultiple">
                                         Zezwól na rysowanie wielu map pokrycia.
                                     </label> <br />
-                                    <b style={{ color: 'red' }}>UWAGA: </b>
+                                    <b className="label-margin-right" style={{ color: 'red' }}>UWAGA: </b>
                                     Może to spowodować spadek wydajności pracy Twojego urządzenia
                                     oraz jakości obserwacji map pokrycia.
                                 </div>

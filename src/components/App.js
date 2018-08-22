@@ -36,7 +36,7 @@ class App extends Component {
             directionalChecked: false,
             openConfiguration: false,
             showFullInfo: true,
-            automaticZoom: false,
+            automaticZoom: true,
             checkMultiple: false,
         };
         this.handleSystemClick = this.handleSystemClick.bind(this);
@@ -190,13 +190,16 @@ class App extends Component {
                     `${window.location.protocol}//${window.location.hostname}:${window.location.port}${window.location.pathname}`
                     :
                     `${window.location.protocol}//${window.location.hostname}${window.location.pathname}`;
-            let url = `${domain}?tra=`;
-            url += this.state.toDrawSelected.map(element => `${element.id_nadajnik}`).join(',');
-            url += `&cfg=${this.state.selectedConfiguration.cfg}&`;
-            url += `sys=${this.state.system}&`;
-            url += `zoom=${this.state.automaticZoom}&`;
-            url += `mult=${this.state.checkMultiple}&`;
-            url += `dirC=${this.state.directionalChecked}`;
+            let url = domain;
+            if (this.state.toDrawSelected.length) {
+                url += '?tra=';
+                url += this.state.toDrawSelected.map(element => `${element.id_nadajnik}`).join(',');
+                url += `&cfg=${this.state.selectedConfiguration.cfg}&`;
+                url += `sys=${this.state.system}&`;
+                url += `zoom=${this.state.automaticZoom}&`;
+                url += `mult=${this.state.checkMultiple}&`;
+                url += `dirC=${this.state.directionalChecked}`;
+            }
             this.setState({ uri: url, isShowingShare: !this.state.isShowingShare }, () => { });
         }
     }
@@ -206,6 +209,7 @@ class App extends Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         this.setState({
             directionalChecked: value,
+            isShowingShare: false,
         });
     }
 
@@ -214,6 +218,7 @@ class App extends Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         this.setState({
             automaticZoom: value,
+            isShowingShare: false,
         });
     }
 
@@ -222,6 +227,7 @@ class App extends Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         this.setState({
             checkMultiple: value,
+            isShowingShare: false,
         });
     }
 
@@ -244,16 +250,22 @@ class App extends Component {
             const intersection = currentTransmitters.filter(transmitter =>
                 this.state.toDrawSelected.includes(transmitter));
             this.setState({ selectedSystemTransmitters: currentTransmitters,
-                toDrawSelected: intersection }, () => {});
+                toDrawSelected: intersection,
+                isShowingShare: false,
+            }, () => {});
         });
     }
 
     getDrawData(dataFromLittleTable, openTable) {
-        this.setState({ toDrawSelected: dataFromLittleTable, isShowingModal: openTable }, () => {});
+        this.setState({
+            toDrawSelected: dataFromLittleTable,
+            isShowingModal: openTable,
+            isShowingShare: false },
+                      () => {});
     }
 
     getSelectedConfiguration(dataFromConfiguration) {
-        this.setState({ selectedConfiguration: dataFromConfiguration });
+        this.setState({ selectedConfiguration: dataFromConfiguration, isShowingShare: false });
     }
 
     getDirectionalCheckedStatus(dataFromConfiguration, automaticZoom, checkMultiple) {
