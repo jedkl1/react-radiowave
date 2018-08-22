@@ -127,7 +127,7 @@ class Info extends React.Component {
                 <h5> Aplikacja została wykonana jako przedmiot pracy inżynierskiej. </h5>
                 Autor: Jędrzej Klocek, opiekun: dr inż. Przemysław Korpas,
                 Politechnika Warszawska 2018 <br />
-                Mapy-RadioPolska.pl beta version: 1.2.1
+                Mapy-RadioPolska.pl beta version: 1.2.2
             </div>
         );
     }

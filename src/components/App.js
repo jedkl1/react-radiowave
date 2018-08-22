@@ -33,7 +33,7 @@ class App extends Component {
             dabClicked: false,
             dvbtClicked: false,
             loading: false,
-            directionalChecked: false,
+            directionalChecked: true,
             openConfiguration: false,
             showFullInfo: true,
             automaticZoom: true,
@@ -86,34 +86,78 @@ class App extends Component {
         if (this.props.location.search) {
             // ?name=ferret&color=purple
             const inputParams = queryString.parse(this.props.location.search);
-            this.setState({
-                system: inputParams.sys,
-                checkMultiple: inputParams.mult === 'true',
-                automaticZoom: inputParams.zoom === 'true',
-                directionalChecked: inputParams.dirC === 'true',
-            }, () => {
-                console.log('Input params are set');
-                const transmitters = inputParams.tra.split(',');
-                transmitters.forEach((transmitter) => {
-                    fetch(`https://mapy.radiopolska.pl/api/transmitterById/pl/${inputParams.sys}/${transmitter}`)
-                        .then(res => res.json())
-                        .then(
-                        (res) => {
-                            const tempArray = this.state.selectedTransmitters.slice();
-                            tempArray.push(res.data[0]);
-                            this.setState({
-                                selectedTransmitters: tempArray,
-                                selectedSystemTransmitters: tempArray,
-                                showFullInfo: false },
-                                          () => { console.log(this.state.selectedTransmitters); });
-                        },
-                    // (error) => {
-                    //     console.log(`Error: ${error}`);
-                    // },
-                );
+
+            if (inputParams.m) {
+                this.setState({
+                    checkMultiple: inputParams.m === 'true',
+
                 });
-            });
-            this.setConfiguration(inputParams.cfg);
+            }
+            if (inputParams.z) {
+                this.setState({
+                    automaticZoom: inputParams.z === 'true',
+
+                });
+            }
+            if (inputParams.d) {
+                this.setState({
+                    directionalChecked: inputParams.d === 'true',
+
+                });
+            }
+
+            if (inputParams.sys) {
+                this.setState({
+                    system: inputParams.sys,
+
+                }, () => {
+                    console.log('Input params are set');
+                    const transmitters = inputParams.tra.split(',');
+                    transmitters.forEach((transmitter) => {
+                        if (isNaN(transmitter)) {
+                            console.error(`Error: niewłaściwy ${transmitter} numer nadajnika`);
+                        } else if (inputParams.sys && (inputParams.sys === 'dab' || inputParams.sys === 'fm' || inputParams === 'dvbt')) {
+                            fetch(`https://mapy.radiopolska.pl/api/transmitterById/pl/${inputParams.sys}/${transmitter}`)
+                                .then(res => res.json())
+                                .then(
+                            (res) => {
+                                const tempArray = this.state.selectedTransmitters.slice();
+                                if (res.data.length) {
+                                    tempArray.push(res.data[0]);
+                                    let selected = this.state.toDrawSelected;
+                                    if (selected.length) {
+                                        selected = this.state.toDrawSelected;
+                                    } else {
+                                        selected = [res.data[0]];
+                                    }
+                                    this.setState({
+                                        selectedTransmitters: tempArray,
+                                        toDrawSelected: selected,
+                                        selectedSystemTransmitters: tempArray,
+                                        showFullInfo: false },
+                                                  () => { console.log(this.state.selectedTransmitters); });
+                                } else {
+                                    console.log(`Error brak ${transmitter} nadajnika w bazie danych`);
+                                    this.setState({
+                                        selectedTransmitters: this.state.selectedTransmitters,
+                                        selectedSystemTransmitters: this.state.selectedSystemTransmitters,
+                                        showFullInfo: true },
+                                                  () => { console.log(this.state.selectedTransmitters); });
+                                }
+                            },
+                            (error) => {
+                                console.log(`Error: ${error}`);
+                            },
+                            );
+                        } else {
+                            console.error('Error: niewłaściwe parametry wejściowe');
+                            this.getConfigurations();
+                            this.setSystems(false);
+                        }
+                    });
+                });
+            }
+            if (inputParams.cfg) { this.setConfiguration(inputParams.cfg); } else { this.getConfigurations(); }
         } else {
             this.getConfigurations();
             this.setSystems(false);
@@ -137,9 +181,9 @@ class App extends Component {
                 (res) => {
                     data = res.data;
                 },
-                // (error) => {
-                //     console.log(`Error: ${error}`);
-                // },
+                (error) => {
+                    console.log(`Error: ${error}`);
+                },
             );
         }
     }
@@ -196,9 +240,9 @@ class App extends Component {
                 url += this.state.toDrawSelected.map(element => `${element.id_nadajnik}`).join(',');
                 url += `&cfg=${this.state.selectedConfiguration.cfg}&`;
                 url += `sys=${this.state.system}&`;
-                url += `zoom=${this.state.automaticZoom}&`;
-                url += `mult=${this.state.checkMultiple}&`;
-                url += `dirC=${this.state.directionalChecked}`;
+                url += `z=${this.state.automaticZoom}&`;
+                url += `m=${this.state.checkMultiple}&`;
+                url += `d=${this.state.directionalChecked}`;
             }
             this.setState({ uri: url, isShowingShare: !this.state.isShowingShare }, () => { });
         }

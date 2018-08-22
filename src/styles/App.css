@@ -56,7 +56,7 @@ a {
 }
 
 .narcissus_17w311v tr td:nth-child(3) {
-  padding: 1px;
+  padding: 1px !important;
 }
 
 .narcissus_17w311v tr th:nth-child(3),
@@ -140,7 +140,7 @@ a {
 
   .narcissus_17w311v {
     padding: 3px !important;
-    width: 95% !important;
+    width: 98% !important;
   }
 
   .narcissus_17w311v tr th:nth-child(7),

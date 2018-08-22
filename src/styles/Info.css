@@ -11,7 +11,7 @@
 }
 
 .carousel-caption {
-    color: #000;
+    color: #000 !important;
 }
 
 .carousel-indicators li {

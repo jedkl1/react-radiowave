@@ -20,6 +20,10 @@ function muxFormat(cell, row) {
     return (<a href={`http://radiopolska.pl/wykaz/mux/${row.id_multipleks}`} title="Szczegóły" target="_blank">{cell}</a>);
 }
 
+function mHzFormat(cell, row) {
+    return (<a href={`http://radiopolska.pl/wykaz/${row.typ}/${row.id_nadajnik}`} title="Szczegóły" target="_blank">{cell}</a>);
+}
+
 function iconFormat(cell) {
     return (<div style={{
         width: '6em',
@@ -130,7 +134,8 @@ class Table extends React.Component {
                     <TableHeaderColumn dataField="logo" dataFormat={iconFormat}>Logotyp</TableHeaderColumn>
                     <TableHeaderColumn
                         dataField="mhz"
-                        filter={{ type: 'TextFilter' }}>MHz</TableHeaderColumn>
+                        filter={{ type: 'TextFilter' }}
+                        dataFormat={mHzFormat}>MHz</TableHeaderColumn>
                     <TableHeaderColumn
                         dataField="program"
                         dataFormat={stationFormat}
@@ -146,11 +151,11 @@ class Table extends React.Component {
                 <div>
                     <TableHeaderColumn isKey dataField="id_nadajnik" hidden>ID</TableHeaderColumn>
                     <TableHeaderColumn dataField="logo" dataFormat={iconFormat}>Logotyp</TableHeaderColumn>
-                    <TableHeaderColumn dataField="mhz" filter={{ type: 'TextFilter' }}>MHz</TableHeaderColumn>
+                    <TableHeaderColumn dataField="mhz" dataFormat={mHzFormat} filter={{ type: 'TextFilter' }}>MHz</TableHeaderColumn>
                     <TableHeaderColumn dataField="multipleks" dataFormat={muxFormat} filter={{ type: 'TextFilter' }}>Multipleks</TableHeaderColumn>
                     <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat} filter={{ type: 'TextFilter' }}>Obiekt nadawczy</TableHeaderColumn>
                     <TableHeaderColumn dataField="nwoj" filter={{ type: 'TextFilter' }}>woj.</TableHeaderColumn>
-                    <TableHeaderColumn dataField="kanal_nazwa" width="10%" filter={{ type: 'TextFilter' }}>Kanał</TableHeaderColumn>
+                    <TableHeaderColumn dataField="kanal_nazwa" dataFormat={mHzFormat} width="10%" filter={{ type: 'TextFilter' }}>Kanał</TableHeaderColumn>
                 </div>);
         }
         const myRef = (el) => { this.btnRef = el; };
