@@ -254,7 +254,7 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
                 if (this.props.system === 'fm') {
                     marker.bindPopup(
                         `${element.skrot}
-                        <a target='_blank' href = http://test.radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
+                        <a target='_blank' href = http://radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
                         ${element.obiekt}</a><br>
                         <b>${element.program}</b><br>
                         Częstotliwość: ${element.mhz} MHz ${element.kategoria}<br>
@@ -264,7 +264,7 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
                 } else {
                     marker.bindPopup(
                         `${element.skrot}
-                        <a target='_blank' href = http://test.radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
+                        <a target='_blank' href = http://radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
                         ${element.obiekt}</a><br>
                         <b>${element.multipleks}</b><br>
                         Częstotliwość: ${element.mhz} MHz ${element.kategoria}<br>
