@@ -388,9 +388,6 @@ class App extends Component {
                                 <h3>Wybierz nadajniki</h3>
                                 {
                                     <div>
-                                        <h3>Dla bezpieczeczenstwa swojego komputera nie próbuj rysować
-                                            wszystkich nadajników<br />
-                                            Nie udało mi się jeszcze zaimplementować kilku zapezpieczeń :)</h3>
                                         <Table
                                             system={this.state.system}
                                             callbackFromApp={this.getSelectedData}

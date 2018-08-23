@@ -84,6 +84,7 @@ class Map extends Component {
             { icon: config.gpsIcon }).addTo(this.state.map);
         marker.bindPopup('Twoja pozycja');
         this.setState({ gpsMarker: marker });
+        setTimeout(this.checkGeoLocation, 3000);
     }
 
     checkGeoLocation() {
@@ -96,8 +97,8 @@ class Map extends Component {
         if (!this.state.map) this.init(this.mapNode);
 
         // check user position in every second
-        const interval = setInterval(this.checkGeoLocation, 2000);
-        this.state.interval = interval;
+        this.checkGeoLocation();
+        setTimeout(this.checkGeoLocation, 5000);
     }
 
     componentDidUpdate(prevProps) {
@@ -134,16 +135,25 @@ class Map extends Component {
         // this.state.selectedTransmitters.forEach(async (element) => {
         this.state.directionalChars.forEach((marker) => { this.state.map.removeLayer(marker); });
         this.setState({ directionalChars: [] }, () => { });
+        let response = false;
+        if (this.state.selectedTransmitters.length >= 30) {
+            response = confirm(`Czy na pewno chcesz wyświetlić ${this.state.selectedTransmitters.length} mapek?
+Grozi to utratą stabilności Twojej przeglądarki.
+W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
+        }
         for (let i = 0, p = Promise.resolve(); i < this.state.selectedTransmitters.length; i += 1) {
-            if (i === 50) {
-                alert('Rysowanie powyżej 50 nadajników jednocześnie znacznie ograniczy pracę Twojego urządzenia');
+            if (i === 30 && response === false) {
                 break;
             }
             p = p.then(() => new Promise((resolve) => {
                 const element = this.state.selectedTransmitters[i];
-                if (element.typ === this.props.system) {
+                if (element.typ === this.props.system && element._mapahash &&
+                    element.id_antena && this.props.configuration.cfg) {
                     fetch(`https://mapy.radiopolska.pl/files/get/${this.props.configuration.cfg}/${element._mapahash}.kml`)
                     .then(res => res.text())
+                    .catch((err) => {
+                        console.error(`${err} in transmitter ${element}`);
+                    })
                     .then(
                         (res) => {
                             parseString(res, (err, result) => {
@@ -175,12 +185,20 @@ class Map extends Component {
                                 this.setState({ directionalChars: tempArray }, () => { });
                             }
                             this.addMarkers();
+                            // if (i === 50) {
+                            //     alert('Rysowanie powyżej 50 nadajnik
+                            // ów jednocześnie znacznie ograniczy pracę Twojego urządzenia');
+                            //     break;
+                            // }
                             resolve();
                         },
                         (error) => {
                             console.log(`Error${error}`);
                         },
                         );
+                } else {
+                    console.error(element);
+                    resolve();
                 }
             }));
         }
@@ -268,7 +286,7 @@ class Map extends Component {
                 latitude += Number(element.szerokosc);
                 longitude += Number(element.dlugosc);
             });
-            this.state.map.setView(new L.LatLng((latitude / this.state.selectedTransmitters.length) - 1,
+            this.state.map.setView(new L.LatLng((latitude / this.state.selectedTransmitters.length) - 0.3,
                 longitude / this.state.selectedTransmitters.length), 7);
         }
     }

@@ -119,7 +119,7 @@ class Table extends React.Component {
             {
                 text: '15', value: 15,
             }],
-            sizePerPage: 5,
+            sizePerPage: 10,
             components: {
                 totalText: 'asdasd',
             },

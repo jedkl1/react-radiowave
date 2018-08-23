@@ -5,7 +5,7 @@
     left: 50%;
     transform:translate(-50%);
     bottom: -22.2em;
-    z-index: 1;
+    z-index: 3;
     width: 36%;
     padding: 3px;
     background-color: #D64A2B;
