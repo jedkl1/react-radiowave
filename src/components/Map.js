@@ -200,10 +200,11 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
                         });
                 } else {
                     console.error(element);
-                    toast.error(`Niestety, mapa dla nadajnika ${element.mhz}MHz/ ${element.program}/ ${element.obiekt} nie jest jeszcze gotowa.
-                            Powiadom administrację o problemie`, {
-                                position: toast.POSITION.BOTTOM_CENTER,
-                            });
+                    // toast.error(`Niestety, mapa dla nadajnika ${element.mhz}MHz/ ${element.program}/
+                    // ${element.obiekt} nie jest jeszcze gotowa.
+                    //         Powiadom administrację o problemie`, {
+                    //             position: toast.POSITION.BOTTOM_CENTER,
+                    //         });
                     resolve();
                 }
             }));
