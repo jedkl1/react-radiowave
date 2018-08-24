@@ -193,17 +193,17 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
                         },
                         ).catch((err) => {
                             console.error(`${err} in transmitter ${element.id_nadajnik} for ${element.typ}`);
-                            toast.error(`Brak podstawowych danych dla nadajnika ${element.id_nadajnik} systemu ${this.props.system}.
+                            toast.error(`Niestety, mapa dla nadajnika ${element.mhz}MHz/ ${element.program}/ ${element.obiekt} nie jest jeszcze gotowa.
                             Powiadom administrację o problemie`, {
                                 position: toast.POSITION.BOTTOM_CENTER,
                             });
                         });
                 } else {
                     console.error(element);
-                    toast.error(`Niewlasciwy system, konfiguracja badz brak podstawowych danych dla ${element.id_nadajnik}
-                    systemu ${this.props.system}. Powiadom administrację o problemie`, {
-                        position: toast.POSITION.BOTTOM_CENTER,
-                    });
+                    toast.error(`Niestety, mapa dla nadajnika ${element.mhz}MHz/ ${element.program}/ ${element.obiekt} nie jest jeszcze gotowa.
+                            Powiadom administrację o problemie`, {
+                                position: toast.POSITION.BOTTOM_CENTER,
+                            });
                     resolve();
                 }
             }));

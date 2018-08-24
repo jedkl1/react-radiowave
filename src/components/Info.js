@@ -3,13 +3,13 @@ import { Carousel } from 'react-bootstrap';
 
 import './../styles/Info.css';
 
-const systemImg = require('../../images/info/system.png');
-const shareImg = require('../../images/info/share.png');
-const littleTableImg = require('../../images/info/littleTable.png');
+const systemImg = require('../../images/info/systems.jpeg');
+const shareImg = require('../../images/info/share.jpeg');
+const littleTableImg = require('../../images/info/littletable.jpeg');
 const transmittersImg = require('../../images/info/transmitters.png');
 const infoImg = require('../../images/info/info.png');
-const confsImg = require('../../images/info/confs.png');
-const tableImg = require('../../images/info/table.png');
+const confsImg = require('../../images/info/confs.jpeg');
+const tableImg = require('../../images/info/table.jpeg');
 
 
 // function InfoImage(props) {
@@ -83,7 +83,7 @@ class Info extends React.Component {
                     <Carousel.Item>
                         <div className={'IntroImageWrapper first-slide'} />
                         <Carousel.Caption>
-                            <h3>Zanim rozpoczeniesz...</h3>
+                            <h3>Zanim rozpoczniesz...</h3>
                             <p>Aplikacja Mapy RadioPolska udostępnia mapy pokrycia sygnałem z nadajników
                                 radiowych i telewizyjnych w Polsce. Mapy te zostały policzone z wykorzystaniem
                                 ogólnodostępnych narzędzi i zbiorów danych (Radio Mobile de Luxe, SRTM, wykazy UKE)
@@ -108,17 +108,28 @@ class Info extends React.Component {
                             <img className={'IntroImage'} alt="RysujNadajnikiImage" src={littleTableImg} />
                         </div>
                         <Carousel.Caption>
-                            <h3>Rysuj nadajniki</h3>
-                            <p>Wybieraj nadajniki by narysować je na mapie.</p>
+                            <h3>Wybierz mapy do narysowania</h3>
+                            <p>Domyślnie możesz wyświetlić jedną mapę na raz, natomiast w konfiguracji możesz
+                                zezwolić na wyświetlanie wielu map.</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
                         <div className={'IntroImageWrapper'}>
-                            <img className={'IntroImage'} alt="ZmienKonfiguracjeImage" src={confsImg} />
+                            <img className={'IntroImage confs'} alt="ZmienKonfiguracjeImage" src={confsImg} />
                         </div>
                         <Carousel.Caption>
-                            <h3>Zmień konfigurację</h3>
-                            <p>Wejdź tutaj by zmieniać konfiguracje map.</p>
+                            <h3>Ustawienia</h3>
+                            <p>W tym oknie możesz zmienić konfigurację aplikacji. Kolejno: <br />
+1. W niektórych przypadkach dostępne są różne warianty map dla tego samego systemu
+- tutaj możesz dokonać szybkiego przełączenia pomiędzy wariantami. <br />
+2. Możesz włączyć lub wyłączyć rysowanie charakterystyk kierunkowych anten
+(w płaszczyźnie azymutalnej), które zostały uwzględnione w obliczeniach. <br />
+3. Automatyczny zoom i wyśrodkowanie jest wygodny do szybkiego przeglądaniamap z różnych nadajników.
+Jednak jeśli chcesz porównać pokrycie sygnałem z różnych nadajników na tym samym terenie, zalecamy
+wyłączenie tej opcji. <br />
+4. Możesz zezwolić na rysowanie wielu map pokrycia. Uwaga: przy wielu nakładających się mapach,
+widok staje się nieczytelny, a poza tym przeglądarka może ulec zawieszeniu.
+                            </p>
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
@@ -127,7 +138,7 @@ class Info extends React.Component {
                         </div>
                         <Carousel.Caption>
                             <h3>Udostępnij</h3>
-                            <p>Udostępniaj swoje mapy znajomym.</p>
+                            <p>Możesz wygenerować link do skonfigurowanego zestawu map i np. udostępnić go znajomym</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
@@ -143,7 +154,7 @@ class Info extends React.Component {
                 <h5> Aplikacja została wykonana jako przedmiot pracy inżynierskiej. </h5>
                 Autor: Jędrzej Klocek, opiekun: dr inż. Przemysław Korpas,
                 Politechnika Warszawska 2018 <br />
-                Mapy-RadioPolska.pl beta version: 1.2.4
+                Mapy RadioPolska beta version: 1.2.5
             </div>
         );
     }

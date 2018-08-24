@@ -89,7 +89,7 @@ class ConfigurationsBox extends Component {
                                     <button onClick={this.openConfiguration} className={'confsButton'}>
                                         <img src={settingsIcon} type="image/svg+xml" className={`Conf-logo ${this.state.isOpen}`} alt="Konfiguracja" />
                                     </button>
-                                    <b className={'WhiteParagraph'}>Wybierz konfigurację mapy pokrycia</b>
+                                    <b className={'WhiteParagraph'}>Ustawienia</b>
                                 </div>
                                 <div className="confsWhiteBox">
                                     <form>

@@ -5,7 +5,7 @@
 }
 
 .IntroImageWrapper.first-slide {
-    background-image: url('../../images/info/intro2.png');
+    background-image: url('../../images/info/intro.jpeg');
     background-repeat: no-repeat;
     opacity: .5;
     background-size: cover;
@@ -15,6 +15,12 @@
     width: 600px;
     height: 450px;
     padding-top: 100px;
+}
+
+.IntroImage.confs {
+    width: 600px;
+    height: 300px;
+    padding-top: 60px;
 }
 
 .carousel-caption {
@@ -35,7 +41,17 @@
         width: 936px;
         height: 500px;
     }
+
+    .IntroImage.confs {
+        width: 480px;
+        height: 220px;
+        padding-top: 60px;
+    }
     
+    .carousel-caption p {
+        font-size: 12px;
+    }
+
     .IntroImage {
         width: 590px;
         height: 380px;
@@ -47,8 +63,14 @@
 @media screen and (max-width: 900px) {
     /* start of phone styles */
     .IntroImageWrapper {
-        width: 630px;
+        width: 748px;
         height: 600px;
+    }
+
+    .IntroImage.confs {
+        width: 480px;
+        height: 220px;
+        padding-top: 60px;
     }
     
     .IntroImage {
@@ -69,6 +91,12 @@
         width: 340px;
         height: 420px;
         padding-top: 210px;
+    }
+
+    .IntroImage.confs {
+        width: 0px;
+        height: 0px;
+        padding-top: 60px;
     }
 }
 
