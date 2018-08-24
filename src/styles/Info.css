@@ -4,6 +4,13 @@
     background-color: #FFF;
 }
 
+.IntroImageWrapper.first-slide {
+    background-image: url('../../images/info/intro2.png');
+    background-repeat: no-repeat;
+    opacity: .5;
+    background-size: cover;
+}
+
 .IntroImage {
     width: 600px;
     height: 450px;

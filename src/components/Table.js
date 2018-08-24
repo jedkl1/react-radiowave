@@ -28,7 +28,7 @@ function iconFormat(cell) {
     return (<div style={{
         width: '6em',
         height: '2.2em',
-        backgroundImage: `url(http://radiopolska.pl/files/thumb/${cell}/300)`,
+        backgroundImage: `url(https://radiopolska.pl/files/thumb/${cell}/300)`,
         borderRadius: '2px',
         backgroundSize: 'contain',
         backgroundPosition: 'center',

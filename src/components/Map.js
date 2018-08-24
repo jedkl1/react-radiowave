@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import L from 'leaflet';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 // postCSS import of Leaflet's CSS
 import 'leaflet/dist/leaflet.css';
 import '../styles/Map.css';
@@ -151,9 +154,6 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
                     element.id_antena && this.props.configuration.cfg) {
                     fetch(`https://mapy.radiopolska.pl/files/get/${this.props.configuration.cfg}/${element._mapahash}.kml`)
                     .then(res => res.text())
-                    .catch((err) => {
-                        console.error(`${err} in transmitter ${element}`);
-                    })
                     .then(
                         (res) => {
                             parseString(res, (err, result) => {
@@ -185,19 +185,25 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
                                 this.setState({ directionalChars: tempArray }, () => { });
                             }
                             this.addMarkers();
-                            // if (i === 50) {
-                            //     alert('Rysowanie powyżej 50 nadajnik
-                            // ów jednocześnie znacznie ograniczy pracę Twojego urządzenia');
-                            //     break;
-                            // }
                             resolve();
                         },
                         (error) => {
+                            console.log();
                             console.log(`Error${error}`);
                         },
-                        );
+                        ).catch((err) => {
+                            console.error(`${err} in transmitter ${element.id_nadajnik} for ${element.typ}`);
+                            toast.error(`Brak podstawowych danych dla nadajnika ${element.id_nadajnik} systemu ${this.props.system}.
+                            Powiadom administrację o problemie`, {
+                                position: toast.POSITION.BOTTOM_CENTER,
+                            });
+                        });
                 } else {
                     console.error(element);
+                    toast.error(`Niewlasciwy system, konfiguracja badz brak podstawowych danych dla ${element.id_nadajnik}
+                    systemu ${this.props.system}. Powiadom administrację o problemie`, {
+                        position: toast.POSITION.BOTTOM_CENTER,
+                    });
                     resolve();
                 }
             }));
@@ -312,6 +318,7 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
         return (
             <div id="mapUI">
                 <div ref={mapRef} id="map" />
+                <ToastContainer autoClose={5000} />
             </div>
         );
     }

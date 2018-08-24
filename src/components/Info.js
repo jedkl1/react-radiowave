@@ -80,6 +80,22 @@ class Info extends React.Component {
                     activeIndex={index}
                     direction={direction}
                     onSelect={this.handleSelect}>
+                    <Carousel.Item>
+                        <div className={'IntroImageWrapper first-slide'} />
+                        <Carousel.Caption>
+                            <h3>Zanim rozpoczeniesz...</h3>
+                            <p>Aplikacja Mapy RadioPolska udostępnia mapy pokrycia sygnałem z nadajników
+                                radiowych i telewizyjnych w Polsce. Mapy te zostały policzone z wykorzystaniem
+                                ogólnodostępnych narzędzi i zbiorów danych (Radio Mobile de Luxe, SRTM, wykazy UKE)
+                                oraz dedykowanego własnego oprogramowania. Należy pamiętać, że mapy pokrycia sygnałem
+                                nie są tożsame z mapami zasięgu, choć pewne podobieństwa występują.
+                                Projekt ma charakter eksperymentalny, a do publikowanych wyników należy podchodzić z
+                                rezerwą. Redakcja portalu RadioPolska ani autor aplikacji nie ponoszą odpowiedzialności
+                                za konsekwencje wykorzystania prezentowanych tutaj wyników. Jędrzej Klocek i
+                                Przemysław Korpas
+                            </p>
+                        </Carousel.Caption>
+                    </Carousel.Item>
                     {
                         this.props.showFull ?
                             full.props.children
@@ -127,7 +143,7 @@ class Info extends React.Component {
                 <h5> Aplikacja została wykonana jako przedmiot pracy inżynierskiej. </h5>
                 Autor: Jędrzej Klocek, opiekun: dr inż. Przemysław Korpas,
                 Politechnika Warszawska 2018 <br />
-                Mapy-RadioPolska.pl beta version: 1.2.3
+                Mapy-RadioPolska.pl beta version: 1.2.4
             </div>
         );
     }
