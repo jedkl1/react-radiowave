@@ -28,20 +28,13 @@ config.params = {
     minZoom: 4,
 };
 config.tileLayer = {
-    // uri: 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
     uri: 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    // uri: 'http://b.tile.stamen.com/terrain/{z}/{x}/{y}.png',
-    // uri: 'https://maps.omniscale.net/v2/myomniscale-d7a6ecbd/style.default/{z}/{x}/{y}.png',
     params: {
         minZoom: 4,
         maxZoom: 16,
-        // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors,<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-        // id: 'mapbox.outdoors',
         id: '',
-        // accessToken: 'sk.eyJ1IjoiamVka2wiLCJhIjoiY2poZ2t6angxMWp0dzMwbzZsNG5uOWhlbyJ9.GFjxyXSEOU2ImK4c-CLm0A',
         accessToken: '',
-        // accessToken: 'myomniscale-d7a6ecbd',
     },
 };
 
@@ -326,6 +319,3 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
 }
 
 export default Map;
-
-
-// access_token = pk.eyJ1IjoiamVka2wiLCJhIjoiY2poZ2tzdGM2MWh6eDM2bmdwajJjYWM1MSJ9.eetF9FLkBjeuCg_fM4dDLg
