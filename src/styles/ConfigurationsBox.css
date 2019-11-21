@@ -1,0 +1,174 @@
+.confsBox {
+    position: absolute;
+    width: 3.1em;
+    height: 3.1em;
+    left: 0em;
+    top: 11em;
+    z-index: 5;
+    padding: 3px;
+    display: block;
+    background-color: #D64A2B;
+    border-radius: 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    -webkit-animation-fill-mode: forwards; /* Chrome 16+, Safari 4+ */
+    -moz-animation-fill-mode: forwards;    /* FF 5+ */
+    -o-animation-fill-mode: forwards;      /* Not implemented yet */
+    -ms-animation-fill-mode: forwards;     /* IE 10+ */
+    animation-fill-mode: forwards;
+    animation: changeDownWidth 1s;
+}
+
+.confsBox.true {
+    width: max-content;
+    height: auto;
+    overflow: auto;
+    -webkit-animation-fill-mode: forwards; /* Chrome 16+, Safari 4+ */
+    -moz-animation-fill-mode: forwards;    /* FF 5+ */
+    -o-animation-fill-mode: forwards;      /* Not implemented yet */
+    -ms-animation-fill-mode: forwards;     /* IE 10+ */
+    animation-fill-mode: forwards;
+    animation: changeUpWidth 1s;
+}
+
+.confsBox label {
+    padding-left: 5px;
+}
+
+.confsButton {
+    border-radius: 5px;
+    border-width: 1px;
+    padding: 1px;
+    height: 2.7em;
+    width: 2.7em;
+    background-color: #FFF;
+}
+
+.confsBox.true .confsButton {
+    border-width: 0px;
+}
+
+.confsButton:hover {
+    background-color: #D64A2B;
+}
+
+.Conf-logo {
+    height: 24px;
+    width: 24px;
+    -webkit-animation-fill-mode: forwards; /* Chrome 16+, Safari 4+ */
+    -moz-animation-fill-mode: forwards;    /* FF 5+ */
+    -o-animation-fill-mode: forwards;      /* Not implemented yet */
+    -ms-animation-fill-mode: forwards;     /* IE 10+ */
+    animation-fill-mode: forwards;
+}
+
+.Conf-logo.true {
+    animation: Conf-logo-spin-forward 1s linear;
+}
+
+.Conf-logo.false {
+    animation: Conf-logo-spin-back 1s linear;
+}
+
+@keyframes Conf-logo-spin-forward {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes Conf-logo-spin-back {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+}
+
+.WhiteParagraph {
+    padding: 8px 6px;
+}
+
+.ButtonHeaderWrap {
+    background-color: #FFF;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.componentWidth {
+    /* width: 100%; */
+    /* height: 10px; */
+}
+
+.confsWhiteBox {
+    background: white;
+    border-radius: 0px 0px 5px 5px;
+    padding: 5px;
+}
+
+.label-without-margin {
+    margin-bottom: 0px;
+}
+
+.label-margin-right {
+    margin-left: 18px;
+}
+
+@keyframes changeUpWidth {
+    from {width: 3.3em;}
+    to {width: 30%;}
+}
+
+@keyframes changeDownWidth {
+    from {width: 30%;}
+    to {width: 3.3em;}
+}
+
+@media screen and (max-width: 1200px) {
+    /* start landscape of phone styles */
+
+    .confsBox.true {
+        width: 90%;
+        height: auto;
+    }
+    
+    @keyframes changeUpWidth {
+        from {width: 20%;}
+        to {width: 90%;}
+    }
+    
+    @keyframes changeDownWidth {
+        from {width: 90%;}
+        to {width: 20%;}
+    }
+}
+
+@media screen and (max-width: 900px) {
+    /* start landscape of phone styles */
+    
+    .confsBox {
+        padding: 3px;
+        top: 7.5em;
+    }
+}
+
+@media screen and (max-width: 481px) {
+    /* start of phone styles */
+    
+    .confsBox.true {
+        width: 96%;
+        height: auto;
+        padding: 3px;
+    }
+    
+    @keyframes changeUpWidth {
+        from {width: 20%;}
+        to {width: 96%;}
+    }
+    
+    @keyframes changeDownWidth {
+        from {width: 96%;}
+        to {width: 20%;}
+    }
+}
+
+@media screen and (max-width: 370px) {
+    .confsBox {
+      top: 3.3em;
+      padding: 3px;
+    }
+}

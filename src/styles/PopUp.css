@@ -1,0 +1,76 @@
+
+.PopUpWrapper {
+    border-radius: 3px;
+    background: #D64A2B;
+    position: absolute;
+    padding: 3px;
+    right: .5em;
+    bottom: 8.6em;
+    max-width: 30em;
+    z-index: 1;
+}
+
+.PopUpTipContainer {
+    width: 28px;
+    height: 20px;
+    position: absolute;
+    left: 90%;
+    padding-left: 8px;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.PopUpContent {
+    background-color: #FFF;
+    border-radius: 3px;
+}
+
+.PopUpContent a {
+    width: 28em;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.PopUpTip {
+    width: 11px;
+    height: 8px;
+    background-color: #D64A2B;
+    transform: rotate(45deg);
+}
+
+.CopyToClip {
+    background-color: white;
+    border-radius: 5px;
+    border: 3px solid;
+    width: 100%;
+    border-color: #D64A2B;
+}
+
+.CopyToClip:hover {
+    background-color: #D64A2B;
+    color: white;
+}
+
+#shareInput {
+    border-radius: 5px;
+}
+
+.Toastify {
+    position: absolute;
+    z-index: 4;
+    bottom: 0em;
+}
+
+@media screen and (max-width: 900px) {
+    /* start of phone styles */
+    .PopUpWrapper {
+        padding: 3px;
+    }
+
+    .PopUpTip {
+        width: 9px;
+        height: 9px;
+    }
+}

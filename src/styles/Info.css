@@ -1,0 +1,131 @@
+.IntroImageWrapper {
+    width: 1182px;
+    height: 600px;
+    background-color: #FFF;
+}
+
+.IntroImageWrapper.first-slide {
+    background-image: url('../../images/info/intro.jpeg');
+    background-repeat: no-repeat;
+    opacity: .5;
+    background-size: cover;
+}
+
+.IntroImage {
+    width: 600px;
+    height: 450px;
+    padding-top: 100px;
+}
+
+.IntroImage.confs {
+    width: 600px;
+    height: 300px;
+    padding-top: 60px;
+}
+
+.carousel-caption {
+    color: #000 !important;
+}
+
+.carousel-indicators li {
+    background-color: #000 !important;
+}
+
+.carousel-indicators .active {
+    background-color: #333 !important;
+}
+
+@media screen and (max-width: 1420px) {
+    /* start of phone styles */
+    .IntroImageWrapper {
+        width: 936px;
+        height: 500px;
+    }
+
+    .IntroImage.confs {
+        width: 480px;
+        height: 220px;
+        padding-top: 60px;
+    }
+    
+    .carousel-caption p {
+        font-size: 12px;
+    }
+
+    .IntroImage {
+        width: 590px;
+        height: 380px;
+        padding-top: 60px;
+    }
+}
+
+
+@media screen and (max-width: 900px) {
+    /* start of phone styles */
+    .IntroImageWrapper {
+        width: 748px;
+        height: 600px;
+    }
+
+    .IntroImage.confs {
+        width: 480px;
+        height: 220px;
+        padding-top: 60px;
+    }
+    
+    .IntroImage {
+        width: 370px;
+        height: 400px;
+        padding-top: 140px;
+    }
+}
+
+@media screen and (max-width: 481px) {
+    /* start of phone styles */
+    .IntroImageWrapper {
+        width: 460px;
+        height: 600px;
+    }
+    
+    .IntroImage {
+        width: 340px;
+        height: 420px;
+        padding-top: 210px;
+    }
+
+    .IntroImage.confs {
+        width: 0px;
+        height: 0px;
+        padding-top: 60px;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    /* start of phone styles */
+
+    .IntroImageWrapper {
+        width: 398px;
+        height: 520px;
+    }
+    
+    .IntroImage {
+        width: 300px;
+        height: 350px;
+        padding-top: 170px;
+    }
+}
+
+@media screen and (max-width: 370px) {
+    /* start of phone styles */
+
+    .IntroImageWrapper {
+        width: 336px;
+        height: 420px;
+    }
+    
+    .IntroImage {
+        width: 260px;
+        height: 290px;
+        padding-top: 140px;
+    }
+}

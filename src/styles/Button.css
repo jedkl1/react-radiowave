@@ -1,37 +1,133 @@
 .button.system,
-.button.info {
+.button.info,
+.button.home,
+.button.checkStation,
+.button.share {
     border-radius: 5px;
-    font-size: 1.7em;
-    background-color: #b140b1;
-    color: #111;
+    background-color: white;
     border: 1px solid #c5c5c5;
+}
+
+.button.system:hover,
+.button.info:hover,
+.button.home:hover,
+.button.checkStation:hover,
+.button.share:hover {
+    border-radius: 5px;
+    background-color: #D64A2B;
+    border: 1px solid #c5c5c5;
+}
+
+.button.system.focus {
+    background-color: #D64A2B;
+    color: white;
+}
+
+.ButtonWrapper {
+    background: #D64A2B;
+    position: absolute;
+    padding: 3px;
+    z-index: 2;
+    border-radius: 5px;
     margin-right: .3em;
 }
 
-.button.home,
-.button.checkStation {
-    width: 2.7em; height: 2.7em;
-    border-radius: 5px;
-    background-color: #b140b1;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 75%;
-    border: 1px solid #c5c5c5;
+.container .ButtonWrapper {
+    position: relative;
+    display: inline-block;
 }
 
-.button.home {
-    background-image: url('../../images/home.png');
-}
-
-.button.checkStation {
-    background-image: url('../../images/antenna-3.png');
+.button.system {
+    font-size: 1.7em;
 }
 
 .button.info {
-    width: 1.5em; height: 1.5em;
-    position: absolute;
-    z-index: 10;
-    right: .2em;
-    bottom:.5em;
     font-size: 1.7em;
+}
+
+.button.checkStation,
+.button.share {
+    width: 2.7em; height: 2.7em;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 85%;
+}
+
+.button.home {
+    position: absolute;
+    z-index: 2;
+    top: .5em;
+    left: .5em;
+    width: 17em; height: 2.7em;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-image: url('../../images/icons/logoIcon.png');
+}
+
+.button.checkStation {
+    background-image: url('../../images/icons/transmitter.png');
+}
+
+.button.share {
+    background-image: url('../../images/share.png');
+}
+
+.shareWrapper {
+    right: 4em;
+    bottom: 8em;
+    position: absolute; 
+}
+
+.infoWrapper {
+    right: 4em;
+    bottom: 4.2em;
+    position: absolute; 
+}
+
+.stationsWrapper {
+    top: 7.3em;
+    left: .5em;
+    position: absolute; 
+}
+
+.configurationWrapper {
+    top: 7.6em;
+    position: absolute; 
+}
+
+.button.info {
+    width: 1.55em; height: 1.55em;
+
+}
+
+SystemButton {
+    position: relative;
+}
+
+@media screen and (max-width: 900px) {
+    /* start of phone styles */
+    .ButtonWrapper {
+        padding: 3px;
+    }
+
+    .stationsWrapper {
+        top: 7.1em;
+    }
+
+    .shareWrapper {
+        right: 3.5em;
+        bottom: 7.8em;
+    }
+
+    .infoWrapper {
+        right: 3.5em;
+    }
+}
+
+@media screen and (max-width: 370px) {
+    /* start of phone styles */   
+    .stationsWrapper {
+        top: 7.3em;
+    }
 }

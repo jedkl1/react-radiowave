@@ -1,0 +1,26 @@
+.legendColor {
+    width: 4em;
+    height: 2em;
+}
+
+.legendField {
+    float: left;
+}
+
+@media screen and (max-width: 900px) {
+    /* start of phone styles */
+  
+    .legendColor {
+        width: 2.6em;
+        height: 1.3em;
+    }
+}
+
+@media screen and (max-width: 481px) {
+    /* start of phone styles */
+  
+    .legendColor {
+        width: 2.1em;
+        height: 1.05em;
+    }
+}

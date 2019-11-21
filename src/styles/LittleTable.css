@@ -1,0 +1,151 @@
+.littleTable {
+    position: absolute;
+    /* width: 6%; */
+    height: 23em;
+    left: 50%;
+    transform:translate(-50%);
+    bottom: -22.2em;
+    z-index: 3;
+    width: 36%;
+    padding: 3px;
+    background-color: #D64A2B;
+    border-radius: 5px;
+    -webkit-animation-fill-mode: forwards; /* Chrome 16+, Safari 4+ */
+    -moz-animation-fill-mode: forwards;    /* FF 5+ */
+    -o-animation-fill-mode: forwards;      /* Not implemented yet */
+    -ms-animation-fill-mode: forwards;     /* IE 10+ */
+    animation-fill-mode: forwards;
+    animation: changeDownVerticalPosition 1s;
+}
+
+.circleButton {
+    height: 3em;
+    width: 6em;
+    border-top-left-radius: 6em;
+    border-top-right-radius: 6em;
+    left: 50%;
+    transform: translate(-50%,-100%);
+    background-color: #D64A2B;
+    position: absolute;
+    border-style: hidden;
+    background-image: url('../../images/button_up.png');
+    background-size: 55%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.littleTable.true {
+    width: 36%;
+    bottom: 1em;
+    transform:translate(-50%);
+    -webkit-animation-fill-mode: forwards; /* Chrome 16+, Safari 4+ */
+    -moz-animation-fill-mode: forwards;    /* FF 5+ */
+    -o-animation-fill-mode: forwards;      /* Not implemented yet */
+    -ms-animation-fill-mode: forwards;     /* IE 10+ */
+    animation-fill-mode: forwards;
+    animation: changeUpVerticalPosition 1s;
+}
+
+.littleTable.true .circleButton {
+    background-image: url('../../images/button_down.png');
+}
+
+@keyframes changeUpVerticalPosition {
+    from {bottom: -22.2em;}
+    to {bottom: 1em;}
+}
+
+@keyframes changeDownVerticalPosition {
+    from {bottom: 1em;}
+    to {bottom: -22.2em;}
+}
+
+.littleTable .react-bs-table-container {
+    height: 90%;
+    background-color: white;
+    border-radius: 5px 5px 0px 0px;
+    overflow: auto;
+}
+
+.react-bs-table.react-bs-table-bordered {
+    height: 87% !important;
+}
+
+@media screen and (max-width: 900px) {
+    /* start landscape of phone styles */
+    
+    .littleTable {
+        width: 65%;
+        height: 20em;
+        bottom: -20em;
+        padding: 3px;
+    }
+
+    .littleTable.true {
+        width: 65%;
+        bottom: .3em;
+    }
+
+    @keyframes changeUpVerticalPosition {
+        from {bottom: -20em;}
+        to {bottom: .3em;}
+    }
+    
+    @keyframes changeDownVerticalPosition {
+        from {bottom: .3em;}
+        to {bottom: -20em;}
+    }
+}
+
+@media screen and (max-width: 768px) {
+    /* start landscape of phone styles */
+    .littleTable .react-bs-table-container {
+        height: 88%;
+    }
+}
+
+@media screen and (max-width: 481px) {
+    /* start of phone styles */
+    
+    .littleTable {
+        width: 95%;
+        padding: 3px;
+    }
+
+    .littleTable.true {
+        width: 95%;
+    }
+}
+
+@media screen and (max-width: 370px) {
+    /* start of phone styles */
+    
+    .littleTable {
+        width: 100%;
+        padding: 3px;
+    }
+
+    .littleTable.true {
+        width: 100%;
+    }
+
+    .littleTable .react-bs-table-container {
+        height: 87%;
+    }
+}
+
+.AddTransmitter {
+    width: 100%;
+    background-color: white;
+    text-align: center;
+    border-radius: 0px 0px 5px 5px;
+}
+
+.AddTransmitter .button {
+    border-radius: 3px;
+    padding: 3px;
+    border: 3px solid;
+    border-color: #D64A2B;
+    background-color: #FFF;
+}
+

@@ -1,0 +1,18 @@
+#searchSelection,
+#searchInput {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 3px;
+}
+
+#searchInput {
+    margin-left: 1em;
+    display: inline;
+}
+
+.searchContainer {
+    display: inline;
+}
