@@ -16,7 +16,6 @@ const logoIcon = require('../../images/icons/logoIcon.png');
 let data = [];
 
 class App extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -60,7 +59,7 @@ class App extends Component {
 
     getConfigurations(configurationString = 'fm-std') {
         fetch('https://mapy.radiopolska.pl/api/cfg')
-            .then(res => res.json())
+            .then((res) => res.json())
             .then(
                 (res) => {
                     this.setState({ configurations: res.data }, function () {
@@ -118,37 +117,39 @@ class App extends Component {
                             console.error(`Error: niewłaściwy ${transmitter} numer nadajnika`);
                         } else if (inputParams.sys && (inputParams.sys === 'dab' || inputParams.sys === 'fm' || inputParams === 'dvbt')) {
                             fetch(`https://mapy.radiopolska.pl/api/transmitterById/pl/${inputParams.sys}/${transmitter}`)
-                                .then(res => res.json())
+                                .then((res) => res.json())
                                 .then(
-                            (res) => {
-                                const tempArray = this.state.selectedTransmitters.slice();
-                                if (res.data.length) {
-                                    tempArray.push(res.data[0]);
-                                    let selected = this.state.toDrawSelected;
-                                    if (selected.length) {
-                                        selected = this.state.toDrawSelected;
-                                    } else {
-                                        selected = [res.data[0]];
-                                    }
-                                    this.setState({
-                                        selectedTransmitters: tempArray,
-                                        toDrawSelected: selected,
-                                        selectedSystemTransmitters: tempArray,
-                                        showFullInfo: false },
-                                                  () => { console.log(this.state.selectedTransmitters); });
-                                } else {
-                                    console.log(`Error brak ${transmitter} nadajnika w bazie danych`);
-                                    this.setState({
-                                        selectedTransmitters: this.state.selectedTransmitters,
-                                        selectedSystemTransmitters: this.state.selectedSystemTransmitters,
-                                        showFullInfo: true },
-                                                  () => { console.log(this.state.selectedTransmitters); });
-                                }
-                            },
-                            (error) => {
-                                console.log(`Error: ${error}`);
-                            },
-                            );
+                                    (res) => {
+                                        const tempArray = this.state.selectedTransmitters.slice();
+                                        if (res.data.length) {
+                                            tempArray.push(res.data[0]);
+                                            let selected = this.state.toDrawSelected;
+                                            if (selected.length) {
+                                                selected = this.state.toDrawSelected;
+                                            } else {
+                                                selected = [res.data[0]];
+                                            }
+                                            this.setState({
+                                                selectedTransmitters: tempArray,
+                                                toDrawSelected: selected,
+                                                selectedSystemTransmitters: tempArray,
+                                                showFullInfo: false,
+                                            },
+                                                          () => { console.log(this.state.selectedTransmitters); });
+                                        } else {
+                                            console.log(`Error brak ${transmitter} nadajnika w bazie danych`);
+                                            this.setState({
+                                                selectedTransmitters: this.state.selectedTransmitters,
+                                                selectedSystemTransmitters: this.state.selectedSystemTransmitters,
+                                                showFullInfo: true,
+                                            },
+                                                          () => { console.log(this.state.selectedTransmitters); });
+                                        }
+                                    },
+                                    (error) => {
+                                        console.log(`Error: ${error}`);
+                                    },
+                                );
                         } else {
                             console.error('Error: niewłaściwe parametry wejściowe');
                             this.getConfigurations();
@@ -176,15 +177,15 @@ class App extends Component {
             }
             // console.log(dataUrl);
             fetch(dataUrl)
-                .then(res => res.json())
+                .then((res) => res.json())
                 .then(
-                (res) => {
-                    data = res.data;
-                },
-                (error) => {
-                    console.log(`Error: ${error}`);
-                },
-            );
+                    (res) => {
+                        data = res.data;
+                    },
+                    (error) => {
+                        console.log(`Error: ${error}`);
+                    },
+                );
         }
     }
 
@@ -230,14 +231,13 @@ class App extends Component {
     handleShareClick() {
         if (this.state.selectedConfiguration) {
             // ?name=ferret&color=purple
-            const domain = window.location.port.length ?
-                    `${window.location.protocol}//${window.location.hostname}:${window.location.port}${window.location.pathname}`
-                    :
-                    `${window.location.protocol}//${window.location.hostname}${window.location.pathname}`;
+            const domain = window.location.port.length
+                ? `${window.location.protocol}//${window.location.hostname}:${window.location.port}${window.location.pathname}`
+                : `${window.location.protocol}//${window.location.hostname}${window.location.pathname}`;
             let url = domain;
             if (this.state.toDrawSelected.length) {
                 url += '?tra=';
-                url += this.state.toDrawSelected.map(element => `${element.id_nadajnik}`).join(',');
+                url += this.state.toDrawSelected.map((element) => `${element.id_nadajnik}`).join(',');
                 url += `&cfg=${this.state.selectedConfiguration.cfg}&`;
                 url += `sys=${this.state.system}&`;
                 url += `z=${this.state.automaticZoom}&`;
@@ -249,7 +249,7 @@ class App extends Component {
     }
 
     directionalChanged(e) {
-        const target = e.target;
+        const { target } = e;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         this.setState({
             directionalChecked: value,
@@ -258,7 +258,7 @@ class App extends Component {
     }
 
     zoomChanged(e) {
-        const target = e.target;
+        const { target } = e;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         this.setState({
             automaticZoom: value,
@@ -267,7 +267,7 @@ class App extends Component {
     }
 
     checkMultipleChanged(e) {
-        const target = e.target;
+        const { target } = e;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         this.setState({
             checkMultiple: value,
@@ -291,9 +291,9 @@ class App extends Component {
                     currentTransmitters.push(element);
                 }
             });
-            const intersection = currentTransmitters.filter(transmitter =>
-                this.state.toDrawSelected.includes(transmitter));
-            this.setState({ selectedSystemTransmitters: currentTransmitters,
+            const intersection = currentTransmitters.filter((transmitter) => this.state.toDrawSelected.includes(transmitter));
+            this.setState({
+                selectedSystemTransmitters: currentTransmitters,
                 toDrawSelected: intersection,
                 isShowingShare: false,
             }, () => {});
@@ -304,7 +304,8 @@ class App extends Component {
         this.setState({
             toDrawSelected: dataFromLittleTable,
             isShowingModal: openTable,
-            isShowingShare: false },
+            isShowingShare: false,
+        },
                       () => {});
     }
 
@@ -318,7 +319,8 @@ class App extends Component {
                 directionalChecked: dataFromConfiguration,
                 automaticZoom,
                 checkMultiple,
-                toDrawSelected: [] });
+                toDrawSelected: [],
+            });
         } else {
             this.setState({ directionalChecked: dataFromConfiguration, automaticZoom, checkMultiple });
         }
@@ -333,30 +335,31 @@ class App extends Component {
             width: '70%',
             textAlign: 'center',
         };
-        const domain = window.location.port.length ?
-                    `${window.location.protocol}//${window.location.hostname}:${window.location.port}${window.location.pathname}`
-                    :
-                    `${window.location.protocol}//${window.location.hostname}${window.location.pathname}`;
+        const domain = window.location.port.length
+            ? `${window.location.protocol}//${window.location.hostname}:${window.location.port}${window.location.pathname}`
+            : `${window.location.protocol}//${window.location.hostname}${window.location.pathname}`;
         return (
             <div id="gridId" className="grid">
                 <div id="systems_container" className="container systems">
                     {
-                        this.state.fmClicked ?
-                            <SystemButton id="fm" class={'system focus'} title="Zmień system na FM" value="FM" onSystemClick={this.handleSystemClick} />
-                        : <SystemButton id="fm" class={'system'} title="Zmień system na FM" value="FM" onSystemClick={this.handleSystemClick} />
+                        this.state.fmClicked
+                            ? <SystemButton id="fm" class="system focus" title="Zmień system na FM" value="FM" onSystemClick={this.handleSystemClick} />
+                            : <SystemButton id="fm" class="system" title="Zmień system na FM" value="FM" onSystemClick={this.handleSystemClick} />
                     }
                     {
-                        this.state.dabClicked ?
-                            <SystemButton id="dab" class={'system focus'} title="Zmień system na DAB+" value="DAB+" onSystemClick={this.handleSystemClick} />
-                        : <SystemButton id="dab" class={'system'} title="Zmień system na DAB+" value="DAB+" onSystemClick={this.handleSystemClick} />
+                        this.state.dabClicked
+                            ? <SystemButton id="dab" class="system focus" title="Zmień system na DAB+" value="DAB+" onSystemClick={this.handleSystemClick} />
+                            : <SystemButton id="dab" class="system" title="Zmień system na DAB+" value="DAB+" onSystemClick={this.handleSystemClick} />
                     }
                     {
-                        this.state.dvbtClicked ?
-                            <SystemButton id="dvbt" class={'system focus'} title="Zmień system na DVB-T" value="DVB-T" onSystemClick={this.handleSystemClick} />
-                        : <SystemButton id="dvbt" class={'system'} title="Zmień system na DVB-T" value="DVB-T" onSystemClick={this.handleSystemClick} />
+                        this.state.dvbtClicked
+                            ? <SystemButton id="dvbt" class="system focus" title="Zmień system na DVB-T" value="DVB-T" onSystemClick={this.handleSystemClick} />
+                            : <SystemButton id="dvbt" class="system" title="Zmień system na DVB-T" value="DVB-T" onSystemClick={this.handleSystemClick} />
                     }
                 </div>
-                <a href={domain}> {/* page must stay on https */}
+                <a href={domain}>
+                    {' '}
+                    {/* page must stay on https */}
                     <img id="home" className="button home" alt="Odswiez" src={logoIcon} />
                 </a>
                 <div className="stationsWrapper ButtonWrapper">
@@ -364,29 +367,31 @@ class App extends Component {
                 </div>
                 <div id="buttons_container" className="container buttons">
                     {
-                    this.state.configurations.length ?
-                        <ConfigurationsBox
-                            system={this.state.system}
-                            automaticZoom={this.state.automaticZoom}
-                            checkMultiple={this.state.checkMultiple}
-                            zoomChanged={this.zoomChanged}
-                            directionalChanged={this.directionalChanged}
-                            checkMultipleChanged={this.checkMultipleChanged}
-                            directionalChecked={this.state.directionalChecked}
-                            isOpen={this.state.openConfiguration}
-                            configurations={this.state.configurations}
-                            selected={this.state.selectedConfiguration}
-                            callbackFromApp={this.getSelectedConfiguration}
-                            callbackDirectionals={this.getDirectionalCheckedStatus} />
-                    : null
-                }
+                        this.state.configurations.length
+                            ? (
+                                <ConfigurationsBox
+                                    system={this.state.system}
+                                    automaticZoom={this.state.automaticZoom}
+                                    checkMultiple={this.state.checkMultiple}
+                                    zoomChanged={this.zoomChanged}
+                                    directionalChanged={this.directionalChanged}
+                                    checkMultipleChanged={this.checkMultipleChanged}
+                                    directionalChecked={this.state.directionalChecked}
+                                    isOpen={this.state.openConfiguration}
+                                    configurations={this.state.configurations}
+                                    selected={this.state.selectedConfiguration}
+                                    callbackFromApp={this.getSelectedConfiguration}
+                                    callbackDirectionals={this.getDirectionalCheckedStatus} />
+                            )
+                            : null
+                    }
                 </div>
                 {
-                    this.state.isShowingModal ?
-                        <ModalContainer>
-                            <ModalDialog style={modalStyle} onClose={this.handleClose}>
-                                <h3>Wybierz nadajniki</h3>
-                                {
+                    this.state.isShowingModal
+                        ? (
+                            <ModalContainer>
+                                <ModalDialog style={modalStyle} onClose={this.handleClose}>
+                                    <h3>Wybierz nadajniki</h3>
                                     <div>
                                         <Table
                                             system={this.state.system}
@@ -394,41 +399,45 @@ class App extends Component {
                                             selected={this.state.selectedTransmitters}
                                             data={data} />
                                     </div>
-                                }
-                            </ModalDialog>
-                        </ModalContainer>
-                    : null
+                                </ModalDialog>
+                            </ModalContainer>
+                        )
+                        : null
                 }
                 {
-                    this.state.isShowingInfo ?
-                        <ModalContainer>
-                            <ModalDialog style={infoStyle} onClose={this.handleInfoClose}>
-                                <Info showFull={this.state.showFullInfo} />
-                            </ModalDialog>
-                        </ModalContainer>
+                    this.state.isShowingInfo
+                        ? (
+                            <ModalContainer>
+                                <ModalDialog style={infoStyle} onClose={this.handleInfoClose}>
+                                    <Info showFull={this.state.showFullInfo} />
+                                </ModalDialog>
+                            </ModalContainer>
+                        )
                         : null
                 }
                 <div className="shareWrapper">
                     <SystemButton id="share" class="share" title="Pobierz link do udostępnienia" value="" onSystemClick={this.handleShareClick} />
                 </div>
                 {
-                    this.state.isShowingShare ?
-                        <PopUp text={this.state.uri} />
-                    : null
+                    this.state.isShowingShare
+                        ? <PopUp text={this.state.uri} />
+                        : null
                 }
                 <div className="infoWrapper">
                     <SystemButton id="infoBtn" class="info" title="Informacje" value="i" onSystemClick={this.handleInfoClick} />
                 </div>
                 {
-                    this.state.selectedSystemTransmitters.length ?
-                        <LittleTable
-                            system={this.state.system}
-                            callbackFromApp={this.getDrawData}
-                            selected={this.state.toDrawSelected}
-                            data={this.state.selectedSystemTransmitters}
-                            checkMultiple={this.state.checkMultiple}
-                            addTransmiter={this.state.isShowingModal} />
-                    : null
+                    this.state.selectedSystemTransmitters.length
+                        ? (
+                            <LittleTable
+                                system={this.state.system}
+                                callbackFromApp={this.getDrawData}
+                                selected={this.state.toDrawSelected}
+                                data={this.state.selectedSystemTransmitters}
+                                checkMultiple={this.state.checkMultiple}
+                                addTransmiter={this.state.isShowingModal} />
+                        )
+                        : null
                 }
                 {
                     <Map

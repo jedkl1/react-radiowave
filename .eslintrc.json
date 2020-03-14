@@ -51,7 +51,7 @@
         "message": "`with` is disallowed in strict mode because it makes code impossible to predict and optimize."
       }
     ],
-    "indent": ["error", 4, {
+    "indent": ["error", 2, {
       "SwitchCase": 1,
       "MemberExpression": 1,
       "FunctionDeclaration": {
@@ -67,8 +67,8 @@
       }
     }],
     "class-methods-use-this": ["off"],
-    "react/jsx-indent": ["error", 4],
-    "react/jsx-indent-props": ["error", 4],
+    "react/jsx-indent": ["error", 2],
+    "react/jsx-indent-props": ["error", 2],
     "react/prop-types": ["off"],
     "react/jsx-filename-extension": ["error", {
       "extensions": [".jsx", ".js"]
