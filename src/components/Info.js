@@ -1,8 +1,6 @@
 import React from 'react';
 import { Carousel } from 'react-bootstrap';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 import '../styles/Info.css';
 
 const systemImg = require('../../images/info/systems.jpeg').default;
