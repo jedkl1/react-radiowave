@@ -1,5 +1,5 @@
 body {
-  font-family: Arial,Helvetica,sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   color: #000;
   overflow-y: hidden;
 }
@@ -16,7 +16,7 @@ a {
 .container {
   position: absolute;
   width: 99.3% !important;
-  left: .5em;
+  left: 0.5em;
   z-index: 2;
   padding: 0px !important;
 }
@@ -26,7 +26,7 @@ a {
 }
 
 .container.buttons {
-  top: .3em;
+  top: 0.3em;
 }
 
 .narcissus_x3xwbs {
@@ -35,8 +35,8 @@ a {
 
 .legendContainer {
   z-index: 1;
-  top: .3em;
-  background: #D64A2B;
+  top: 0.3em;
+  background: #d64a2b;
   border-radius: 5px;
   padding: 3px;
   position: absolute;
@@ -152,14 +152,14 @@ a {
 @media screen and (max-width: 481px) {
   /* start of phone styles */
 
-  .narcissus_17w311v .filter.text-filter.form-control{
+  .narcissus_17w311v .filter.text-filter.form-control {
     padding: 6px 2px;
   }
 
   .whiteLegend {
     height: 3em;
   }
-  
+
   .narcissus_17w311v tr th:nth-child(5),
   .narcissus_17w311v tr td:nth-child(5) {
     width: 43% !important;
@@ -174,7 +174,7 @@ a {
 
   .legendContainer {
     top: -0.5em;
-    right: .3em;
+    right: 0.3em;
     padding: 3px;
   }
 
