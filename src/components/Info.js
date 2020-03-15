@@ -44,7 +44,7 @@ class Info extends React.Component {
     const { showFull } = this.props;
 
     const full = (
-      <div>
+      <>
         <Carousel.Item>
           <div className="IntroImageWrapper">
             <img
@@ -81,7 +81,7 @@ class Info extends React.Component {
             <p>Przeszukuj tabelkę i zaznacz interesujące Cię pozycje.</p>
           </Carousel.Caption>
         </Carousel.Item>
-      </div>
+      </>
     );
 
     return (

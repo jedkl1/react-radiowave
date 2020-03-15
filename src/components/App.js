@@ -6,11 +6,13 @@ import queryString from 'query-string';
 import '../styles/App.css';
 import Map from './Map';
 import SystemButton from './Button';
-import Table from './Table';
+import Table from './Table/index';
 import LittleTable from './LittleTable';
 import ConfigurationsBox from './ConfigurationsBox';
 import PopUp from './PopUp';
 import Info from './Info';
+
+import { generateUrl } from '../helpers/url';
 
 const logoIcon = require('../../images/icons/logoIcon.png').default;
 
@@ -39,7 +41,6 @@ class App extends Component {
       checkMultiple: false,
     };
     this.handleSystemClick = this.handleSystemClick.bind(this);
-    this.handleRefreshClick = this.handleRefreshClick.bind(this);
     this.handleShareClick = this.handleShareClick.bind(this);
     this.handleInfoClick = this.handleInfoClick.bind(this);
     this.getConfigurations = this.getConfigurations.bind(this);
@@ -70,7 +71,7 @@ class App extends Component {
               if (configuration.cfg === configurationString) {
                 this.setState(
                   { selectedConfiguration: configuration },
-                  () => {},
+                  () => { },
                 );
               }
             });
@@ -230,9 +231,9 @@ class App extends Component {
 
   setSystems(params = false) {
     if (params) {
-      this.setState({ system: params }, () => {});
+      this.setState({ system: params }, () => { });
     } else {
-      this.setState({ system: 'fm' }, () => {});
+      this.setState({ system: 'fm' }, () => { });
     }
   }
 
@@ -241,15 +242,15 @@ class App extends Component {
   }
 
   setZoom(isAutomatic) {
-    this.setState({ automaticZoom: isAutomatic }, () => {});
+    this.setState({ automaticZoom: isAutomatic }, () => { });
   }
 
   setMultiple(isMultiple) {
-    this.setState({ checkMultiple: isMultiple }, () => {});
+    this.setState({ checkMultiple: isMultiple }, () => { });
   }
 
   setDirectional(isDirectional) {
-    this.setState({ directionalChecked: isDirectional }, () => {});
+    this.setState({ directionalChecked: isDirectional }, () => { });
   }
 
   handleSystemClick(id) {
@@ -267,56 +268,28 @@ class App extends Component {
     if (id === 'fm') {
       this.setState(
         { fmClicked: true, dabClicked: false, dvbtClicked: false },
-        () => {},
+        () => { },
       );
     } else if (id === 'dab') {
       this.setState(
         { fmClicked: false, dabClicked: true, dvbtClicked: false },
-        () => {},
+        () => { },
       );
     } else if (id === 'dvbt') {
       this.setState(
         { fmClicked: false, dabClicked: false, dvbtClicked: true },
-        () => {},
+        () => { },
       );
     }
     this.setState(
       { system: id, selectedSystemTransmitters: currentTransmitters },
-      () => {},
+      () => { },
     );
   }
 
-  handleRefreshClick() {}
-
   handleShareClick() {
-    const {
-      selectedConfiguration,
-      toDrawSelected,
-      system,
-      automaticZoom,
-      checkMultiple,
-      directionalChecked,
-      isShowingShare,
-    } = this.state;
-    if (selectedConfiguration) {
-      // ?name=ferret&color=purple
-      const domain = window.location.port.length
-        ? `${window.location.protocol}//${window.location.hostname}:${window.location.port}${window.location.pathname}`
-        : `${window.location.protocol}//${window.location.hostname}${window.location.pathname}`;
-      let url = domain;
-      if (toDrawSelected.length) {
-        url += '?tra=';
-        url += toDrawSelected
-          .map((element) => `${element.id_nadajnik}`)
-          .join(',');
-        url += `&cfg=${selectedConfiguration.cfg}&`;
-        url += `sys=${system}&`;
-        url += `z=${automaticZoom}&`;
-        url += `m=${checkMultiple}&`;
-        url += `d=${directionalChecked}`;
-      }
-      this.setState({ uri: url, isShowingShare: !isShowingShare }, () => {});
-    }
+    const url = generateUrl(this.state);
+    this.setState((prevState) => ({ uri: url, isShowingShare: !prevState.isShowingShare }));
   }
 
   directionalChanged(e) {
@@ -378,7 +351,7 @@ class App extends Component {
           toDrawSelected: intersection,
           isShowingShare: false,
         },
-        () => {},
+        () => { },
       );
     });
   }
@@ -390,7 +363,7 @@ class App extends Component {
         isShowingModal: openTable,
         isShowingShare: false,
       },
-      () => {},
+      () => { },
     );
   }
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import L from 'leaflet';
 
 import { ToastContainer, toast } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 // postCSS import of Leaflet's CSS
@@ -12,10 +13,6 @@ const { parseString } = require('react-native-xml2js');
 const icon = require('../../images/icons/transmitter_half.png').default;
 const gpsIcon = require('../../images/icons/yagi_half.png').default;
 
-/* eslint no-underscore-dangle: 0 */
-
-// store the map configuration properties in an object,
-// we could also move this to a separate file & import it if desired.
 const config = {};
 
 config.params = {
@@ -26,7 +23,8 @@ config.params = {
   minZoom: 4,
 };
 config.tileLayer = {
-  uri: 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  // uri: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  uri: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
   params: {
     minZoom: 4,
     maxZoom: 16,
@@ -153,7 +151,7 @@ class Map extends Component {
     directionalChars.forEach((marker) => {
       map.removeLayer(marker);
     });
-    this.setState({ directionalChars: [] }, () => {});
+    this.setState({ directionalChars: [] }, () => { });
     let response = false;
     if (selectedTransmitters.length >= 30) {
       response = Window.confirm(`Czy na pewno chcesz wyświetlić ${selectedTransmitters.length} mapek?
@@ -174,10 +172,11 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
           const { configuration, directional, system } = this.props;
 
           if (
+            /* eslint-disable */
             element.typ === system
-              && element._mapahash
-              && element.id_antena
-              && configuration.cfg
+            && element._mapahash
+            && element.id_antena
+            && configuration.cfg
           ) {
             fetch(
               `https://mapy.radiopolska.pl/files/get/${configuration.cfg}/${element._mapahash}.kml`,
@@ -219,7 +218,7 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
                       },
                     ).addTo(map);
                     tempArray.push(marker);
-                    this.setState({ directionalChars: tempArray }, () => {});
+                    this.setState({ directionalChars: tempArray }, () => { });
                   }
                   this.addMarkers();
                   resolve();
@@ -241,6 +240,7 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
                   },
                 );
               });
+            /* eslint-enable */
           } else {
             console.error(element);
             // toast.error(`Niestety, mapa dla nadajnika ${element.mhz}MHz/ ${element.program}/
@@ -295,7 +295,7 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
     directionalChars.forEach((marker) => {
       map.removeLayer(marker);
     });
-    this.setState({ directionalChars: [] }, () => {});
+    this.setState({ directionalChars: [] }, () => { });
     selectedTransmitters.forEach((element) => {
       if (element.typ === system) {
         const tempArray = directionalChars.slice();
@@ -306,7 +306,7 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
           }),
         }).addTo(map);
         tempArray.push(marker);
-        this.setState({ directionalChars: tempArray }, () => {});
+        this.setState({ directionalChars: tempArray }, () => { });
       }
     });
   }
@@ -330,30 +330,30 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
         if (system === 'fm') {
           marker.bindPopup(
             `${element.skrot}
-                        <a target='_blank' href = http://radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
-                        ${element.obiekt}</a><br>
-                        <b>${element.program}</b><br>
-                        Częstotliwość: ${element.mhz} MHz ${element.kategoria}<br>
-                        PI: ${element.pi} ERP: ${element.erp}kW Pol: ${element.polaryzacja}<br>
-                        Wys. podst. masztu: ${element.wys_npm}m n.p.m<br>
-                        Wys. umieszcz. nadajnika: ${element.antena_npt}m n.p.t`,
+            <a target='_blank' href = http://radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
+            ${element.obiekt}</a><br>
+            <b>${element.program}</b><br>
+            Częstotliwość: ${element.mhz} MHz ${element.kategoria}<br>
+            PI: ${element.pi} ERP: ${element.erp}kW Pol: ${element.polaryzacja}<br>
+            Wys. podst. masztu: ${element.wys_npm}m n.p.m<br>
+            Wys. umieszcz. nadajnika: ${element.antena_npt}m n.p.t`,
           );
         } else {
           marker.bindPopup(
             `${element.skrot}
-                        <a target='_blank' href = http://radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
-                        ${element.obiekt}</a><br>
-                        <b>${element.multipleks}</b><br>
-                        Częstotliwość: ${element.mhz} MHz ${element.kategoria}<br>
-                        ERP: ${element.erp}kW Pol: ${element.polaryzacja}<br>
-                        Wys. podst. masztu: ${element.wys_npm}m n.p.m<br>
-                        Wys. umieszcz. nadajnika: ${element.antena_npt}m n.p.t`,
+            <a target='_blank' href = http://radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
+            ${element.obiekt}</a><br>
+            <b>${element.multipleks}</b><br>
+            Częstotliwość: ${element.mhz} MHz ${element.kategoria}<br>
+            ERP: ${element.erp}kW Pol: ${element.polaryzacja}<br>
+            Wys. podst. masztu: ${element.wys_npm}m n.p.m<br>
+            Wys. umieszcz. nadajnika: ${element.antena_npt}m n.p.t`,
           );
         }
         tempArray.push(marker);
       }
     });
-    this.setState({ markers: tempArray }, () => {});
+    this.setState({ markers: tempArray }, () => { });
   }
 
   setView() {

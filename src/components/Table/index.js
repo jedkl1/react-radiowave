@@ -1,57 +1,43 @@
 import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import '../styles/Spinner.css';
+import '../../styles/Spinner.css';
 
-// import Search from './Search';
 
-function radioMastFormat(cell, row) {
-  return (
-    <a
-      href={`http://radiopolska.pl/wykaz/obiekt/${row.id_obiekt}`}
-      title="Szczegóły"
-      target="_blank"
-      rel="noopener noreferrer">
-      {cell}
-    </a>
-  );
-}
+const cellFormats = {
+  station: {
+    path: 'program',
+    rowKey: 'id_program',
+  },
+  mux: {
+    path: 'mux',
+    rowKey: 'id_multipleks',
+  },
+  obiekt: {
+    path: 'obiekt',
+    rowKey: 'id_obiekt',
+  },
+  mHz: {
+    rowKey: 'id_nadajnik',
+  },
+};
 
-function stationFormat(cell, row) {
-  return (
-    <a
-      href={`http://radiopolska.pl/wykaz/program/${row.id_program}`}
-      title="Szczegóły"
-      target="_blank"
-      rel="noopener noreferrer">
-      {cell}
-    </a>
-  );
-}
+const baseListUrl = 'http://radiopolska.pl/wykaz';
 
-function muxFormat(cell, row) {
-  return (
-    <a
-      href={`http://radiopolska.pl/wykaz/mux/${row.id_multipleks}`}
-      title="Szczegóły"
-      target="_blank"
-      rel="noopener noreferrer">
-      {cell}
-    </a>
-  );
-}
-
-function mHzFormat(cell, row) {
-  return (
-    <a
-      href={`http://radiopolska.pl/wykaz/${row.typ}/${row.id_nadajnik}`}
-      title="Szczegóły"
-      target="_blank"
-      rel="noopener noreferrer">
-      {cell}
-    </a>
-  );
-}
+const linkCellFormat = (cell, row, propKeys, isMHz = false) => (
+  <a
+    href={
+      isMHz
+        ? `${baseListUrl}/${row.typ}/${row[propKeys.rowKey]}`
+        : `${baseListUrl}/${propKeys.path}/${row[propKeys.rowKey]}`
+    }
+    title="Szczegóły"
+    target="_blank"
+    rel="noopener noreferrer">
+    {cell}
+  </a>
+);
 
 function iconFormat(cell) {
   return (
@@ -67,15 +53,6 @@ function iconFormat(cell) {
       }} />
   );
 }
-
-// function handleSearch(e) {
-//     console.log(e);
-// }
-
-// function handleSelect(e) {
-//     selectedSearch = e.target.value;
-//     console.log(selectedSearch);
-// }
 
 class Table extends React.Component {
   constructor(props) {
@@ -136,10 +113,6 @@ class Table extends React.Component {
     this.updateSelectedIDs();
   }
 
-  // afterSearch(searchText, result) {
-  //     this.setState({ filteredTransmitters: result });
-  // }
-
   render() {
     const { selectedIDs, system } = this.state;
     const { data } = this.props;
@@ -178,7 +151,7 @@ class Table extends React.Component {
     let table = null;
     if (system === 'fm') {
       table = (
-        <div>
+        <>
           <TableHeaderColumn isKey dataField="id_nadajnik" hidden>
             ID
           </TableHeaderColumn>
@@ -188,29 +161,30 @@ class Table extends React.Component {
           <TableHeaderColumn
             dataField="mhz"
             filter={{ type: 'TextFilter' }}
-            dataFormat={mHzFormat}>
+            dataFormat={(cell, row) => linkCellFormat(cell, row, cellFormats.mHz, true)}>
+            {' '}
             MHz
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="program"
-            dataFormat={stationFormat}
+            dataFormat={(cell, row) => linkCellFormat(cell, row, cellFormats.station)}
             filter={{ type: 'TextFilter' }}>
             Program
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="obiekt"
-            dataFormat={radioMastFormat}
+            dataFormat={(cell, row) => linkCellFormat(cell, row, cellFormats.obiekt)}
             filter={{ type: 'TextFilter' }}>
             Obiekt nadawczy
           </TableHeaderColumn>
           <TableHeaderColumn dataField="nwoj" filter={{ type: 'TextFilter' }}>
             Woj.
           </TableHeaderColumn>
-        </div>
+        </>
       );
     } else if (system === 'dab' || system === 'dvbt') {
       table = (
-        <div>
+        <>
           <TableHeaderColumn isKey dataField="id_nadajnik" hidden>
             ID
           </TableHeaderColumn>
@@ -219,19 +193,19 @@ class Table extends React.Component {
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="mhz"
-            dataFormat={mHzFormat}
+            dataFormat={(cell, row) => linkCellFormat(cell, row, cellFormats.mHz, true)}
             filter={{ type: 'TextFilter' }}>
             MHz
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="multipleks"
-            dataFormat={muxFormat}
+            dataFormat={(cell, row) => linkCellFormat(cell, row, cellFormats.mux)}
             filter={{ type: 'TextFilter' }}>
             Multipleks
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="obiekt"
-            dataFormat={radioMastFormat}
+            dataFormat={(cell, row) => linkCellFormat(cell, row, cellFormats.obiekt)}
             filter={{ type: 'TextFilter' }}>
             Obiekt nadawczy
           </TableHeaderColumn>
@@ -240,12 +214,12 @@ class Table extends React.Component {
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="kanal_nazwa"
-            dataFormat={mHzFormat}
+            dataFormat={(cell, row) => linkCellFormat(cell, row, cellFormats.mHz, true)}
             width="10%"
             filter={{ type: 'TextFilter' }}>
             Kanał
           </TableHeaderColumn>
-        </div>
+        </>
       );
     }
     const myRef = (el) => {
@@ -253,13 +227,6 @@ class Table extends React.Component {
     };
     return (
       <div>
-        {/* <div>
-                    <select id="searchSelection">
-                        <option value="name">Nazwa stacji</option>
-                        <option value="freq">Częstotliwość</option>
-                    </select>
-                    <Search />
-                </div> */}
         {data.length ? (
           <BootstrapTable
             ref={myRef}
