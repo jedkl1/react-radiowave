@@ -74,7 +74,7 @@ class ConfigurationsBox extends Component {
             name="configuration"
             checked={selected.cfg === configuration.cfg}
             value={configuration.cfg}
-            onClick={this.onConfigurationChanged} />,
+            onChange={this.onConfigurationChanged} />,
           <label key={configuration.nazwa} htmlFor={configuration.cfg}>
             {configuration.nazwa}
           </label>,
@@ -134,7 +134,7 @@ class ConfigurationsBox extends Component {
                     props.selected.cfg === state.possibleConfigurations[0].cfg
                   }
                   value={state.possibleConfigurations[0].cfg}
-                  onClick={this.onConfigurationChanged} />
+                  onChange={this.onConfigurationChanged} />
                 <label htmlFor={state.possibleConfigurations[0].cfg}>
                   {state.possibleConfigurations[0].nazwa}
                 </label>

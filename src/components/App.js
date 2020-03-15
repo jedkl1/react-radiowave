@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Modal from 'react-modal';
+// import Modal from 'react-modal';
+import { Modal } from 'react-bootstrap';
 import queryString from 'query-string';
 
 import '../styles/App.css';
@@ -82,9 +83,9 @@ class App extends Component {
   }
 
   /* eslint-disable camelcase */
-  UNSAFE_componentWillMount() {
-    Modal.setAppElement('body');
-  }
+  // UNSAFE_componentWillMount() {
+  //   Modal.setAppElement('body');
+  // }
 
   componentDidMount() {
     this.checkQueryString();
@@ -422,14 +423,6 @@ class App extends Component {
   }
 
   render() {
-    const modalStyle = {
-      width: '65%',
-      textAlign: 'center',
-    };
-    const infoStyle = {
-      width: '70%',
-      textAlign: 'center',
-    };
     const domain = window.location.port.length
       ? `${window.location.protocol}//${window.location.hostname}:${window.location.port}${window.location.pathname}`
       : `${window.location.protocol}//${window.location.hostname}${window.location.pathname}`;
@@ -516,23 +509,22 @@ class App extends Component {
               callbackDirectionals={this.getDirectionalCheckedStatus} />
           ) : null}
         </div>
-        <Modal
-          isOpen={state.isShowingModal}
-          style={modalStyle}
-          onRequestClose={this.handleClose}>
-          <h3>Wybierz nadajniki</h3>
-          <div>
+        <Modal show={state.isShowingModal} size="xl" onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title> Wybierz nadajniki</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
             <Table
               system={state.system}
               callbackFromApp={this.getSelectedData}
               selected={state.selectedTransmitters}
               data={data} />
-          </div>
+          </Modal.Body>
         </Modal>
         <Modal
-          isOpen={state.isShowingInfo}
-          style={infoStyle}
-          onRequestClose={this.handleInfoClose}>
+          show={state.isShowingInfo}
+          size="xl"
+          onHide={this.handleInfoClose}>
           <Info showFull={state.showFullInfo} />
         </Modal>
         <div className="shareWrapper">
