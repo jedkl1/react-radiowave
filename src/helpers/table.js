@@ -1,6 +1,7 @@
 import React from 'react';
 
 const { PROD_LIST_URL } = process.env;
+const { PROD_THUMBS_URL } = process.env;
 
 export const linkCellsProps = {
   station: {
@@ -32,4 +33,17 @@ export const linkCellFormat = (cell, row, propKeys, isMHz = false) => (
     rel="noopener noreferrer">
     {cell}
   </a>
+);
+
+export const iconFormat = (cell) => (
+  <div
+    style={{
+      width: '6em',
+      height: '2.2em',
+      backgroundImage: `url(${PROD_THUMBS_URL}/thumb/${cell}/300)`,
+      borderRadius: '2px',
+      backgroundSize: 'contain',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+    }} />
 );

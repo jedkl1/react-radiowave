@@ -1,27 +1,10 @@
 import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
-import { linkCellFormat, linkCellsProps } from '../../helpers/table';
+import { iconFormat, linkCellFormat, linkCellsProps } from '../../helpers/table';
 
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import '../../styles/Spinner.css';
-
-const { PROD_THUMBS_URL } = process.env;
-
-function iconFormat(cell) {
-  return (
-    <div
-      style={{
-        width: '6em',
-        height: '2.2em',
-        backgroundImage: `url(${PROD_THUMBS_URL}/thumb/${cell}/300)`,
-        borderRadius: '2px',
-        backgroundSize: 'contain',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }} />
-  );
-}
 
 class Table extends React.Component {
   constructor(props) {
@@ -114,14 +97,13 @@ class Table extends React.Component {
       components: {
         totalText: 'asdasd',
       },
-      // afterSearch: this.afterSearch.bind(this),
     };
 
     let table = null;
     if (system === 'fm') {
       table = (
         <>
-          <TableHeaderColumn isKey dataField="id_nadajnik" hidden>
+          <TableHeaderColumn dataField="id_nadajnik" hidden>
             ID
           </TableHeaderColumn>
           <TableHeaderColumn dataField="logo" dataFormat={iconFormat}>
@@ -131,7 +113,6 @@ class Table extends React.Component {
             dataField="mhz"
             filter={{ type: 'TextFilter' }}
             dataFormat={(cell, row) => linkCellFormat(cell, row, linkCellsProps.mHz, true)}>
-            {' '}
             MHz
           </TableHeaderColumn>
           <TableHeaderColumn
@@ -194,6 +175,7 @@ class Table extends React.Component {
     const myRef = (el) => {
       this.btnRef = el;
     };
+
     return (
       <div>
         {data.length ? (
@@ -205,7 +187,7 @@ class Table extends React.Component {
             hover
             condensed
             pagination
-            // search
+            keyField="id_nadajnik"
             options={options}>
             {table.props.children}
           </BootstrapTable>

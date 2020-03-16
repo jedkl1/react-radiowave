@@ -67,8 +67,12 @@
     overflow: auto;
 }
 
-.react-bs-table.react-bs-table-bordered {
-    height: 87% !important;
+.littleTable .react-bs-table-bordered .react-bs-container-body {
+    height: 83% !important;
+}
+
+.littleTable .react-bs-table.react-bs-table-bordered {
+    height: 95% !important;
 }
 
 @media screen and (max-width: 900px) {

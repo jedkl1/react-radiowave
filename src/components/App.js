@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import Modal from 'react-modal';
 import { Modal } from 'react-bootstrap';
 import queryString from 'query-string';
 

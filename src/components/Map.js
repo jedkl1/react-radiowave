@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import L from 'leaflet';
-
 import { ToastContainer, toast } from 'react-toastify';
+import { xml2js } from 'xml-js';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -9,7 +9,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'leaflet/dist/leaflet.css';
 import '../styles/Map.css';
 
-const { parseString } = require('react-native-xml2js');
 const icon = require('../../images/icons/transmitter_half.png').default;
 const gpsIcon = require('../../images/icons/yagi_half.png').default;
 
@@ -187,28 +186,28 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
               .then((res) => res.text())
               .then(
                 (res) => {
-                  parseString(res, (err, result) => {
-                    const kml = result.kml.GroundOverlay[0];
+                  const kml = xml2js(res, { ignoreAttributes: true, compact: true }).kml.GroundOverlay;
+                  const boundsArray = [];
+                  console.log(kml);
 
-                    const boundsArray = [];
+                  boundsArray.push(Number(kml.LatLonBox.east._text));
+                  boundsArray.push(Number(kml.LatLonBox.north._text));
+                  boundsArray.push(Number(kml.LatLonBox.south._text));
+                  boundsArray.push(Number(kml.LatLonBox.west._text));
+                  const corner1 = L.latLng(boundsArray[1], boundsArray[0]);
+                  const corner2 = L.latLng(boundsArray[2], boundsArray[3]);
+                  const bounds = L.latLngBounds(corner1, corner2);
+                  this.layersGroup.addLayer(
+                    L.imageOverlay(
+                      `${PROD_FILES_URL}/get/${configuration.cfg}/${element._mapahash}.png`,
+                      bounds,
+                      { opacity: 0.6 },
+                    ),
+                  );
 
-                    boundsArray.push(Number(kml.LatLonBox[0].east[0]));
-                    boundsArray.push(Number(kml.LatLonBox[0].north[0]));
-                    boundsArray.push(Number(kml.LatLonBox[0].south[0]));
-                    boundsArray.push(Number(kml.LatLonBox[0].west[0]));
-                    const corner1 = L.latLng(boundsArray[1], boundsArray[0]);
-                    const corner2 = L.latLng(boundsArray[2], boundsArray[3]);
-                    const bounds = L.latLngBounds(corner1, corner2);
-                    this.layersGroup.addLayer(
-                      L.imageOverlay(
-                        `${PROD_FILES_URL}/get/${configuration.cfg}/${element._mapahash}.png`,
-                        bounds,
-                        { opacity: 0.6 },
-                      ),
-                    );
+                  this.layersGroup.addTo(map);
 
-                    this.layersGroup.addTo(map);
-                  });
+
                   if (directional) {
                     const tempArray = directionalChars.slice();
                     const marker = L.marker(
@@ -227,7 +226,6 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
                   resolve();
                 },
                 (error) => {
-                  console.log();
                   console.log(`Error${error}`);
                 },
               )
