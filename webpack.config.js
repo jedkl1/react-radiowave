@@ -4,11 +4,12 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const autoprefixer = require('autoprefixer');
+const Dotenv = require('dotenv-webpack');
 
 /**
  * webpack.config.js 可以 export 一个 object，或者是一个 env 为参数的 function
  */
-module.exports = function(env) {
+module.exports = function (env) {
   /**
    * 判断是否是生产环境。 当命令行运行 `webpack --env.production` 时， env.production 的值为 true
    * https://webpack.js.org/configuration/configuration-types/#exporting-a-function-to-use-env
@@ -80,30 +81,30 @@ module.exports = function(env) {
           test: /\.css$/,
           loader: isProduction
             ? ExtractTextPlugin.extract({
-                fallback: 'style-loader',
-                use: [
-                  {
-                    loader: require.resolve('css-loader')
-                  },
-                  {
-                    loader: require.resolve('postcss-loader'),
-                    options: {
-                      plugins: () => [
-                        require('postcss-flexbugs-fixes'),
-                        autoprefixer({
-                          browsers: [
-                            '>1%',
-                            'last 4 versions',
-                            'Firefox ESR',
-                            'not ie < 9'
-                          ],
-                          flexbox: 'no-2009'
-                        })
-                      ]
-                    }
+              fallback: 'style-loader',
+              use: [
+                {
+                  loader: require.resolve('css-loader')
+                },
+                {
+                  loader: require.resolve('postcss-loader'),
+                  options: {
+                    plugins: () => [
+                      require('postcss-flexbugs-fixes'),
+                      autoprefixer({
+                        browsers: [
+                          '>1%',
+                          'last 4 versions',
+                          'Firefox ESR',
+                          'not ie < 9'
+                        ],
+                        flexbox: 'no-2009'
+                      })
+                    ]
                   }
-                ]
-              })
+                }
+              ]
+            })
             : ['style-loader', 'css-loader']
         },
         /**
@@ -136,6 +137,13 @@ module.exports = function(env) {
      * https://webpack.js.org/concepts/plugins/
      */
     plugins: [
+      new Dotenv({
+        path: './.env', // load this now instead of the ones in '.env'
+        safe: true, // load '.env.example' to verify the '.env' variables are all set. Can also be a string to a different file.
+        systemvars: true, // load all the predefined 'process.env' variables which will trump anything local per dotenv specs.
+        silent: true, // hide any errors
+        defaults: false // load '.env.defaults' as the default values if empty.
+      }),
       new InterpolateHtmlPlugin(HtmlWebpackPlugin, { publicPath: '' }),
       new HtmlWebpackPlugin({
         inject: true,
@@ -155,18 +163,7 @@ module.exports = function(env) {
       }),
       new ExtractTextPlugin('static/css/[name].[hash].css'),
       new webpack.HotModuleReplacementPlugin(), // 用于热加载
-      // 可以替换代码中的变量
-      // https://webpack.js.org/plugins/define-plugin/#use-case-service-urls
-      new webpack.DefinePlugin({
-        SERVICE_URL: isProduction
-          ? JSON.stringify('http://pro.example.com')
-          : JSON.stringify('http://dev.example.com'),
-        'process.env': {
-          NODE_ENV: isProduction
-            ? JSON.stringify('production')
-            : JSON.stringify('development')
-        }
-      })
+
     ],
     /**
      * webpack 自带的开发 server，配合 webpack-dev-server 命令使用

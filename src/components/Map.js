@@ -13,6 +13,9 @@ const { parseString } = require('react-native-xml2js');
 const icon = require('../../images/icons/transmitter_half.png').default;
 const gpsIcon = require('../../images/icons/yagi_half.png').default;
 
+const { PROD_FILES_URL } = process.env;
+const { PROD_LIST_URL } = process.env;
+
 const config = {};
 
 config.params = {
@@ -23,8 +26,8 @@ config.params = {
   minZoom: 4,
 };
 config.tileLayer = {
-  // uri: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  uri: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+  uri: process.env.TILE_PROVIDER_1_URL,
+  // uri: process.env.TILE_PROVIDER_2_URL,
   params: {
     minZoom: 4,
     maxZoom: 16,
@@ -179,7 +182,7 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
             && configuration.cfg
           ) {
             fetch(
-              `https://mapy.radiopolska.pl/files/get/${configuration.cfg}/${element._mapahash}.kml`,
+              `${PROD_FILES_URL}/get/${configuration.cfg}/${element._mapahash}.kml`,
             )
               .then((res) => res.text())
               .then(
@@ -198,7 +201,7 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
                     const bounds = L.latLngBounds(corner1, corner2);
                     this.layersGroup.addLayer(
                       L.imageOverlay(
-                        `https://mapy.radiopolska.pl/files/get/${configuration.cfg}/${element._mapahash}.png`,
+                        `${PROD_FILES_URL}/get/${configuration.cfg}/${element._mapahash}.png`,
                         bounds,
                         { opacity: 0.6 },
                       ),
@@ -212,7 +215,7 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
                       [element.szerokosc, element.dlugosc],
                       {
                         icon: L.icon({
-                          iconUrl: `https://mapy.radiopolska.pl/files/ant_pattern/${element.id_antena}`,
+                          iconUrl: `${PROD_FILES_URL}/ant_pattern/${element.id_antena}`,
                           iconSize: [130, 130],
                         }),
                       },
@@ -275,7 +278,7 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
     // const imageBounds = [[boundsArray[2], boundsArray[3]], [boundsArray[1], boundsArray[0]]];
     this.layersGroup.addLayer(
       L.imageOverlay(
-        `https://mapy.radiopolska.pl/files/get/${configuration.cfg}/${png}`,
+        `${PROD_FILES_URL}/get/${configuration.cfg}/${png}`,
         bounds,
         { opacity: 0.5 },
       ),
@@ -301,7 +304,7 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
         const tempArray = directionalChars.slice();
         const marker = L.marker([element.szerokosc, element.dlugosc], {
           icon: L.icon({
-            iconUrl: `https://mapy.radiopolska.pl/files/ant_pattern/${element.id_antena}`,
+            iconUrl: `${PROD_FILES_URL}/ant_pattern/${element.id_antena}`,
             iconSize: [130, 130],
           }),
         }).addTo(map);
@@ -330,7 +333,7 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
         if (system === 'fm') {
           marker.bindPopup(
             `${element.skrot}
-            <a target='_blank' href = http://radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
+            <a target='_blank' href=${PROD_LIST_URL}/obiekt/${element.id_obiekt}>
             ${element.obiekt}</a><br>
             <b>${element.program}</b><br>
             Częstotliwość: ${element.mhz} MHz ${element.kategoria}<br>
@@ -341,7 +344,7 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
         } else {
           marker.bindPopup(
             `${element.skrot}
-            <a target='_blank' href = http://radiopolska.pl/wykaz/obiekt/${element.id_obiekt}>
+            <a target='_blank' href=${PROD_LIST_URL}/obiekt/${element.id_obiekt}>
             ${element.obiekt}</a><br>
             <b>${element.multipleks}</b><br>
             Częstotliwość: ${element.mhz} MHz ${element.kategoria}<br>

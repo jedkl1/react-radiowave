@@ -1,43 +1,12 @@
 import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
+import { linkCellFormat, linkCellsProps } from '../../helpers/table';
+
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import '../../styles/Spinner.css';
 
-
-const cellFormats = {
-  station: {
-    path: 'program',
-    rowKey: 'id_program',
-  },
-  mux: {
-    path: 'mux',
-    rowKey: 'id_multipleks',
-  },
-  obiekt: {
-    path: 'obiekt',
-    rowKey: 'id_obiekt',
-  },
-  mHz: {
-    rowKey: 'id_nadajnik',
-  },
-};
-
-const baseListUrl = 'http://radiopolska.pl/wykaz';
-
-const linkCellFormat = (cell, row, propKeys, isMHz = false) => (
-  <a
-    href={
-      isMHz
-        ? `${baseListUrl}/${row.typ}/${row[propKeys.rowKey]}`
-        : `${baseListUrl}/${propKeys.path}/${row[propKeys.rowKey]}`
-    }
-    title="Szczegóły"
-    target="_blank"
-    rel="noopener noreferrer">
-    {cell}
-  </a>
-);
+const { PROD_THUMBS_URL } = process.env;
 
 function iconFormat(cell) {
   return (
@@ -45,7 +14,7 @@ function iconFormat(cell) {
       style={{
         width: '6em',
         height: '2.2em',
-        backgroundImage: `url(https://radiopolska.pl/files/thumb/${cell}/300)`,
+        backgroundImage: `url(${PROD_THUMBS_URL}/thumb/${cell}/300)`,
         borderRadius: '2px',
         backgroundSize: 'contain',
         backgroundPosition: 'center',
@@ -161,19 +130,19 @@ class Table extends React.Component {
           <TableHeaderColumn
             dataField="mhz"
             filter={{ type: 'TextFilter' }}
-            dataFormat={(cell, row) => linkCellFormat(cell, row, cellFormats.mHz, true)}>
+            dataFormat={(cell, row) => linkCellFormat(cell, row, linkCellsProps.mHz, true)}>
             {' '}
             MHz
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="program"
-            dataFormat={(cell, row) => linkCellFormat(cell, row, cellFormats.station)}
+            dataFormat={(cell, row) => linkCellFormat(cell, row, linkCellsProps.station)}
             filter={{ type: 'TextFilter' }}>
             Program
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="obiekt"
-            dataFormat={(cell, row) => linkCellFormat(cell, row, cellFormats.obiekt)}
+            dataFormat={(cell, row) => linkCellFormat(cell, row, linkCellsProps.obiekt)}
             filter={{ type: 'TextFilter' }}>
             Obiekt nadawczy
           </TableHeaderColumn>
@@ -193,19 +162,19 @@ class Table extends React.Component {
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="mhz"
-            dataFormat={(cell, row) => linkCellFormat(cell, row, cellFormats.mHz, true)}
+            dataFormat={(cell, row) => linkCellFormat(cell, row, linkCellsProps.mHz, true)}
             filter={{ type: 'TextFilter' }}>
             MHz
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="multipleks"
-            dataFormat={(cell, row) => linkCellFormat(cell, row, cellFormats.mux)}
+            dataFormat={(cell, row) => linkCellFormat(cell, row, linkCellsProps.mux)}
             filter={{ type: 'TextFilter' }}>
             Multipleks
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="obiekt"
-            dataFormat={(cell, row) => linkCellFormat(cell, row, cellFormats.obiekt)}
+            dataFormat={(cell, row) => linkCellFormat(cell, row, linkCellsProps.obiekt)}
             filter={{ type: 'TextFilter' }}>
             Obiekt nadawczy
           </TableHeaderColumn>
@@ -214,7 +183,7 @@ class Table extends React.Component {
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="kanal_nazwa"
-            dataFormat={(cell, row) => linkCellFormat(cell, row, cellFormats.mHz, true)}
+            dataFormat={(cell, row) => linkCellFormat(cell, row, linkCellsProps.mHz, true)}
             width="10%"
             filter={{ type: 'TextFilter' }}>
             Kanał

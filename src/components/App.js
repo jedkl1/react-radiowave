@@ -16,6 +16,8 @@ import { generateUrl } from '../helpers/url';
 
 const logoIcon = require('../../images/icons/logoIcon.png').default;
 
+const { PROD_API_URL } = process.env;
+
 let data = [];
 
 class App extends Component {
@@ -62,7 +64,7 @@ class App extends Component {
 
   getConfigurations(configurationString = 'fm-std') {
     const { configurations } = this.state;
-    fetch('https://mapy.radiopolska.pl/api/cfg')
+    fetch(`${PROD_API_URL}/cfg`)
       .then((res) => res.json())
       .then(
         (res) => {
@@ -82,11 +84,6 @@ class App extends Component {
         // },
       );
   }
-
-  /* eslint-disable camelcase */
-  // UNSAFE_componentWillMount() {
-  //   Modal.setAppElement('body');
-  // }
 
   componentDidMount() {
     this.checkQueryString();
@@ -134,7 +131,7 @@ class App extends Component {
                   || inputParams === 'dvbt')
               ) {
                 fetch(
-                  `https://mapy.radiopolska.pl/api/transmitterById/pl/${inputParams.sys}/${transmitter}`,
+                  `${PROD_API_URL}/transmitterById/pl/${inputParams.sys}/${transmitter}`,
                 )
                   .then((res) => res.json())
                   .then(
@@ -207,7 +204,7 @@ class App extends Component {
   componentDidUpdate(prevProps, prevStates) {
     const { system } = this.state;
     if (system !== prevStates.system) {
-      let dataUrl = 'https://mapy.radiopolska.pl/api/transmitterAll/pl/';
+      let dataUrl = `${PROD_API_URL}/transmitterAll/pl/`;
       if (system === 'fm') {
         dataUrl += 'fm';
       } else if (system === 'dab') {
@@ -451,8 +448,6 @@ class App extends Component {
           )}
         </div>
         <a href={domain}>
-          {' '}
-          {/* page must stay on https */}
           <img id="home" className="button home" alt="Odswiez" src={logoIcon} />
         </a>
         <div className="stationsWrapper ButtonWrapper">
@@ -541,7 +536,3 @@ class App extends Component {
 }
 
 export default App;
-
-// http://localhost:9000/l
-// AIzaSyAZgc-xDQ-6Y9aDjj2GztoxTMSnRC6DioM
-// http://localhost:9000/?config={%22tra%22:[{%22id%22:253},{%22id%22:312}],%22cfg%22:%22fm-std%22,%22sys%22:%22fm%22}

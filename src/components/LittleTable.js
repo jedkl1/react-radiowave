@@ -1,31 +1,10 @@
 import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+
+import { linkCellFormat, linkCellsProps } from '../helpers/table';
+
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import '../styles/LittleTable.css';
-
-function radioMastFormat(cell, row) {
-  return (
-    <a
-      href={`http://radiopolska.pl/wykaz/obiekt/${row.id_obiekt}`}
-      title="Szczegóły"
-      target="_blank"
-      rel="noopener noreferrer">
-      {cell}
-    </a>
-  );
-}
-
-function stationFormat(cell, row) {
-  return (
-    <a
-      href={`http://radiopolska.pl/wykaz/program/${row.id_program}`}
-      title="Szczegóły"
-      target="_blank"
-      rel="noopener noreferrer">
-      {cell}
-    </a>
-  );
-}
 
 class LittleTable extends React.Component {
   constructor(props) {
@@ -115,7 +94,7 @@ class LittleTable extends React.Component {
 
   handleClick() {
     const { open } = this.state;
-    this.setState({ open: !open }, () => {});
+    this.setState({ open: !open }, () => { });
   }
 
   handleAddTransmiterClick() {
@@ -159,11 +138,11 @@ class LittleTable extends React.Component {
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="program"
-            dataFormat={stationFormat}
+            dataFormat={(cell, row) => linkCellFormat(cell, row, linkCellsProps.station)}
             width="40%">
             Program
           </TableHeaderColumn>
-          <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>
+          <TableHeaderColumn dataField="obiekt" dataFormat={(cell, row) => linkCellFormat(cell, row, linkCellsProps.obiekt)}>
             Obiekt nadawczy
           </TableHeaderColumn>
         </div>
@@ -179,11 +158,11 @@ class LittleTable extends React.Component {
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="multipleks"
-            dataFormat={stationFormat}
+            dataFormat={(cell, row) => linkCellFormat(cell, row, linkCellsProps.mux)}
             width="30%">
             Multipleks
           </TableHeaderColumn>
-          <TableHeaderColumn dataField="obiekt" dataFormat={radioMastFormat}>
+          <TableHeaderColumn dataField="obiekt" dataFormat={(cell, row) => linkCellFormat(cell, row, linkCellsProps.obiekt)}>
             Obiekt nadawczy
           </TableHeaderColumn>
         </div>
