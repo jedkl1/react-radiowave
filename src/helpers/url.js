@@ -1,3 +1,9 @@
+/**
+ * Url @Params
+ * z -> automatic zoom on map
+ * m -> allow multiple layers
+ * d -> draw directional characteristics
+*/
 export const generateUrl = (state) => {
   const {
     selectedConfiguration,
@@ -19,13 +25,37 @@ export const generateUrl = (state) => {
       url += toDrawSelected
         .map((element) => `${element.id_nadajnik}`)
         .join(',');
-      url += `&cfg=${selectedConfiguration.cfg}&`;
-      url += `sys=${system}&`;
-      url += `z=${automaticZoom}&`;
-      url += `m=${checkMultiple}&`;
-      url += `d=${directionalChecked}`;
+      url += `&cfg=${selectedConfiguration.cfg}`;
+      url += `&sys=${system}`;
+      url += `&z=${automaticZoom}`;
+      url += `&m=${checkMultiple}`;
+      url += `&d=${directionalChecked}`;
     }
     return url;
   }
   return '';
+};
+
+export const parseQueryToState = (query) => {
+  const newState = {
+    system: '',
+    checkMultiple: false,
+    automaticZoom: true,
+    directionalChecked: true,
+  };
+
+  if (query.m) {
+    newState.checkMultiple = query.m === 'true';
+  }
+  if (query.z) {
+    newState.automaticZoom = query.z === 'true';
+  }
+  if (query.d) {
+    newState.directionalChecked = query.d === 'true';
+  }
+  if (query.sys) {
+    newState.system = query.sys;
+  }
+
+  return newState;
 };

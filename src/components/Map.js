@@ -188,7 +188,6 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
                 (res) => {
                   const kml = xml2js(res, { ignoreAttributes: true, compact: true }).kml.GroundOverlay;
                   const boundsArray = [];
-                  console.log(kml);
 
                   boundsArray.push(Number(kml.LatLonBox.east._text));
                   boundsArray.push(Number(kml.LatLonBox.north._text));

@@ -11,7 +11,8 @@ import ConfigurationsBox from './ConfigurationsBox';
 import PopUp from './PopUp';
 import Info from './Info';
 
-import { generateUrl } from '../helpers/url';
+import { generateUrl, parseQueryToState } from '../helpers/url';
+import { getTransmittersBySystem } from '../api/transmitters';
 
 const logoIcon = require('../../images/icons/logoIcon.png').default;
 
@@ -32,9 +33,6 @@ class App extends Component {
       toDrawSelected: [],
       configurations: [],
       selectedConfiguration: null,
-      fmClicked: true,
-      dabClicked: false,
-      dvbtClicked: false,
       directionalChecked: true,
       openConfiguration: false,
       showFullInfo: true,
@@ -94,26 +92,10 @@ class App extends Component {
       // ?name=ferret&color=purple
       const inputParams = queryString.parse(location.search);
 
-      if (inputParams.m) {
-        this.setState({
-          checkMultiple: inputParams.m === 'true',
-        });
-      }
-      if (inputParams.z) {
-        this.setState({
-          automaticZoom: inputParams.z === 'true',
-        });
-      }
-      if (inputParams.d) {
-        this.setState({
-          directionalChecked: inputParams.d === 'true',
-        });
-      }
-
       if (inputParams.sys) {
         this.setState(
           {
-            system: inputParams.sys,
+            ...parseQueryToState(inputParams),
           },
           () => {
             console.log('Input params are set');
@@ -140,6 +122,8 @@ class App extends Component {
                         selectedTransmitters,
                         toDrawSelected,
                       } = this.state;
+                      console.log(selectedSystemTransmitters, selectedTransmitters, toDrawSelected);
+
                       const tempArray = selectedTransmitters.slice();
                       if (res.data.length) {
                         tempArray.push(res.data[0]);
@@ -200,28 +184,10 @@ class App extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevStates) {
+  async componentDidUpdate(prevProps, prevStates) {
     const { system } = this.state;
     if (system !== prevStates.system) {
-      let dataUrl = `${PROD_API_URL}/transmitterAll/pl/`;
-      if (system === 'fm') {
-        dataUrl += 'fm';
-      } else if (system === 'dab') {
-        dataUrl += 'dab';
-      } else if (system === 'dvbt') {
-        dataUrl += 'dvbt';
-      }
-      // console.log(dataUrl);
-      fetch(dataUrl)
-        .then((res) => res.json())
-        .then(
-          (res) => {
-            data = res.data;
-          },
-          (error) => {
-            console.log(`Error: ${error}`);
-          },
-        );
+      data = await getTransmittersBySystem(system);
     }
   }
 
@@ -261,22 +227,6 @@ class App extends Component {
         currentTransmitters.push(element);
       }
     });
-    if (id === 'fm') {
-      this.setState(
-        { fmClicked: true, dabClicked: false, dvbtClicked: false },
-        () => { },
-      );
-    } else if (id === 'dab') {
-      this.setState(
-        { fmClicked: false, dabClicked: true, dvbtClicked: false },
-        () => { },
-      );
-    } else if (id === 'dvbt') {
-      this.setState(
-        { fmClicked: false, dabClicked: false, dvbtClicked: true },
-        () => { },
-      );
-    }
     this.setState(
       { system: id, selectedSystemTransmitters: currentTransmitters },
       () => { },
@@ -391,6 +341,12 @@ class App extends Component {
     }
   }
 
+  systemButtonFocusClass(system, shouldBeSystem) {
+    let className = 'system';
+    if (system === shouldBeSystem) className += ' focus';
+    return className;
+  }
+
   render() {
     const domain = window.location.port.length
       ? `${window.location.protocol}//${window.location.hostname}:${window.location.port}${window.location.pathname}`
@@ -400,51 +356,24 @@ class App extends Component {
     return (
       <div id="gridId" className="grid">
         <div id="systems_container" className="container systems">
-          {state.fmClicked ? (
-            <SystemButton
-              id="fm"
-              class="system focus"
-              title="Zmień system na FM"
-              value="FM"
-              onSystemClick={this.handleSystemClick} />
-          ) : (
-            <SystemButton
-              id="fm"
-              class="system"
-              title="Zmień system na FM"
-              value="FM"
-              onSystemClick={this.handleSystemClick} />
-          )}
-          {state.dabClicked ? (
-            <SystemButton
-              id="dab"
-              class="system focus"
-              title="Zmień system na DAB+"
-              value="DAB+"
-              onSystemClick={this.handleSystemClick} />
-          ) : (
-            <SystemButton
-              id="dab"
-              class="system"
-              title="Zmień system na DAB+"
-              value="DAB+"
-              onSystemClick={this.handleSystemClick} />
-          )}
-          {state.dvbtClicked ? (
-            <SystemButton
-              id="dvbt"
-              class="system focus"
-              title="Zmień system na DVB-T"
-              value="DVB-T"
-              onSystemClick={this.handleSystemClick} />
-          ) : (
-            <SystemButton
-              id="dvbt"
-              class="system"
-              title="Zmień system na DVB-T"
-              value="DVB-T"
-              onSystemClick={this.handleSystemClick} />
-          )}
+          <SystemButton
+            id="fm"
+            class={this.systemButtonFocusClass(state.system, 'fm')}
+            title="Zmień system na FM"
+            value="FM"
+            onSystemClick={this.handleSystemClick} />
+          <SystemButton
+            id="dab"
+            class={this.systemButtonFocusClass(state.system, 'dab')}
+            title="Zmień system na DAB+"
+            value="DAB+"
+            onSystemClick={this.handleSystemClick} />
+          <SystemButton
+            id="dvbt"
+            class={this.systemButtonFocusClass(state.system, 'dvbt')}
+            title="Zmień system na DVB-T"
+            value="DVB-T"
+            onSystemClick={this.handleSystemClick} />
         </div>
         <a href={domain}>
           <img id="home" className="button home" alt="Odswiez" src={logoIcon} />

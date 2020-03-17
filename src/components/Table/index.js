@@ -135,7 +135,7 @@ class Table extends React.Component {
     } else if (system === 'dab' || system === 'dvbt') {
       table = (
         <>
-          <TableHeaderColumn isKey dataField="id_nadajnik" hidden>
+          <TableHeaderColumn dataField="id_nadajnik" hidden>
             ID
           </TableHeaderColumn>
           <TableHeaderColumn dataField="logo" dataFormat={iconFormat}>
