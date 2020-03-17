@@ -11,8 +11,9 @@ import ConfigurationsBox from './ConfigurationsBox';
 import PopUp from './PopUp';
 import Info from './Info';
 
+import { getTransmittersBySystem, getConfigurationsFromAPI } from '../api/transmitters';
 import { generateUrl, parseQueryToState } from '../helpers/url';
-import { getTransmittersBySystem } from '../api/transmitters';
+import { isValidSystem } from '../validators/url';
 
 const logoIcon = require('../../images/icons/logoIcon.png').default;
 
@@ -25,7 +26,8 @@ class App extends Component {
     super(props);
     this.state = {
       isShowingModal: false,
-      isShowingInfo: true,
+      // @TODO Info to true
+      isShowingInfo: false,
       isShowingShare: false,
       selectedTransmitters: [],
       selectedSystemTransmitters: [],
@@ -33,11 +35,13 @@ class App extends Component {
       toDrawSelected: [],
       configurations: [],
       selectedConfiguration: null,
-      directionalChecked: true,
       openConfiguration: false,
       showFullInfo: true,
-      automaticZoom: true,
-      checkMultiple: false,
+      settings: {
+        automaticZoom: true,
+        drawMultiple: false,
+        drawDirectionalChar: true,
+      },
     };
     this.handleSystemClick = this.handleSystemClick.bind(this);
     this.handleShareClick = this.handleShareClick.bind(this);
@@ -46,141 +50,21 @@ class App extends Component {
     this.getSelectedData = this.getSelectedData.bind(this);
     this.getDrawData = this.getDrawData.bind(this);
     this.getSelectedConfiguration = this.getSelectedConfiguration.bind(this);
-    this.setConfiguration = this.setConfiguration.bind(this);
-    this.getDirectionalCheckedStatus = this.getDirectionalCheckedStatus.bind(
-      this,
-    );
     this.handleClose = this.handleClose.bind(this);
     this.handleInfoClose = this.handleInfoClose.bind(this);
     this.openDialog = this.openDialog.bind(this);
     this.checkQueryString = this.checkQueryString.bind(this);
-    this.zoomChanged = this.zoomChanged.bind(this);
-    this.directionalChanged = this.directionalChanged.bind(this);
-    this.checkMultipleChanged = this.checkMultipleChanged.bind(this);
-  }
-
-  getConfigurations(configurationString = 'fm-std') {
-    const { configurations } = this.state;
-    fetch(`${PROD_API_URL}/cfg`)
-      .then((res) => res.json())
-      .then(
-        (res) => {
-          this.setState({ configurations: res.data }, function () {
-            configurations.forEach((configuration) => {
-              if (configuration.cfg === configurationString) {
-                this.setState(
-                  { selectedConfiguration: configuration },
-                  () => { },
-                );
-              }
-            });
-          });
-        },
-        // (error) => {
-        //     console.log(`Error: ${error}`);
-        // },
-      );
+    this.handleSettingsChanged = this.handleSettingsChanged.bind(this);
   }
 
   componentDidMount() {
-    this.checkQueryString();
-  }
-
-  checkQueryString() {
     const { location } = this.props;
-    if (location.search) {
-      // ?name=ferret&color=purple
-      const inputParams = queryString.parse(location.search);
 
-      if (inputParams.sys) {
-        this.setState(
-          {
-            ...parseQueryToState(inputParams),
-          },
-          () => {
-            console.log('Input params are set');
-            const transmitters = inputParams.tra.split(',');
-            transmitters.forEach((transmitter) => {
-              if (Number.isNaN(Number(transmitter))) {
-                console.error(
-                  `Error: niewłaściwy ${transmitter} numer nadajnika`,
-                );
-              } else if (
-                inputParams.sys
-                && (inputParams.sys === 'dab'
-                  || inputParams.sys === 'fm'
-                  || inputParams === 'dvbt')
-              ) {
-                fetch(
-                  `${PROD_API_URL}/transmitterById/pl/${inputParams.sys}/${transmitter}`,
-                )
-                  .then((res) => res.json())
-                  .then(
-                    (res) => {
-                      const {
-                        selectedSystemTransmitters,
-                        selectedTransmitters,
-                        toDrawSelected,
-                      } = this.state;
-                      console.log(selectedSystemTransmitters, selectedTransmitters, toDrawSelected);
-
-                      const tempArray = selectedTransmitters.slice();
-                      if (res.data.length) {
-                        tempArray.push(res.data[0]);
-                        let selected = toDrawSelected;
-                        if (selected.length) {
-                          selected = toDrawSelected;
-                        } else {
-                          selected = [res.data[0]];
-                        }
-                        this.setState(
-                          {
-                            selectedTransmitters: tempArray,
-                            toDrawSelected: selected,
-                            selectedSystemTransmitters: tempArray,
-                            showFullInfo: false,
-                          },
-                          () => {
-                            console.log(selectedTransmitters);
-                          },
-                        );
-                      } else {
-                        console.log(
-                          `Error brak ${transmitter} nadajnika w bazie danych`,
-                        );
-                        this.setState(
-                          {
-                            selectedTransmitters,
-                            selectedSystemTransmitters,
-                            showFullInfo: true,
-                          },
-                          () => {
-                            console.log(selectedTransmitters);
-                          },
-                        );
-                      }
-                    },
-                    (error) => {
-                      console.log(`Error: ${error}`);
-                    },
-                  );
-              } else {
-                console.error('Error: niewłaściwe parametry wejściowe');
-                this.getConfigurations();
-                this.setSystems(false);
-              }
-            });
-          },
-        );
-      }
-      if (inputParams.cfg) {
-        this.setConfiguration(inputParams.cfg);
-      } else {
-        this.getConfigurations();
-      }
+    if (location.search.length) {
+      this.checkQueryString(location.search);
     } else {
       this.getConfigurations();
-      this.setSystems(false);
+      this.setDefaultSystem();
     }
   }
 
@@ -191,28 +75,98 @@ class App extends Component {
     }
   }
 
-  setSystems(params = false) {
-    if (params) {
-      this.setState({ system: params }, () => { });
-    } else {
-      this.setState({ system: 'fm' }, () => { });
+  async getConfigurations(configurationKey = 'fm-std') {
+    const newState = await getConfigurationsFromAPI(configurationKey);
+    this.setState({ ...newState }, () => { });
+  }
+
+  checkQueryString(query) {
+    const inputParams = queryString.parse(query);
+
+    if (inputParams.sys) {
+      this.setState(
+        { ...parseQueryToState(inputParams) },
+        () => {
+          console.log('Input params are set');
+          const transmitters = inputParams.tra.split(',');
+          transmitters.forEach((transmitter) => {
+            if (Number.isNaN(Number(transmitter))) {
+              console.error(
+                `Error: niewłaściwy ${transmitter} numer nadajnika`,
+              );
+            } else if (inputParams.sys && (isValidSystem(inputParams.sys))) {
+              fetch(
+                `${PROD_API_URL}/transmitterById/pl/${inputParams.sys}/${transmitter}`,
+              )
+                .then((res) => res.json())
+                .then(
+                  (res) => {
+                    const {
+                      selectedSystemTransmitters,
+                      selectedTransmitters,
+                      toDrawSelected,
+                    } = this.state;
+                    console.log(selectedSystemTransmitters, selectedTransmitters, toDrawSelected);
+
+                    const tempArray = selectedTransmitters.slice();
+                    if (res.data.length) {
+                      tempArray.push(res.data[0]);
+                      let selected = toDrawSelected;
+                      if (selected.length) {
+                        selected = toDrawSelected;
+                      } else {
+                        selected = [res.data[0]];
+                      }
+                      this.setState(
+                        {
+                          selectedTransmitters: tempArray,
+                          toDrawSelected: selected,
+                          selectedSystemTransmitters: tempArray,
+                        },
+                        () => { },
+                      );
+                    } else {
+                      console.log(
+                        `Error brak ${transmitter} nadajnika w bazie danych`,
+                      );
+                      this.setState(
+                        {
+                          selectedTransmitters,
+                          selectedSystemTransmitters,
+                          showFullInfo: true,
+                        },
+                        () => {
+                          console.log(selectedTransmitters);
+                        },
+                      );
+                    }
+                  },
+                  (error) => {
+                    console.log(`Error: ${error}`);
+                  },
+                );
+            } else {
+              console.error('Error: niewłaściwe parametry wejściowe');
+              this.getConfigurations();
+              this.setDefaultSystem();
+            }
+          });
+        },
+      );
     }
+    if (inputParams.cfg) {
+      this.setConfiguration(inputParams.cfg);
+    } else {
+      this.getConfigurations();
+    }
+  }
+
+  setDefaultSystem() {
+    this.setState({ system: 'fm' });
   }
 
   setConfiguration(configurationString) {
     this.getConfigurations(configurationString);
-  }
-
-  setZoom(isAutomatic) {
-    this.setState({ automaticZoom: isAutomatic }, () => { });
-  }
-
-  setMultiple(isMultiple) {
-    this.setState({ checkMultiple: isMultiple }, () => { });
-  }
-
-  setDirectional(isDirectional) {
-    this.setState({ directionalChecked: isDirectional }, () => { });
   }
 
   handleSystemClick(id) {
@@ -238,31 +192,8 @@ class App extends Component {
     this.setState((prevState) => ({ uri: url, isShowingShare: !prevState.isShowingShare }));
   }
 
-  directionalChanged(e) {
-    const { target } = e;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    this.setState({
-      directionalChecked: value,
-      isShowingShare: false,
-    });
-  }
-
-  zoomChanged(e) {
-    const { target } = e;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    this.setState({
-      automaticZoom: value,
-      isShowingShare: false,
-    });
-  }
-
-  checkMultipleChanged(e) {
-    const { target } = e;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    this.setState({
-      checkMultiple: value,
-      isShowingShare: false,
-    });
+  handleSettingsChanged(newState) {
+    this.setState({ ...newState, isShowingShare: false });
   }
 
   openDialog() {
@@ -320,27 +251,6 @@ class App extends Component {
     });
   }
 
-  getDirectionalCheckedStatus(
-    dataFromConfiguration,
-    automaticZoom,
-    checkMultipleArgs,
-  ) {
-    const { checkMultiple } = this.state;
-    if (checkMultiple !== checkMultipleArgs) {
-      this.setState({
-        directionalChecked: dataFromConfiguration,
-        automaticZoom,
-        checkMultiple: checkMultipleArgs,
-        toDrawSelected: [],
-      });
-    } else {
-      this.setState({
-        directionalChecked: dataFromConfiguration,
-        automaticZoom,
-      });
-    }
-  }
-
   systemButtonFocusClass(system, shouldBeSystem) {
     let className = 'system';
     if (system === shouldBeSystem) className += ' focus';
@@ -392,17 +302,12 @@ class App extends Component {
           {state.configurations.length ? (
             <ConfigurationsBox
               system={state.system}
-              automaticZoom={state.automaticZoom}
-              checkMultiple={state.checkMultiple}
-              zoomChanged={this.zoomChanged}
-              directionalChanged={this.directionalChanged}
-              checkMultipleChanged={this.checkMultipleChanged}
-              directionalChecked={state.directionalChecked}
               isOpen={state.openConfiguration}
               configurations={state.configurations}
+              settings={state.settings}
+              settingsCallback={this.handleSettingsChanged}
               selected={state.selectedConfiguration}
-              callbackFromApp={this.getSelectedConfiguration}
-              callbackDirectionals={this.getDirectionalCheckedStatus} />
+              callbackFromApp={this.getSelectedConfiguration} />
           ) : null}
         </div>
         <Modal show={state.isShowingModal} size="xl" onHide={this.handleClose}>
@@ -446,7 +351,7 @@ class App extends Component {
             callbackFromApp={this.getDrawData}
             selected={state.toDrawSelected}
             data={state.selectedSystemTransmitters}
-            checkMultiple={state.checkMultiple}
+            checkMultiple={state.settings.drawMultiple}
             addTransmiter={state.isShowingModal} />
         ) : null}
         {
@@ -454,9 +359,9 @@ class App extends Component {
             selectedTransmitters={state.toDrawSelected}
             selectedMarkers={state.selectedSystemTransmitters}
             configuration={state.selectedConfiguration}
-            directional={state.directionalChecked}
+            directional={state.settings.drawDirectionalChar}
             system={state.system}
-            automaticZoom={state.automaticZoom} />
+            automaticZoom={state.settings.automaticZoom} />
         }
       </div>
     );

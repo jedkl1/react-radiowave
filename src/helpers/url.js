@@ -9,9 +9,7 @@ export const generateUrl = (state) => {
     selectedConfiguration,
     toDrawSelected,
     system,
-    automaticZoom,
-    checkMultiple,
-    directionalChecked,
+    settings,
   } = state;
   if (selectedConfiguration) {
     const { location } = window;
@@ -27,9 +25,9 @@ export const generateUrl = (state) => {
         .join(',');
       url += `&cfg=${selectedConfiguration.cfg}`;
       url += `&sys=${system}`;
-      url += `&z=${automaticZoom}`;
-      url += `&m=${checkMultiple}`;
-      url += `&d=${directionalChecked}`;
+      url += `&z=${settings.automaticZoom}`;
+      url += `&m=${settings.drawMultiple}`;
+      url += `&d=${settings.drawDirectionalChar}`;
     }
     return url;
   }
@@ -39,19 +37,22 @@ export const generateUrl = (state) => {
 export const parseQueryToState = (query) => {
   const newState = {
     system: '',
-    checkMultiple: false,
-    automaticZoom: true,
-    directionalChecked: true,
+    settings: {
+      drawMultiple: false,
+      automaticZoom: true,
+      drawDirectionalChar: true,
+    },
+    showFullInfo: false,
   };
 
   if (query.m) {
-    newState.checkMultiple = query.m === 'true';
+    newState.settings.drawMultiple = query.m === 'true';
   }
   if (query.z) {
-    newState.automaticZoom = query.z === 'true';
+    newState.settings.automaticZoom = query.z === 'true';
   }
   if (query.d) {
-    newState.directionalChecked = query.d === 'true';
+    newState.settings.drawDirectionalChar = query.d === 'true';
   }
   if (query.sys) {
     newState.system = query.sys;

@@ -4,6 +4,21 @@ import Legend from './Legend';
 
 import settingsIcon from '../../images/baseline_settings_black_36dp.png';
 
+const settingsCheckboxesDesc = [
+  {
+    name: 'drawDirectionalChar',
+    label: 'Rysuj charakterystyki kierunkowe anten',
+  },
+  {
+    name: 'automaticZoom',
+    label: 'Automatyczny zoom i wyśrodkowanie map',
+  },
+  {
+    name: 'drawMultiple',
+    label: 'Zezwól na rysowanie wielu map pokrycia.',
+  },
+];
+
 class ConfigurationsBox extends Component {
   constructor(props) {
     super(props);
@@ -11,9 +26,13 @@ class ConfigurationsBox extends Component {
       possibleConfigurations: [],
       checkedConfiguration: null,
       isOpen: false,
+      automaticZoom: props.settings.automaticZoom,
+      drawDirectionalChar: props.settings.drawDirectionalChar,
+      drawMultiple: props.settings.drawMultiple,
     };
     this.getPossibleConfiguration = this.getPossibleConfiguration.bind(this);
     this.onConfigurationChanged = this.onConfigurationChanged.bind(this);
+    this.onSettingsChanged = this.onSettingsChanged.bind(this);
     this.openConfiguration = this.openConfiguration.bind(this);
   }
 
@@ -28,60 +47,67 @@ class ConfigurationsBox extends Component {
     this.getPossibleConfiguration();
   }
 
-  getPossibleConfiguration(prevProps) {
+  getPossibleConfiguration(prevProps = undefined) {
     const { props } = this;
-    const possibleConfs = [];
 
-    props.configurations.forEach((configuration) => {
-      if (configuration.typ === props.system) {
-        possibleConfs.push(configuration);
-      }
-    });
-    if (props.selected && props.system === prevProps.system) {
-      this.setState(
-        {
-          possibleConfigurations: possibleConfs,
-          checkedConfiguration: props.selected,
-        },
-        () => {},
+    if (!prevProps || props.system !== prevProps.system || !props.selected) {
+      const possibleConfs = props.configurations.filter(
+        (configuration) => (configuration.typ === props.system),
       );
-    } else if (!props.selected || props.system !== prevProps.system) {
-      this.setState(
-        {
-          possibleConfigurations: possibleConfs,
-          checkedConfiguration: possibleConfs[0],
-        },
-        () => {
-          const { checkedConfiguration } = this.state;
-          props.callbackFromApp(checkedConfiguration);
-        },
-      );
+      this.setState({ possibleConfigurations: possibleConfs, checkedConfiguration: possibleConfs[0] },
+                    () => props.callbackFromApp(possibleConfs[0]));
     }
   }
 
-  returnPossibleRadio() {
+  possibleConfRadios() {
     const { selected } = this.props;
     const { possibleConfigurations } = this.state;
-    const radios = [];
 
-    possibleConfigurations.forEach((configuration) => {
-      if (configuration.cfg !== possibleConfigurations[0].cfg) {
-        radios.push(
+    return possibleConfigurations.map((configuration) => (
+      <React.Fragment key={configuration.nazwa}>
+        <label htmlFor={configuration.cfg}>
           <input
             id={configuration.cfg}
-            key={configuration.cfg}
             type="radio"
             name="configuration"
             checked={selected.cfg === configuration.cfg}
             value={configuration.cfg}
-            onChange={this.onConfigurationChanged} />,
-          <label key={configuration.nazwa} htmlFor={configuration.cfg}>
-            {configuration.nazwa}
-          </label>,
-        );
-      }
+            onChange={this.onConfigurationChanged} />
+          {configuration.nazwa}
+        </label>
+        <br />
+      </React.Fragment>
+    ));
+  }
+
+  onSettingsChanged(e) {
+    const { target } = e;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+
+    this.setState({ [target.name]: value }, () => {
+      const { settingsCallback } = this.props;
+      const { automaticZoom, drawDirectionalChar, drawMultiple } = this.state;
+      settingsCallback({ settings: { automaticZoom, drawDirectionalChar, drawMultiple } });
     });
-    return radios;
+  }
+
+  settingsCheckboxes = () => {
+    const { state } = this;
+
+    return settingsCheckboxesDesc.map((checkbox) => (
+      <React.Fragment key={checkbox.name}>
+        <label key={checkbox.name} htmlFor={checkbox.name}>
+          <input
+            id={checkbox.name}
+            type="checkbox"
+            name={checkbox.name}
+            checked={state[checkbox.name] === true}
+            onChange={this.onSettingsChanged} />
+          {checkbox.label}
+        </label>
+        <br />
+      </React.Fragment>
+    ));
   }
 
   onConfigurationChanged(e) {
@@ -103,7 +129,6 @@ class ConfigurationsBox extends Component {
   }
 
   render() {
-    const { props } = this;
     const { state } = this;
 
     return state.possibleConfigurations.length ? (
@@ -125,61 +150,14 @@ class ConfigurationsBox extends Component {
             </div>
             <div className="confsWhiteBox">
               <form>
-                <input
-                  type="radio"
-                  name="configuration"
-                  key={state.possibleConfigurations[0].cfg}
-                  id={state.possibleConfigurations[0].cfg}
-                  checked={
-                    props.selected.cfg === state.possibleConfigurations[0].cfg
-                  }
-                  value={state.possibleConfigurations[0].cfg}
-                  onChange={this.onConfigurationChanged} />
-                <label htmlFor={state.possibleConfigurations[0].cfg}>
-                  {state.possibleConfigurations[0].nazwa}
-                </label>
-                <br />
-                {this.returnPossibleRadio()}
+                {this.possibleConfRadios()}
               </form>
               <b>{state.checkedConfiguration.opis}</b>
               {' '}
               <br />
               {' '}
               <br />
-              <label htmlFor="directionalChars">
-                <input
-                  type="checkbox"
-                  name="directionalChars"
-                  id="directionalChars"
-                  checked={props.directionalChecked === true}
-                  onChange={props.directionalChanged} />
-                Rysuj charakterystyki kierunkowe anten
-              </label>
-              {' '}
-              <br />
-              <label htmlFor="automaticZoom">
-                <input
-                  type="checkbox"
-                  name="automatiZoom"
-                  id="automaticZoom"
-                  checked={props.automaticZoom === true}
-                  onChange={props.zoomChanged} />
-                {' '}
-                Automatyczny zoom i wyśrodkowanie map
-              </label>
-              {' '}
-              <br />
-              <label className="label-without-margin" htmlFor="checkMultiple">
-                <input
-                  type="checkbox"
-                  name="checkMultiple"
-                  id="checkMultiple"
-                  checked={props.checkMultiple === true}
-                  onChange={props.checkMultipleChanged} />
-                Zezwól na rysowanie wielu map pokrycia.
-              </label>
-              {' '}
-              <br />
+              {this.settingsCheckboxes()}
               <b className="label-margin-right" style={{ color: 'red' }}>
                 UWAGA:
                 {' '}
