@@ -11,13 +11,11 @@ import ConfigurationsBox from './ConfigurationsBox';
 import PopUp from './PopUp';
 import Info from './Info';
 
-import { getTransmittersBySystem, getConfigurationsFromAPI } from '../api/transmitters';
+import { fetchTransmittersBySystem, fetchAPIConfigurations, fetchTransmittersArray } from '../api/transmitters';
 import { generateUrl, parseQueryToState } from '../helpers/url';
 import { isValidSystem } from '../validators/url';
 
 const logoIcon = require('../../images/icons/logoIcon.png').default;
-
-const { PROD_API_URL } = process.env;
 
 let data = [];
 
@@ -71,12 +69,12 @@ class App extends Component {
   async componentDidUpdate(prevProps, prevStates) {
     const { system } = this.state;
     if (system !== prevStates.system) {
-      data = await getTransmittersBySystem(system);
+      data = await fetchTransmittersBySystem(system);
     }
   }
 
   async getConfigurations(configurationKey = 'fm-std') {
-    const newState = await getConfigurationsFromAPI(configurationKey);
+    const newState = await fetchAPIConfigurations(configurationKey);
     this.setState({ ...newState }, () => { });
   }
 
@@ -87,70 +85,27 @@ class App extends Component {
       this.setState(
         { ...parseQueryToState(inputParams) },
         () => {
-          console.log('Input params are set');
-          const transmitters = inputParams.tra.split(',');
-          transmitters.forEach((transmitter) => {
-            if (Number.isNaN(Number(transmitter))) {
-              console.error(
-                `Error: niewłaściwy ${transmitter} numer nadajnika`,
-              );
-            } else if (inputParams.sys && (isValidSystem(inputParams.sys))) {
-              fetch(
-                `${PROD_API_URL}/transmitterById/pl/${inputParams.sys}/${transmitter}`,
-              )
-                .then((res) => res.json())
-                .then(
-                  (res) => {
-                    const {
-                      selectedSystemTransmitters,
-                      selectedTransmitters,
-                      toDrawSelected,
-                    } = this.state;
-                    console.log(selectedSystemTransmitters, selectedTransmitters, toDrawSelected);
+          const ids = inputParams.tra.split(',');
 
-                    const tempArray = selectedTransmitters.slice();
-                    if (res.data.length) {
-                      tempArray.push(res.data[0]);
-                      let selected = toDrawSelected;
-                      if (selected.length) {
-                        selected = toDrawSelected;
-                      } else {
-                        selected = [res.data[0]];
-                      }
-                      this.setState(
-                        {
-                          selectedTransmitters: tempArray,
-                          toDrawSelected: selected,
-                          selectedSystemTransmitters: tempArray,
-                        },
-                        () => { },
-                      );
-                    } else {
-                      console.log(
-                        `Error brak ${transmitter} nadajnika w bazie danych`,
-                      );
-                      this.setState(
-                        {
-                          selectedTransmitters,
-                          selectedSystemTransmitters,
-                          showFullInfo: true,
-                        },
-                        () => {
-                          console.log(selectedTransmitters);
-                        },
-                      );
-                    }
-                  },
-                  (error) => {
-                    console.log(`Error: ${error}`);
-                  },
-                );
-            } else {
-              console.error('Error: niewłaściwe parametry wejściowe');
-              this.getConfigurations();
-              this.setDefaultSystem();
-            }
-          });
+          if (inputParams.sys && (isValidSystem(inputParams.sys))) {
+            fetchTransmittersArray(ids, inputParams.sys)
+              .then((transmitters) => {
+                // removing undefined when something was wrong
+                const filteredTransmitters = transmitters.filter((tra) => !!tra);
+
+                if (filteredTransmitters.length > 0) {
+                  this.setState({
+                    selectedSystemTransmitters: filteredTransmitters,
+                    selectedTransmitters: filteredTransmitters,
+                    toDrawSelected: [filteredTransmitters[0]],
+                  });
+                }
+              });
+          } else {
+            console.error('Error: niewłaściwe parametry wejściowe');
+            this.getConfigurations();
+            this.setDefaultSystem();
+          }
         },
       );
     }

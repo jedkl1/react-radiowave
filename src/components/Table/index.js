@@ -13,7 +13,7 @@ class Table extends React.Component {
       selectedTransmitters: props.selected,
       selectedIDs: [],
       system: props.system,
-      filteredTransmitters: null,
+      filteredTransmitters: [],
     };
     this.btnRef = null;
     this.updateSelectedIDs = this.updateSelectedIDs.bind(this);

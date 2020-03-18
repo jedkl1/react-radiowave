@@ -3,6 +3,9 @@ import L from 'leaflet';
 import { ToastContainer, toast } from 'react-toastify';
 import { xml2js } from 'xml-js';
 
+import { fetchKMLsArray } from '../api/maps-layers';
+import { shouldDrawLayers, shouldSetView, layersDifference } from '../helpers/map';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 // postCSS import of Leaflet's CSS
@@ -56,11 +59,11 @@ class Map extends Component {
     super(props);
     this.state = {
       map: null,
-      selectedTransmitters: props.selectedTransmitters,
+      selectedTransmitters: [],
       markers: [],
       directionalChars: [],
       gpsMarker: null,
-      interval: null,
+      layersIDs: [],
     };
     this.mapNode = null;
     this.gpsChanged = this.gpsChanged.bind(this);
@@ -99,35 +102,41 @@ class Map extends Component {
     setTimeout(this.checkGeoLocation, 5000);
   }
 
-  componentDidUpdate(prevProps) {
-    const {
-      automaticZoom,
-      configuration,
-      directional,
-      selectedMarkers,
-      selectedTransmitters,
-    } = this.props;
+  async componentDidUpdate(prevProps) {
+    const { props } = this;
 
     if (prevProps.configuration) {
-      if (
-        selectedTransmitters !== prevProps.selectedTransmitters
-        || configuration.cfg !== prevProps.configuration.cfg
-        || directional !== prevProps.directional
-      ) {
-        this.state.selectedTransmitters = selectedTransmitters;
-        this.layersGroup.clearLayers();
-        this.drawLayersCharsMarkers();
-        this.addMarkers();
-        if (
-          prevProps.configuration === configuration
-          && directional === prevProps.directional
-          && automaticZoom
-        ) {
+      if (shouldDrawLayers(props, prevProps)) {
+        if (shouldSetView(props, prevProps)) {
           this.setView();
         }
-      } else if (selectedMarkers !== prevProps.selectedMarkers) {
+        if (props.selectedTransmitters.length === 0) {
+          this.layersGroup.clearLayers();
+        } else {
+          const { layersIDs } = this.state;
+          const diff = layersDifference(props.selectedTransmitters, layersIDs);
+
+          if (diff.toAdd) {
+            console.log('TODO will be add');
+          } else {
+            diff.difference.forEach((el) => {
+              this.layersGroup.removeLayer(Object.keys(el)[0].leafletId);
+            });
+          }
+        }
+
+        await fetchKMLsArray(props.selectedTransmitters, props.configuration)
+          .then((res) => {
+            console.log(res);
+            this.state.selectedTransmitters = res;
+          });
+
+        this.newDrawLayers();
+        // this.drawLayersCharsMarkers();
         this.addMarkers();
-      } else if (directional !== prevProps.directional && !directional) {
+      } else if (props.selectedMarkers !== prevProps.selectedMarkers) {
+        this.addMarkers();
+      } else if (props.directional !== prevProps.directional && !props.directional) {
         const { directionalChars, map } = this.state;
 
         directionalChars.forEach((element) => {
@@ -141,10 +150,53 @@ class Map extends Component {
   componentWillUnmount() {
     // code to run just before unmounting the component
     // this destroys the Leaflet map object & related event listeners
-    const { interval, map } = this.state;
+    const { map } = this.state;
 
     map.remove();
-    clearInterval(interval);
+  }
+
+  differenceLayers() {
+
+  }
+
+  newDrawLayers() {
+    const { configuration } = this.props;
+    const { map } = this.state;
+    let { selectedTransmitters } = this.state;
+
+    let response = false;
+
+    if (selectedTransmitters.length >= 30) {
+      response = window.confirm(
+        `Czy na pewno chcesz wyświetlić ${selectedTransmitters.length} mapek? 
+        Grozi to utratą stabilności Twojej przeglądarki.
+        W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`,
+      );
+    }
+    if (response === false) {
+      selectedTransmitters = selectedTransmitters.slice(0, 30);
+    }
+
+    const layersIDs = [];
+    /* eslint no-underscore-dangle: 0 */
+    selectedTransmitters.forEach((element) => {
+      const layer = L.imageOverlay(
+        `${PROD_FILES_URL}/get/${configuration.cfg}/${element._mapahash}.png`,
+        element.bounds,
+        { opacity: 0.6 },
+      );
+      this.layersGroup.addLayer(layer);
+
+      layersIDs.push({ [element.id_nadajnik]: { leafletId: layer._leaflet_id } });
+    });
+
+    this.setState({ layersIDs }, () => {
+      const { state } = this;
+      console.log(state.layersIDs);
+    });
+    /* eslint no-underscore-dangle: 1 */
+    this.layersGroup.addTo(map);
+    console.log(this.layersGroup);
   }
 
   async drawLayersCharsMarkers() {
@@ -156,7 +208,7 @@ class Map extends Component {
     this.setState({ directionalChars: [] }, () => { });
     let response = false;
     if (selectedTransmitters.length >= 30) {
-      response = Window.confirm(`Czy na pewno chcesz wyświetlić ${selectedTransmitters.length} mapek?
+      response = window.confirm(`Czy na pewno chcesz wyświetlić ${selectedTransmitters.length} mapek?
 Grozi to utratą stabilności Twojej przeglądarki.
 W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
     }
@@ -253,62 +305,6 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
         }),
       );
     }
-  }
-
-  addLayer(kml, png) {
-    const { map } = this.state;
-    const { configuration } = this.props;
-
-    const boundsArray = [];
-
-    boundsArray.push(Number(kml.LatLonBox[0].east[0]));
-    boundsArray.push(Number(kml.LatLonBox[0].north[0]));
-    boundsArray.push(Number(kml.LatLonBox[0].south[0]));
-    boundsArray.push(Number(kml.LatLonBox[0].west[0]));
-    let corner1 = L.latLng(boundsArray[1], boundsArray[0]);
-    const corner2 = L.latLng(boundsArray[2], boundsArray[3]);
-
-    corner1 = map.project(corner1, 17);
-
-    const bounds = L.latLngBounds(corner1, corner2);
-
-    // const imageBounds = [[boundsArray[2], boundsArray[3]], [boundsArray[1], boundsArray[0]]];
-    this.layersGroup.addLayer(
-      L.imageOverlay(
-        `${PROD_FILES_URL}/get/${configuration.cfg}/${png}`,
-        bounds,
-        { opacity: 0.5 },
-      ),
-    );
-
-    const { directional } = this.props;
-
-    if (directional) {
-      this.addDirectionalChar();
-    }
-  }
-
-  addDirectionalChar() {
-    const { directionalChars, map, selectedTransmitters } = this.state;
-    const { system } = this.props;
-
-    directionalChars.forEach((marker) => {
-      map.removeLayer(marker);
-    });
-    this.setState({ directionalChars: [] }, () => { });
-    selectedTransmitters.forEach((element) => {
-      if (element.typ === system) {
-        const tempArray = directionalChars.slice();
-        const marker = L.marker([element.szerokosc, element.dlugosc], {
-          icon: L.icon({
-            iconUrl: `${PROD_FILES_URL}/ant_pattern/${element.id_antena}`,
-            iconSize: [130, 130],
-          }),
-        }).addTo(map);
-        tempArray.push(marker);
-        this.setState({ directionalChars: tempArray }, () => { });
-      }
-    });
   }
 
   addMarkers() {
