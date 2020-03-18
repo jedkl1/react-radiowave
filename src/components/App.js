@@ -24,8 +24,7 @@ class App extends Component {
     super(props);
     this.state = {
       isShowingModal: false,
-      // @TODO Info to true
-      isShowingInfo: false,
+      isShowingInfo: true,
       isShowingShare: false,
       selectedTransmitters: [],
       selectedSystemTransmitters: [],
@@ -316,7 +315,8 @@ class App extends Component {
             configuration={state.selectedConfiguration}
             directional={state.settings.drawDirectionalChar}
             system={state.system}
-            automaticZoom={state.settings.automaticZoom} />
+            automaticZoom={state.settings.automaticZoom}
+            drawMultiple={state.settings.drawMultiple} />
         }
       </div>
     );

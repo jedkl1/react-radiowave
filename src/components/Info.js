@@ -11,15 +11,6 @@ const infoImg = require('../../images/info/info.png').default;
 const confsImg = require('../../images/info/confs.jpeg').default;
 const tableImg = require('../../images/info/table.jpeg').default;
 
-// function InfoImage(props) {
-//     return (
-//         <div className="imgContainer">
-//             <img src={props.src} alt={props.alt} />
-//             <p>{props.hint}</p>
-//         </div>
-//     );
-// }
-
 class Info extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -205,7 +196,7 @@ class Info extends React.Component {
               Politechnika Warszawska 2018
             </span>
             <br />
-            <strong>Mapy RadioPolska beta version: 1.2.5</strong>
+            <strong>Mapy RadioPolska beta version: 1.3.1</strong>
           </div>
         </Modal.Footer>
       </>

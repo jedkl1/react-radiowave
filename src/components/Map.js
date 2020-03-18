@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import L from 'leaflet';
-import { ToastContainer, toast } from 'react-toastify';
-import { xml2js } from 'xml-js';
+// import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 import { fetchKMLsArray } from '../api/maps-layers';
 import { shouldDrawLayers, shouldSetView, layersDifference } from '../helpers/map';
@@ -60,6 +60,7 @@ class Map extends Component {
     this.state = {
       map: null,
       selectedTransmitters: [],
+      newSelectedTransmitters: [],
       markers: [],
       directionalChars: [],
       gpsMarker: null,
@@ -107,32 +108,48 @@ class Map extends Component {
 
     if (prevProps.configuration) {
       if (shouldDrawLayers(props, prevProps)) {
-        if (shouldSetView(props, prevProps)) {
-          this.setView();
-        }
-        if (props.selectedTransmitters.length === 0) {
+        const { layersIDs } = this.state;
+        if (props.selectedTransmitters.length === 0 || props.selectedTransmitters.length === 1) {
+          if (layersIDs.length > 0 && !props.drawMultiple) {
+            this.layersGroup.removeLayer(layersIDs[0][Object.keys(layersIDs[0])[0]].leafletId);
+          }
           this.layersGroup.clearLayers();
+          this.state.layersIDs = [];
+
+          await fetchKMLsArray(props.selectedTransmitters, props.configuration)
+            .then((res) => {
+              this.state.selectedTransmitters = res;
+              this.state.newSelectedTransmitters = res;
+            });
+
+          this.newDrawLayers();
         } else {
-          const { layersIDs } = this.state;
           const diff = layersDifference(props.selectedTransmitters, layersIDs);
 
           if (diff.toAdd) {
-            console.log('TODO will be add');
+            await fetchKMLsArray(diff.difference, props.configuration)
+              .then((res) => {
+                const { selectedTransmitters } = this.state;
+                this.setState({
+                  selectedTransmitters: [...selectedTransmitters, ...res],
+                  newSelectedTransmitters: [...res],
+                }, () => { this.newDrawLayers(); });
+              });
           } else {
             diff.difference.forEach((el) => {
-              this.layersGroup.removeLayer(Object.keys(el)[0].leafletId);
+              const id = el[Object.keys(el)[0]];
+
+              this.layersGroup.removeLayer(id.leafletId);
+              const newLayersIDs = layersIDs.filter((layer) => el !== layer);
+              this.setState({ layersIDs: newLayersIDs });
             });
           }
         }
 
-        await fetchKMLsArray(props.selectedTransmitters, props.configuration)
-          .then((res) => {
-            console.log(res);
-            this.state.selectedTransmitters = res;
-          });
-
-        this.newDrawLayers();
-        // this.drawLayersCharsMarkers();
+        if (shouldSetView(props, prevProps)) {
+          this.setView();
+        }
+        this.drawDirectionalChars();
         this.addMarkers();
       } else if (props.selectedMarkers !== prevProps.selectedMarkers) {
         this.addMarkers();
@@ -148,164 +165,76 @@ class Map extends Component {
   }
 
   componentWillUnmount() {
-    // code to run just before unmounting the component
     // this destroys the Leaflet map object & related event listeners
     const { map } = this.state;
-
     map.remove();
-  }
-
-  differenceLayers() {
-
   }
 
   newDrawLayers() {
     const { configuration } = this.props;
-    const { map } = this.state;
-    let { selectedTransmitters } = this.state;
+    let { newSelectedTransmitters } = this.state;
 
     let response = false;
 
-    if (selectedTransmitters.length >= 30) {
+    if (newSelectedTransmitters.length >= 30) {
       response = window.confirm(
-        `Czy na pewno chcesz wyświetlić ${selectedTransmitters.length} mapek? 
+        `Czy na pewno chcesz wyświetlić ${newSelectedTransmitters.length} mapek? 
         Grozi to utratą stabilności Twojej przeglądarki.
         W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`,
       );
     }
     if (response === false) {
-      selectedTransmitters = selectedTransmitters.slice(0, 30);
+      newSelectedTransmitters = newSelectedTransmitters.slice(0, 30);
     }
 
-    const layersIDs = [];
+    const { layersIDs } = this.state;
+    const newLayersIDs = layersIDs;
     /* eslint no-underscore-dangle: 0 */
-    selectedTransmitters.forEach((element) => {
+    newSelectedTransmitters.forEach((element) => {
       const layer = L.imageOverlay(
         `${PROD_FILES_URL}/get/${configuration.cfg}/${element._mapahash}.png`,
         element.bounds,
         { opacity: 0.6 },
       );
+      // this.layersGroup.addLayer(layer);
       this.layersGroup.addLayer(layer);
-
-      layersIDs.push({ [element.id_nadajnik]: { leafletId: layer._leaflet_id } });
+      newLayersIDs.push({ [element.id_nadajnik]: { leafletId: layer._leaflet_id } });
     });
 
-    this.setState({ layersIDs }, () => {
-      const { state } = this;
-      console.log(state.layersIDs);
-    });
+    this.setState({ layersIDs: newLayersIDs }, () => { });
     /* eslint no-underscore-dangle: 1 */
-    this.layersGroup.addTo(map);
-    console.log(this.layersGroup);
   }
 
-  async drawLayersCharsMarkers() {
+  drawDirectionalChars() {
     const { directionalChars, map, selectedTransmitters } = this.state;
+    const { directional } = this.props;
 
-    directionalChars.forEach((marker) => {
-      map.removeLayer(marker);
-    });
-    this.setState({ directionalChars: [] }, () => { });
-    let response = false;
-    if (selectedTransmitters.length >= 30) {
-      response = window.confirm(`Czy na pewno chcesz wyświetlić ${selectedTransmitters.length} mapek?
-Grozi to utratą stabilności Twojej przeglądarki.
-W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
-    }
-    for (
-      let i = 0, p = Promise.resolve();
-      i < selectedTransmitters.length;
-      i += 1
-    ) {
-      if (i === 30 && response === false) {
-        break;
-      }
-      p = p.then(
-        () => new Promise((resolve) => {
-          const element = selectedTransmitters[i];
-          const { configuration, directional, system } = this.props;
-
-          if (
-            /* eslint-disable */
-            element.typ === system
-            && element._mapahash
-            && element.id_antena
-            && configuration.cfg
-          ) {
-            fetch(
-              `${PROD_FILES_URL}/get/${configuration.cfg}/${element._mapahash}.kml`,
-            )
-              .then((res) => res.text())
-              .then(
-                (res) => {
-                  const kml = xml2js(res, { ignoreAttributes: true, compact: true }).kml.GroundOverlay;
-                  const boundsArray = [];
-
-                  boundsArray.push(Number(kml.LatLonBox.east._text));
-                  boundsArray.push(Number(kml.LatLonBox.north._text));
-                  boundsArray.push(Number(kml.LatLonBox.south._text));
-                  boundsArray.push(Number(kml.LatLonBox.west._text));
-                  const corner1 = L.latLng(boundsArray[1], boundsArray[0]);
-                  const corner2 = L.latLng(boundsArray[2], boundsArray[3]);
-                  const bounds = L.latLngBounds(corner1, corner2);
-                  this.layersGroup.addLayer(
-                    L.imageOverlay(
-                      `${PROD_FILES_URL}/get/${configuration.cfg}/${element._mapahash}.png`,
-                      bounds,
-                      { opacity: 0.6 },
-                    ),
-                  );
-
-                  this.layersGroup.addTo(map);
-
-
-                  if (directional) {
-                    const tempArray = directionalChars.slice();
-                    const marker = L.marker(
-                      [element.szerokosc, element.dlugosc],
-                      {
-                        icon: L.icon({
-                          iconUrl: `${PROD_FILES_URL}/ant_pattern/${element.id_antena}`,
-                          iconSize: [130, 130],
-                        }),
-                      },
-                    ).addTo(map);
-                    tempArray.push(marker);
-                    this.setState({ directionalChars: tempArray }, () => { });
-                  }
-                  this.addMarkers();
-                  resolve();
-                },
-                (error) => {
-                  console.log(`Error${error}`);
-                },
-              )
-              .catch((err) => {
-                console.error(
-                  `${err} in transmitter ${element.id_nadajnik} for ${element.typ}`,
-                );
-                toast.error(
-                  `Niestety, mapa dla nadajnika ${element.mhz}MHz/ ${element.program}/ ${element.obiekt} nie jest jeszcze gotowa.
-                            Powiadom administrację o problemie`,
-                  {
-                    position: toast.POSITION.BOTTOM_CENTER,
-                  },
-                );
-              });
-            /* eslint-enable */
-          } else {
-            console.error(element);
-            // toast.error(`Niestety, mapa dla nadajnika ${element.mhz}MHz/ ${element.program}/
-            // ${element.obiekt} nie jest jeszcze gotowa.
-            //         Powiadom administrację o problemie`, {
-            //             position: toast.POSITION.BOTTOM_CENTER,
-            //         });
-            resolve();
-          }
-        }),
-      );
+    if (directional) {
+      const tempArray = directionalChars.slice();
+      selectedTransmitters.forEach((element) => {
+        const marker = L.marker(
+          [element.szerokosc, element.dlugosc],
+          {
+            icon: L.icon({
+              iconUrl: `${PROD_FILES_URL}/ant_pattern/${element.id_antena}`,
+              iconSize: [130, 130],
+            }),
+          },
+        ).addTo(map);
+        tempArray.push(marker);
+      });
+      this.setState({ directionalChars: tempArray }, () => { });
     }
   }
+
+  // toast.error(
+  //   `Niestety, mapa dla nadajnika ${element.mhz}MHz/ ${element.program}/ ${element.obiekt} nie jest jeszcze gotowa.
+  //             Powiadom administrację o problemie`,
+  //   {
+  //     position: toast.POSITION.BOTTOM_CENTER,
+  //   },
+  // );
+
 
   addMarkers() {
     const { map, markers } = this.state;
@@ -314,9 +243,7 @@ W przeciwnym wypadku zostanie narysowanych pierwszych 30 pozycji z listy`);
     markers.forEach((marker) => {
       map.removeLayer(marker);
     });
-    this.setState({ markers: [] }, () => {
-      console.log('Markers removed');
-    });
+    this.setState({ markers: [] }, () => { });
     const tempArray = [];
     selectedMarkers.forEach((element) => {
       if (element.typ === system) {
