@@ -1,15 +1,13 @@
-export const shouldSetView = (props, prevProps) => (
-  props.configuration === prevProps.configuration
+export const shouldSetView = (props, prevProps) => props.configuration === prevProps.configuration
   && props.directional === prevProps.directional
-  && props.automaticZoom
-);
+  && props.automaticZoom;
 
-export const shouldDrawLayers = (props, prevProps) => (
-  props.selectedTransmitters !== prevProps.selectedTransmitters
-  || props.configuration.cfg !== prevProps.configuration.cfg
-  || props.directional !== prevProps.directional
-);
+export const shouldDrawLayers = (props, prevProps) => props.selectedTransmitters !== prevProps.selectedTransmitters
+  || props.configuration.cfg !== prevProps.configuration.cfg;
 
+export const shouldClearAllLayers = (props, prevProps) => props.selectedTransmitters.length === 0
+  || (props.selectedTransmitters.length === 1 && !props.drawMultiple)
+  || props.configuration !== prevProps.configuration;
 
 export const layersDifference = (transmitters, ids) => {
   let toAdd = false;

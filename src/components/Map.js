@@ -4,7 +4,13 @@ import L from 'leaflet';
 import { ToastContainer } from 'react-toastify';
 
 import { fetchKMLsArray } from '../api/maps-layers';
-import { shouldDrawLayers, shouldSetView, layersDifference } from '../helpers/map';
+import { postError } from '../api/errors';
+import {
+  shouldClearAllLayers,
+  shouldDrawLayers,
+  shouldSetView,
+  layersDifference,
+} from '../helpers/map';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -109,32 +115,43 @@ class Map extends Component {
     if (prevProps.configuration) {
       if (shouldDrawLayers(props, prevProps)) {
         const { layersIDs } = this.state;
-        if (props.selectedTransmitters.length === 0 || props.selectedTransmitters.length === 1) {
+        if (shouldClearAllLayers(props, prevProps)) {
           if (layersIDs.length > 0 && !props.drawMultiple) {
-            this.layersGroup.removeLayer(layersIDs[0][Object.keys(layersIDs[0])[0]].leafletId);
+            this.layersGroup.removeLayer(
+              layersIDs[0][Object.keys(layersIDs[0])[0]].leafletId,
+            );
           }
+          this.clearDirectionalMarkers();
           this.layersGroup.clearLayers();
           this.state.layersIDs = [];
 
-          await fetchKMLsArray(props.selectedTransmitters, props.configuration)
-            .then((res) => {
-              this.state.selectedTransmitters = res;
-              this.state.newSelectedTransmitters = res;
-            });
+          await fetchKMLsArray(
+            props.selectedTransmitters,
+            props.configuration,
+          ).then((res) => {
+            this.state.selectedTransmitters = res;
+            this.state.newSelectedTransmitters = res;
+          });
 
           this.newDrawLayers();
         } else {
           const diff = layersDifference(props.selectedTransmitters, layersIDs);
 
           if (diff.toAdd) {
-            await fetchKMLsArray(diff.difference, props.configuration)
-              .then((res) => {
+            await fetchKMLsArray(diff.difference, props.configuration).then(
+              (res) => {
                 const { selectedTransmitters } = this.state;
-                this.setState({
-                  selectedTransmitters: [...selectedTransmitters, ...res],
-                  newSelectedTransmitters: [...res],
-                }, () => { this.newDrawLayers(); });
-              });
+                this.setState(
+                  {
+                    selectedTransmitters: [...selectedTransmitters, ...res],
+                    newSelectedTransmitters: [...res],
+                  },
+                  () => {
+                    this.newDrawLayers();
+                  },
+                );
+              },
+            );
           } else {
             diff.difference.forEach((el) => {
               const id = el[Object.keys(el)[0]];
@@ -153,13 +170,9 @@ class Map extends Component {
         this.addMarkers();
       } else if (props.selectedMarkers !== prevProps.selectedMarkers) {
         this.addMarkers();
-      } else if (props.directional !== prevProps.directional && !props.directional) {
-        const { directionalChars, map } = this.state;
-
-        directionalChars.forEach((element) => {
-          map.removeLayer(element);
-        });
-        this.state.directionalChars = [];
+      } else if (props.directional !== prevProps.directional) {
+        this.clearDirectionalMarkers();
+        this.drawDirectionalChars();
       }
     }
   }
@@ -168,6 +181,15 @@ class Map extends Component {
     // this destroys the Leaflet map object & related event listeners
     const { map } = this.state;
     map.remove();
+  }
+
+  clearDirectionalMarkers() {
+    const { directionalChars, map } = this.state;
+
+    directionalChars.forEach((element) => {
+      map.removeLayer(element);
+    });
+    this.setState({ directionalChars: [] });
   }
 
   newDrawLayers() {
@@ -191,17 +213,25 @@ class Map extends Component {
     const newLayersIDs = layersIDs;
     /* eslint no-underscore-dangle: 0 */
     newSelectedTransmitters.forEach((element) => {
-      const layer = L.imageOverlay(
-        `${PROD_FILES_URL}/get/${configuration.cfg}/${element._mapahash}.png`,
-        element.bounds,
-        { opacity: 0.6 },
-      );
-      // this.layersGroup.addLayer(layer);
-      this.layersGroup.addLayer(layer);
-      newLayersIDs.push({ [element.id_nadajnik]: { leafletId: layer._leaflet_id } });
+      const url = `${PROD_FILES_URL}/get/${configuration.cfg}/${element._mapahash}.png`;
+      fetch(url)
+        .then((res) => {
+          if (!res.ok) {
+            postError({ code: res.status, method: 'GET', url });
+          }
+          return res;
+        })
+        .then(() => {
+          const layer = L.imageOverlay(url, element.bounds, { opacity: 0.6 });
+          this.layersGroup.addLayer(layer);
+          newLayersIDs.push({
+            [element.id_nadajnik]: { leafletId: layer._leaflet_id },
+          });
+        })
+        .catch((e) => console.log(e));
     });
 
-    this.setState({ layersIDs: newLayersIDs }, () => { });
+    this.setState({ layersIDs: newLayersIDs }, () => {});
     /* eslint no-underscore-dangle: 1 */
   }
 
@@ -212,18 +242,26 @@ class Map extends Component {
     if (directional) {
       const tempArray = directionalChars.slice();
       selectedTransmitters.forEach((element) => {
-        const marker = L.marker(
-          [element.szerokosc, element.dlugosc],
-          {
-            icon: L.icon({
-              iconUrl: `${PROD_FILES_URL}/ant_pattern/${element.id_antena}`,
-              iconSize: [130, 130],
-            }),
-          },
-        ).addTo(map);
-        tempArray.push(marker);
+        const url = `${PROD_FILES_URL}/ant_pattern/${element.id_antena}`;
+        fetch(url)
+          .then((res) => {
+            if (!res.ok) {
+              postError({ code: res.status, method: 'GET', url });
+            }
+            return res;
+          })
+          .then(() => {
+            const marker = L.marker([element.szerokosc, element.dlugosc], {
+              icon: L.icon({
+                iconUrl: url,
+                iconSize: [130, 130],
+              }),
+            }).addTo(map);
+            tempArray.push(marker);
+          })
+          .catch((e) => console.log(e));
       });
-      this.setState({ directionalChars: tempArray }, () => { });
+      this.setState({ directionalChars: tempArray }, () => {});
     }
   }
 
@@ -235,7 +273,6 @@ class Map extends Component {
   //   },
   // );
 
-
   addMarkers() {
     const { map, markers } = this.state;
     const { selectedMarkers, system } = this.props;
@@ -243,7 +280,7 @@ class Map extends Component {
     markers.forEach((marker) => {
       map.removeLayer(marker);
     });
-    this.setState({ markers: [] }, () => { });
+    this.setState({ markers: [] }, () => {});
     const tempArray = [];
     selectedMarkers.forEach((element) => {
       if (element.typ === system) {
@@ -276,7 +313,7 @@ class Map extends Component {
         tempArray.push(marker);
       }
     });
-    this.setState({ markers: tempArray }, () => { });
+    this.setState({ markers: tempArray }, () => {});
   }
 
   setView() {

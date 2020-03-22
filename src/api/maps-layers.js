@@ -1,13 +1,15 @@
 import L from 'leaflet';
 import { xml2js } from 'xml-js';
 
+import { postError } from './errors';
 import { isValidElement } from '../validators/map-layers';
 
 const { PROD_FILES_URL } = process.env;
 
 /* eslint no-underscore-dangle: 0 */
 const mapKMLToBounds = (response) => {
-  const kml = xml2js(response, { ignoreAttributes: true, compact: true }).kml.GroundOverlay;
+  const kml = xml2js(response, { ignoreAttributes: true, compact: true }).kml
+    .GroundOverlay;
   const boundsArray = [];
 
   boundsArray.push(Number(kml.LatLonBox.east._text));
@@ -19,13 +21,21 @@ const mapKMLToBounds = (response) => {
   return L.latLngBounds(corner1, corner2);
 };
 
-
 const fetchKMLByMapHash = async (url) => {
-  const response = await fetch(url)
-    .then((res) => res.text());
+  const response = await fetch(url).then((res) => {
+    if (!res.ok) {
+      postError({
+        code: res.status,
+        method: 'GET',
+        url,
+        msg: res.body,
+      });
+    }
+    return { text: res.text(), status: res.status };
+  });
 
-  if (response.length) {
-    return response;
+  if ((await response.text).length && response.status === 200) {
+    return response.text;
   }
   throw Error('Brak opisu mapy pokrycia o podanym id w bazie danych');
 };
