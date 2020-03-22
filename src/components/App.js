@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Modal } from 'react-bootstrap';
-import queryString from 'query-string';
+import { parse } from 'qs';
 
 import '../styles/App.css';
 import Map from './Map';
@@ -11,7 +11,11 @@ import ConfigurationsBox from './ConfigurationsBox';
 import PopUp from './PopUp';
 import Info from './Info';
 
-import { fetchTransmittersBySystem, fetchAPIConfigurations, fetchTransmittersArray } from '../api/transmitters';
+import {
+  fetchTransmittersBySystem,
+  fetchAPIConfigurations,
+  fetchTransmittersArray,
+} from '../api/transmitters';
 import { generateUrl, parseQueryToState } from '../helpers/url';
 import { isValidSystem } from '../validators/url';
 
@@ -58,7 +62,7 @@ class App extends Component {
     const { location } = this.props;
 
     if (location.search.length) {
-      this.checkQueryString(location.search);
+      this.checkQueryString(location.search.split('?')[1]);
     } else {
       this.getConfigurations();
       this.setDefaultSystem();
@@ -74,39 +78,35 @@ class App extends Component {
 
   async getConfigurations(configurationKey = 'fm-std') {
     const newState = await fetchAPIConfigurations(configurationKey);
-    this.setState({ ...newState }, () => { });
+    this.setState({ ...newState }, () => {});
   }
 
   checkQueryString(query) {
-    const inputParams = queryString.parse(query);
+    const inputParams = parse(query);
 
     if (inputParams.sys) {
-      this.setState(
-        { ...parseQueryToState(inputParams) },
-        () => {
-          const ids = inputParams.tra.split(',');
+      this.setState({ ...parseQueryToState(inputParams) }, () => {
+        const ids = inputParams.tra.split(',');
 
-          if (inputParams.sys && (isValidSystem(inputParams.sys))) {
-            fetchTransmittersArray(ids, inputParams.sys)
-              .then((transmitters) => {
-                // removing undefined when something was wrong
-                const filteredTransmitters = transmitters.filter((tra) => !!tra);
+        if (inputParams.sys && isValidSystem(inputParams.sys)) {
+          fetchTransmittersArray(ids, inputParams.sys).then((transmitters) => {
+            // removing undefined when something was wrong
+            const filteredTransmitters = transmitters.filter((tra) => !!tra);
 
-                if (filteredTransmitters.length > 0) {
-                  this.setState({
-                    selectedSystemTransmitters: filteredTransmitters,
-                    selectedTransmitters: filteredTransmitters,
-                    toDrawSelected: [filteredTransmitters[0]],
-                  });
-                }
+            if (filteredTransmitters.length > 0) {
+              this.setState({
+                selectedSystemTransmitters: filteredTransmitters,
+                selectedTransmitters: filteredTransmitters,
+                toDrawSelected: [filteredTransmitters[0]],
               });
-          } else {
-            console.error('Error: niewłaściwe parametry wejściowe');
-            this.getConfigurations();
-            this.setDefaultSystem();
-          }
-        },
-      );
+            }
+          });
+        } else {
+          console.error('Error: niewłaściwe parametry wejściowe');
+          this.getConfigurations();
+          this.setDefaultSystem();
+        }
+      });
     }
     if (inputParams.cfg) {
       this.setConfiguration(inputParams.cfg);
@@ -137,13 +137,16 @@ class App extends Component {
     });
     this.setState(
       { system: id, selectedSystemTransmitters: currentTransmitters },
-      () => { },
+      () => {},
     );
   }
 
   handleShareClick() {
     const url = generateUrl(this.state);
-    this.setState((prevState) => ({ uri: url, isShowingShare: !prevState.isShowingShare }));
+    this.setState((prevState) => ({
+      uri: url,
+      isShowingShare: !prevState.isShowingShare,
+    }));
   }
 
   handleSettingsChanged(newState) {
@@ -182,7 +185,7 @@ class App extends Component {
           toDrawSelected: intersection,
           isShowingShare: false,
         },
-        () => { },
+        () => {},
       );
     });
   }
@@ -194,7 +197,7 @@ class App extends Component {
         isShowingModal: openTable,
         isShowingShare: false,
       },
-      () => { },
+      () => {},
     );
   }
 
